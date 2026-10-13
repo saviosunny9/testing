@@ -33,7 +33,9 @@ for (const file of files) {
   }
   // Literal U+FFFD (in Next's polyfills) becomes its escape; some hosts reject the raw character.
   if (file.endsWith('.js')) src = src.replaceAll('\uFFFD', '\\ufffd');
-  src = src.split(PREFIX).join('./').replaceAll('/__asset_prefix__', '.').replaceAll('"/media/', '"./media/').replaceAll('url(/media/', 'url(./media/');
+  src = src.split(PREFIX).join('./').replaceAll('/__asset_prefix__', '.').replaceAll('"/media/', '"./media/').replaceAll('url(/media/', 'url(./media/')
+    // later candidates in a srcset ("a.webp 720w, /media/b.webp 1439w")
+    .replaceAll(', /media/', ', ./media/');
 
   if (src !== before) writeFileSync(file, src);
 }
