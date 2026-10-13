@@ -6,7 +6,7 @@ import { gsap } from '@/lib/gsap';
 import { MOMENT_SAVED_SCENE, SCENES } from './scenes';
 import type { VideoClock } from './videoClock';
 
-const RADIUS = 14;
+const RADIUS = 12;
 const DRIFT = 0.6; // ± percent of the frame
 
 function cornerPaths(x: number, y: number, w: number, h: number) {
@@ -54,10 +54,16 @@ export default function DetectionBox({ clock, animated = true }: Props) {
       const t = animated ? (performance.now() - start) / 1000 : 0;
       const dx = animated ? Math.sin((t * Math.PI * 2) / 4.2) * DRIFT : 0;
       const dy = animated ? Math.cos((t * Math.PI * 2) / 5.4) * DRIFT : 0;
+      // The 16:9 box can be taller than the screen it sits in (cover crop); keep the
+      // drawing inside the visible band.
+      const screenH = root.closest('.hud')?.clientHeight ?? size.h;
+      const visTop = Math.max(0, (size.h - screenH) / 2) + 10;
+      const visBottom = size.h - Math.max(0, (size.h - screenH) / 2) - 10;
       const x = ((box.x + dx) / 100) * size.w;
-      const y = ((box.y + dy) / 100) * size.h;
+      const rawY = ((box.y + dy) / 100) * size.h;
+      const y = Math.max(rawY, visTop);
       const w = (box.w / 100) * size.w;
-      const h = (box.h / 100) * size.h;
+      const h = Math.min(rawY + (box.h / 100) * size.h, visBottom) - y;
 
       const glow = glowRef.current!;
       glow.setAttribute('x', `${x}`);
@@ -69,10 +75,10 @@ export default function DetectionBox({ clock, animated = true }: Props) {
       const chipH = label.offsetHeight;
       // Keep both chips inside the frame, even when the box hugs an edge.
       const lx = Math.min(x + 12, size.w - label.offsetWidth - 8);
-      const ly = Math.min(y + h - chipH / 2, size.h - chipH - 8);
+      const ly = Math.min(y + h - chipH / 2, visBottom - chipH);
       const mx = Math.max(8, Math.min(x + w - moment.offsetWidth - 12, size.w - moment.offsetWidth - 8));
       label.style.transform = `translate3d(${lx}px, ${ly}px, 0)`;
-      moment.style.transform = `translate3d(${mx}px, ${y + 12}px, 0)`;
+      moment.style.transform = `translate3d(${mx}px, ${y + 10}px, 0)`;
     };
 
     const ro = new ResizeObserver(() => {
@@ -122,13 +128,7 @@ export default function DetectionBox({ clock, animated = true }: Props) {
   return (
     <div ref={rootRef} className="detection pointer-events-none absolute inset-0" aria-hidden>
       <svg className="absolute inset-0 h-full w-full overflow-visible">
-        <rect
-          ref={glowRef}
-          rx={RADIUS}
-          fill="rgba(76,199,100,0.06)"
-          stroke="rgba(76,199,100,0.18)"
-          strokeWidth={8}
-        />
+        <rect ref={glowRef} rx={RADIUS} fill="rgba(255,255,255,0.04)" stroke="none" />
         {[0, 1, 2, 3].map((i) => (
           <path
             key={i}
@@ -138,8 +138,8 @@ export default function DetectionBox({ clock, animated = true }: Props) {
             className="det-corner"
             pathLength={1}
             fill="none"
-            stroke="var(--leaf)"
-            strokeWidth={2}
+            stroke="rgba(255,255,255,0.92)"
+            strokeWidth={1.5}
             strokeLinecap="round"
             strokeDasharray="1 1"
             strokeDashoffset={0}
@@ -147,13 +147,19 @@ export default function DetectionBox({ clock, animated = true }: Props) {
         ))}
       </svg>
       <div ref={labelRef} className="det-label absolute left-0 top-0 will-change-transform">
-        <span className="mono inline-flex h-6 items-center rounded-full bg-leaf px-2.5 text-[11px] font-medium text-ink shadow-[0_0_0_4px_rgba(76,199,100,.18)]">
+        <span
+          className="inline-flex items-center rounded-full bg-white/90 font-medium text-ink shadow-[0_4px_14px_rgba(0,0,0,.18)]"
+          style={{ fontSize: 'max(9px, 3.6cqh)', padding: '0.35em 0.8em' }}
+        >
           <span ref={labelTextRef}>{SCENES[0].label}</span>
         </span>
       </div>
       <div ref={momentRef} className="absolute left-0 top-0 opacity-0">
-        <span className="inline-flex h-7 items-center gap-1.5 rounded-full bg-linen/95 px-3 text-[12px] font-semibold text-ink shadow-[0_8px_24px_-8px_rgba(80,40,10,.45)]">
-          <Star size={13} strokeWidth={1.5} className="fill-apricot text-ember" /> Moment saved
+        <span
+          className="inline-flex items-center gap-1.5 rounded-full bg-black/45 font-medium text-white backdrop-blur-md"
+          style={{ fontSize: 'max(9px, 3.6cqh)', padding: '0.4em 0.85em' }}
+        >
+          <Star size="1.1em" strokeWidth={1.5} className="fill-amber text-amber" /> Moment saved
         </span>
       </div>
     </div>

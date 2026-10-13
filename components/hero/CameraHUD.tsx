@@ -1,22 +1,17 @@
 'use client';
 
-import { BatteryMedium, Camera, Circle, Maximize, Mic, Wifi } from 'lucide-react';
+import { ScanFace, Star } from 'lucide-react';
 import { forwardRef, useEffect, useRef, useState } from 'react';
+import { LogoMark } from '@/components/Header';
 import { gsap } from '@/lib/gsap';
 import DetectionBox from './DetectionBox';
-import { SCENE_COLORS, SCENES } from './scenes';
+import { SCENES } from './scenes';
 import type { VideoClock } from './videoClock';
 
-const DAYS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 const pad = (n: number) => String(n).padStart(2, '0');
 
-/** `EEE dd MMM yyyy · HH:mm:ss` in the viewer's local time. */
-function formatStamp(d: Date) {
-  return `${DAYS[d.getDay()]} ${pad(d.getDate())} ${MONTHS[d.getMonth()]} ${d.getFullYear()} · ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
-}
-
-function Timestamp({ live }: { live: boolean }) {
+/** Live wall-clock time in the viewer's timezone. */
+function Clock({ live }: { live: boolean }) {
   const [now, setNow] = useState<Date | null>(null);
   useEffect(() => {
     setNow(new Date());
@@ -24,20 +19,18 @@ function Timestamp({ live }: { live: boolean }) {
     const id = window.setInterval(() => setNow(new Date()), 1000);
     return () => window.clearInterval(id);
   }, [live]);
-  return (
-    <span className="mono whitespace-nowrap text-[10px] sm:text-[12px]" suppressHydrationWarning>
-      {now ? formatStamp(now) : ' '}
-    </span>
-  );
+  return <span suppressHydrationWarning>{now ? `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}` : '00:00:00'}</span>;
 }
 
-function CamLabel({ clock }: { clock: VideoClock }) {
+/** Text that crossfades whenever the scene changes. */
+function SceneText({ clock, pick }: { clock: VideoClock; pick: (i: number) => string }) {
   const ref = useRef<HTMLSpanElement>(null);
+  const pickRef = useRef(pick);
   useEffect(() => {
     const el = ref.current!;
     let first = true;
     return clock.onScene((i) => {
-      const text = SCENES[i].cam;
+      const text = pickRef.current(i);
       if (first) {
         first = false;
         el.textContent = text;
@@ -45,128 +38,113 @@ function CamLabel({ clock }: { clock: VideoClock }) {
       }
       gsap
         .timeline({ overwrite: true })
-        .to(el, { opacity: 0, duration: 0.1 })
+        .to(el, { opacity: 0, duration: 0.12 })
         .call(() => {
           el.textContent = text;
         })
-        .to(el, { opacity: 1, duration: 0.1 });
+        .to(el, { opacity: 1, duration: 0.18 });
     });
   }, [clock]);
-  return (
-    <span ref={ref} className="truncate">
-      {SCENES[0].cam}
-    </span>
-  );
+  return <span ref={ref}>{pick(0)}</span>;
 }
 
-function ActivityTimeline({ clock, duration }: { clock: VideoClock; duration: number }) {
+function LoopProgress({ clock }: { clock: VideoClock }) {
   const fillRef = useRef<HTMLDivElement>(null);
-  const headRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    return clock.onFrame((t, d) => {
-      const p = Math.min(1, Math.max(0, t / d));
-      if (fillRef.current) fillRef.current.style.transform = `scaleX(${p})`;
-      if (headRef.current) headRef.current.style.transform = `translate3d(${p * 100}%, 0, 0)`;
-    });
-  }, [clock]);
-
+  const knobRef = useRef<HTMLDivElement>(null);
+  useEffect(
+    () =>
+      clock.onFrame((t, d) => {
+        const p = Math.min(1, Math.max(0, t / d));
+        if (fillRef.current) fillRef.current.style.transform = `scaleX(${p})`;
+        if (knobRef.current) knobRef.current.style.transform = `translate3d(${p * 100}%, 0, 0)`;
+      }),
+    [clock],
+  );
   return (
-    <div className="hud-item relative mt-3 h-[3px] w-full rounded-full bg-white/25">
-      <div ref={fillRef} className="absolute inset-0 origin-left rounded-full bg-white/60" style={{ transform: 'scaleX(0)' }} />
-      {SCENES.map((s) => (
-        <span
-          key={s.start}
-          className="absolute top-1/2 h-[7px] w-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full ring-2 ring-black/20"
-          style={{ left: `${(s.start / duration) * 100}%`, background: SCENE_COLORS[s.type] }}
-        />
-      ))}
-      <div ref={headRef} className="absolute inset-0">
-        <span className="absolute left-0 top-1/2 h-[11px] w-[11px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow-[0_0_0_3px_rgba(255,255,255,.25)]" />
+      <div className="hud-item hud-extra relative mt-[3.2cqh] h-[0.8cqh] min-h-[2px] rounded-full bg-white/25">
+        <div ref={fillRef} className="absolute inset-0 origin-left rounded-full bg-white/80" style={{ transform: 'scaleX(0)' }} />
+        <div ref={knobRef} className="absolute inset-0">
+          <span className="absolute left-0 top-1/2 grid h-[4.6cqh] w-[4.6cqh] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white shadow-[0_2px_8px_rgba(0,0,0,.3)]">
+            <span className="h-[1.6cqh] w-[1.6cqh] rounded-full bg-rec" />
+          </span>
+        </div>
       </div>
-    </div>
   );
 }
 
-type Props = {
-  clock: VideoClock;
-  live?: boolean;
-  className?: string;
-};
+/** Top-right status ring: fills once per loop of the feed. */
+function StatusRing({ clock }: { clock: VideoClock }) {
+  const ringRef = useRef<SVGCircleElement>(null);
+  useEffect(
+    () =>
+      clock.onFrame((t, d) => {
+        if (ringRef.current) ringRef.current.style.strokeDashoffset = String(1 - Math.min(1, t / d));
+      }),
+    [clock],
+  );
+  return (
+      <div className="hud-item absolute right-[4.2cqw] top-[6cqh] grid h-[15cqh] w-[15cqh] place-items-center" aria-hidden>
+        <svg viewBox="0 0 40 40" className="absolute inset-0 h-full w-full -rotate-90">
+          <circle cx="20" cy="20" r="17" fill="rgba(0,0,0,.28)" stroke="rgba(255,255,255,.18)" strokeWidth="4" />
+          <circle ref={ringRef} cx="20" cy="20" r="17" fill="none" stroke="var(--live)" strokeWidth="4" strokeLinecap="round" pathLength={1} strokeDasharray="1 1" strokeDashoffset={1} />
+        </svg>
+        <span className="relative text-white" style={{ width: '42%', height: '42%' }}>
+          <LogoMark size="100%" />
+        </span>
+      </div>
+  );
+}
+
+type Props = { clock: VideoClock; live?: boolean; className?: string };
 
 /**
- * Live-feed overlay drawn inside the final frame rectangle (§6).
- * Children marked `.hud-corner` / `.hud-item` are animated by the hero timeline.
+ * Clean live view drawn inside the phone screen: one glass panel (room, time,
+ * who's there, moments) and a status ring, after Apple's Fitness+ overlay.
+ * Children marked `.hud-item` are faded in by the hero timeline.
  */
 const CameraHUD = forwardRef<HTMLDivElement, Props>(function CameraHUD({ clock, live = true, className = '' }, ref) {
-  const duration = SCENES[SCENES.length - 1].end;
   return (
-    <div ref={ref} className={`frame-rect hud pointer-events-none overflow-hidden ${className}`}>
-      <div className="hud-item absolute inset-0" aria-hidden>
-        <div className="frame-grain absolute inset-0" />
-      </div>
-      <div className="hud-item frame-vignette absolute inset-0 rounded-[inherit]" aria-hidden />
-
-      <div aria-hidden className="absolute inset-0">
+    <div ref={ref} className={`frame-rect hud pointer-events-none overflow-hidden ${className}`} aria-hidden>
+      {/* Detection box lives in a 16:9 box matching the video's cover crop */}
+      <div className="detection-wrap absolute left-0 top-1/2 aspect-video w-full -translate-y-1/2">
         <DetectionBox clock={clock} animated={live} />
       </div>
 
-      {/* Viewfinder corners */}
-      <div className="absolute inset-3 sm:inset-[14px]" aria-hidden>
-        <span className="hud-corner tl" />
-        <span className="hud-corner tr" />
-        <span className="hud-corner bl" />
-        <span className="hud-corner br" />
-      </div>
+      <span className="hud-item hud-island" />
+      <StatusRing clock={clock} />
 
-      <div className="absolute inset-3 flex flex-col px-2 pt-2 sm:inset-[18px] sm:px-3 sm:pt-3">
-        {/* Top row */}
-        <div className="flex items-start justify-between gap-3" aria-hidden>
-          <div className="hud-item hud-chip mono min-w-0">
-            <span className="rec-dot shrink-0" />
-            <span className="font-medium">REC</span>
-            <span className="rounded-full bg-leaf px-1.5 py-[2px] text-[10px] font-medium leading-none text-ink [text-shadow:none]">
-              LIVE
-            </span>
-            <span className="h-3.5 w-px shrink-0 bg-white/35" />
-            <span className="min-w-0 normal-case tracking-[0.02em]">
-              <CamLabel clock={clock} />
-            </span>
-          </div>
-          <div className="hud-item hud-chip mono hidden md:inline-flex">
-            <Wifi size={14} strokeWidth={1.5} />
-            <span className="inline-flex items-center gap-1">
-              <BatteryMedium size={16} strokeWidth={1.5} /> 82%
-            </span>
-            <span className="font-medium">HD</span>
-          </div>
+      <div className="hud-item hud-panel absolute left-[6.5cqw] top-[6cqh] w-[27cqw] px-[3.2cqh] py-[3.4cqh]">
+        <div className="flex items-center gap-[1.6cqh] font-semibold text-rec" style={{ fontSize: 'max(9px, 4.6cqh)' }}>
+          <span className="rec-dot inline-block h-[2.4cqh] w-[2.4cqh] min-h-[5px] min-w-[5px]" />
+          LIVE
+          <span className="ml-auto rounded-[1cqh] border border-white/40 px-[1.1cqh] text-white/85" style={{ fontSize: 'max(8px, 3cqh)' }}>
+            HD
+          </span>
         </div>
-
-        <div className="flex-1" />
-
-        {/* Bottom row */}
-        <div className="flex items-end justify-between gap-3">
-          <div className="hud-item hud-chip" aria-hidden>
-            <Timestamp live={live} />
-          </div>
-          <div className="pointer-events-auto flex gap-2">
-            <button type="button" className="hud-item hud-btn hidden md:grid" aria-label="Talk back">
-              <Mic size={17} strokeWidth={1.5} />
-            </button>
-            <button type="button" className="hud-item hud-btn" aria-label="Take snapshot">
-              <Camera size={17} strokeWidth={1.5} />
-            </button>
-            <button type="button" className="hud-item hud-btn hidden md:grid" aria-label="Record clip">
-              <Circle size={17} strokeWidth={1.5} />
-            </button>
-            <button type="button" className="hud-item hud-btn" aria-label="Full screen">
-              <Maximize size={17} strokeWidth={1.5} />
-            </button>
-          </div>
-        </div>
-
-        <div aria-hidden>
-          <ActivityTimeline clock={clock} duration={duration} />
-        </div>
+        <p className="display mt-[1.6cqh] truncate font-semibold leading-[1.05]" style={{ fontSize: 'max(12px, 8.6cqh)', fontStretch: '105%' }}>
+          <SceneText clock={clock} pick={(i) => SCENES[i].cam} />
+        </p>
+        <p className="hud-extra mt-[0.6cqh] truncate text-white/70" style={{ fontSize: 'max(9px, 4.2cqh)' }}>
+          <SceneText clock={clock} pick={(i) => SCENES[i].activity} />
+        </p>
+        <div className="hud-extra my-[2.6cqh] h-px bg-white/20" />
+        <p className="tnum hud-extra font-medium leading-none" style={{ fontSize: 'max(11px, 9cqh)', letterSpacing: '-0.02em' }}>
+          <Clock live={live} />
+        </p>
+        <p className="hud-extra mt-[2cqh] flex items-center gap-[1.4cqh]" style={{ fontSize: 'max(9px, 5cqh)' }}>
+          <ScanFace size="1em" strokeWidth={2} className="text-live" />
+          <SceneText clock={clock} pick={(i) => SCENES[i].label} />
+          <span className="text-white/55" style={{ fontSize: '0.75em' }}>
+            <SceneText clock={clock} pick={(i) => (SCENES[i].type === 'pet' ? 'pet' : 'family')} />
+          </span>
+        </p>
+        <p className="hud-extra mt-[1.2cqh] flex items-center gap-[1.4cqh]" style={{ fontSize: 'max(9px, 5cqh)' }}>
+          <Star size="1em" strokeWidth={2} className="fill-amber text-amber" />3
+          <span className="text-amber" style={{ fontSize: '0.75em' }}>
+            MOMENTS
+          </span>
+        </p>
+        <LoopProgress clock={clock} />
       </div>
     </div>
   );

@@ -1,0 +1,13 @@
+{
+  "name": "alaro-camera-render",
+  "private": true,
+  "description": "Offline three.js model of the Alaro camera, rendered to PNG in headless Chromium.",
+  "scripts": {
+    "serve": "python3 -m http.server 4000 --bind 127.0.0.1"
+  },
+  "dependencies": {
+    "@fontsource/nunito": "^5.0.0",
+    "playwright": "^1.48.0",
+    "three": "0.170.0"
+  }
+}

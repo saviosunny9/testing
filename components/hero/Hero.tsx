@@ -6,9 +6,8 @@ import { useReducedMotion } from '@/lib/useReducedMotion';
 import CameraHUD from './CameraHUD';
 import FilmPlayer from './FilmPlayer';
 import HeroCopy from './HeroCopy';
-import NotificationToasts from './NotificationToasts';
+import PhoneBody from './PhoneBody';
 import PreviewCopy from './PreviewCopy';
-import SonarRings from './SonarRings';
 import { useHeroIntro, useHeroTimeline } from './useHeroTimeline';
 import { VideoClock } from './videoClock';
 
@@ -88,36 +87,32 @@ function AnimatedHero({ onWatchFilm }: { onWatchFilm: () => void }) {
   return (
     <section id="hero" ref={track} className="hero-track" aria-label="Introduction">
       <div ref={stage} className="hero-stage" id="top">
-        <SonarRings className="arm-hidden z-0" />
         <div ref={frameTarget} className="frame-rect frame-target" aria-hidden />
-        <div className="frame-rect frame-shadow arm-hidden z-[5] shadow-[0_40px_80px_-20px_rgba(80,40,10,.35)]" aria-hidden />
+        <PhoneBody className="arm-hidden z-[5]" />
 
-        <div
-          ref={camFrame}
-          className={`cam-frame ${posterHidden ? 'poster-hidden' : ''}`}
-          style={{ backgroundImage: `url(${POSTER})` }}
-        >
-          <video
-            ref={camVideo}
-            className="cam-video intro-hide"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            poster={POSTER}
-            aria-hidden="true"
-          >
-            <source src={SRC_720} type="video/mp4" media="(max-width: 767px)" />
-            <source src={SRC_1080} type="video/mp4" />
-          </video>
+        <div ref={camFrame} className="cam-frame">
+          <div className={`cam-media ${posterHidden ? 'poster-hidden' : ''}`} style={{ backgroundImage: `url(${POSTER})` }}>
+            <video
+              ref={camVideo}
+              className="cam-video intro-hide"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              poster={POSTER}
+              aria-hidden="true"
+            >
+              <source src={SRC_720} type="video/mp4" media="(max-width: 767px)" />
+              <source src={SRC_1080} type="video/mp4" />
+            </video>
+          </div>
           <div className="hero-gradient" />
         </div>
 
         <CameraHUD clock={clock} className="arm-hidden z-20" />
         <HeroCopy onWatchFilm={onWatchFilm} className="absolute inset-0 z-30" />
         <PreviewCopy className="arm-hidden z-30" />
-        <NotificationToasts className="arm-hidden z-30" />
       </div>
     </section>
   );
@@ -125,10 +120,9 @@ function AnimatedHero({ onWatchFilm }: { onWatchFilm: () => void }) {
 
 /* -------------------------------------------------------------------------- */
 
-/** prefers-reduced-motion: static poster hero, then the preview as a normal section (§7). */
+/** prefers-reduced-motion: static colour hero, then the phone preview as its own section. */
 function StaticHero({ onWatchFilm }: { onWatchFilm: () => void }) {
   const clock = useMemo(() => new VideoClock(), []);
-
   return (
     <>
       <section id="hero" data-header-theme="dark" className="relative h-[100svh] overflow-hidden bg-black" aria-label="Introduction">
@@ -139,15 +133,14 @@ function StaticHero({ onWatchFilm }: { onWatchFilm: () => void }) {
         <HeroCopy onWatchFilm={onWatchFilm} className="absolute inset-0" />
       </section>
 
-      <section className="relative h-[100svh] min-h-[680px] overflow-hidden bg-cream" aria-label="Live camera preview">
-        <SonarRings />
-        <div className="frame-rect static-frame z-10">
+      <section className="relative h-[100svh] min-h-[640px] overflow-hidden bg-white" aria-label="Live view preview">
+        <PhoneBody />
+        <div className="frame-rect z-10 overflow-hidden bg-black">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={POSTER} alt="" className="absolute inset-0 h-full w-full object-cover" />
         </div>
         <CameraHUD clock={clock} live={false} className="z-20" />
         <PreviewCopy className="z-30" />
-        <NotificationToasts className="z-30" />
       </section>
     </>
   );

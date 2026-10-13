@@ -1,7 +1,8 @@
-# Alaro: smart home camera site
+# Alaro: smart camera site
 
-Marketing site for **Alaro** (working brand name, set in `lib/brand.ts`). The hero is a full-bleed film that,
-on scroll, shrinks into a framed live camera preview with a security-camera HUD. The full brief is
+Product site for **Alaro** (working brand name, set in `lib/brand.ts`), laid out from the Alaro wireframe with an
+Apple-style white system. The hero is a black-and-white film that turns to colour as you scroll and shrinks into a
+landscape iPhone showing a clean live view of the Alaro app. The original hero brief is
 [`docs/HERO_CONTEXT.md`](docs/HERO_CONTEXT.md).
 
 ```bash
@@ -11,42 +12,50 @@ npm run build      # production build (also runs lint + typecheck)
 ```
 
 Stack: Next.js 15 (App Router) · TypeScript · Tailwind CSS 3 · GSAP 3 (ScrollTrigger, SplitText) · Lenis · lucide-react.
+Type: Archivo (expanded, display) · Geist (text) · Geist Mono.
+
+## Page
+
+1. **Hero**: film in black and white → colour, shrinks into an iPhone with a Fitness+-style live-view panel
+2. **Moments**: "You can't be everywhere", Family / Business bento
+3. **Intelligence**: the camera on a grey band
+4. **Understands**: dark cards: visual intelligence, day digest, "little things" marquee
+5. **Ask Alaro**: working chat demo with suggested questions
+6. **Your space. Your control.**: feature carousel (pan/tilt, app, talk, night vision, privacy)
+7. **Experience + buy**: feature list, colour picker (Graphite, Chalk White, Nuuk Red), add to bag
+8. **Built for the way you use it**: Family / Business
+9. **Built with care**: dark stepper over close-up renders
+10. **FAQ**, **closing CTA**, **footer**
 
 ## Where things live
 
 | Path | What |
 |---|---|
-| `lib/brand.ts` | `BRAND_NAME`, nav links, all hero/preview/toast copy, alternative headlines |
-| `components/hero/Hero.tsx` | Pinned stage markup; reduced-motion static variant |
-| `components/hero/useHeroTimeline.ts` | All GSAP: the scroll timeline (§5.4) and the load-in intro (§4.3) |
-| `components/hero/scenes.ts` | Scene map + detection-box coordinates (percent of frame) |
-| `components/hero/videoClock.ts` | Follows the video playhead (`requestVideoFrameCallback`) and emits scene changes |
-| `components/hero/CameraHUD.tsx`, `DetectionBox.tsx` | Live-feed overlay: REC/LIVE, camera label, timestamp, controls, activity timeline, AI box |
-| `components/hero/SonarRings.tsx`, `NotificationToasts.tsx`, `PreviewCopy.tsx` | End-state pieces around the frame |
-| `components/sections/Sections.tsx` | The rest of the page (§8) |
-| `lib/headerTheme.ts` | Header text colour, derived from what is under the header |
-| `app/globals.css` | Colour tokens, `.frame-rect` (the final 16:9 rectangle), HUD and ring styles |
+| `lib/brand.ts` | `BRAND_NAME`, nav, hero copy, placeholder price |
+| `components/hero/Hero.tsx` | Pinned stage; reduced-motion static variant |
+| `components/hero/useHeroTimeline.ts` | All hero GSAP: scroll timeline and load-in intro |
+| `components/hero/CameraHUD.tsx` | Live-view panel, status ring, Dynamic Island (sized with container units) |
+| `components/hero/PhoneBody.tsx` | iPhone frame around the screen rect |
+| `components/hero/scenes.ts` | Scene map: room, person, activity and detection box per scene |
+| `components/sections/*` | Everything below the hero |
+| `app/globals.css` | Tokens, `.frame-rect` (the phone screen), header states |
+| `tools/camera-render/` | three.js model used to render the product images |
 
 ## How the shrink works
 
-`.frame-rect` (CSS) defines the final rectangle; the HUD, rings, toasts and preview copy all share it.
-On every ScrollTrigger refresh JS reads that rect and:
-
-- animates `.cam-frame`'s `clip-path: inset(... round 28px)` from full screen to the rect, and
-- scales/translates the video (sized as a 16:9 "cover" box) so that at the end it fills the rect exactly.
-  That is what makes the detection-box percentages line up 1:1 with the footage.
-
-Only `transform`, `opacity`, `filter` and `clip-path` are animated. Scrolling back up reverses everything.
+`.frame-rect` (CSS) is the phone's 19.5:9 screen. On every ScrollTrigger refresh JS reads that rect and animates
+`.cam-frame`'s `clip-path` from full screen to it, while scaling the cover-sized 16:9 video so it covers the screen
+exactly. The film's `grayscale()` filter is scrubbed from 1 to 0 over the same stretch. Only `transform`, `opacity`,
+`filter` and `clip-path` are animated, and everything reverses on scroll up.
 
 ## Media
 
-`public/media/hero-{1080,720}.mp4` and `hero-poster.jpg` were encoded from the original `alaro-short.mp4`.
-Scenes 1, 5 and 6 of the source carried 34px letterbox bars; those scenes were cropped and rescaled so
-every frame is full-bleed. `public/media/stills/` holds frames used by the lower sections.
-`docs/reference/video-scenes.jpg` and `detection-boxes.jpg` are regenerated from the final video.
-The brand moodboard referenced in the brief (`docs/reference/moodboard.webp`) was not provided.
+- `public/media/hero-*.mp4`, `hero-poster.jpg`: encoded from `alaro-short.mp4`; scenes 1, 5 and 6 had letterbox bars
+  that were cropped.
+- `public/media/stills/`: frames from the film, colour-graded warm to match the photo direction.
+- `public/media/product/`: 3D renders of the camera (see `tools/camera-render/`).
 
-Placeholder content to replace before launch: price (£89), testimonial names/quotes, footer links.
+Placeholders to replace before launch: price and EMI, specs (2K, 350° pan), delivery and warranty terms, FAQ answers.
 
 ## Static export
 
