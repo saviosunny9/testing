@@ -2,6 +2,7 @@
 
 import { ShoppingBag } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import SoundToggle from '@/components/SoundToggle';
 import { BRAND_NAME, NAV_LINKS } from '@/lib/brand';
 import { getCartCount, subscribeCart } from '@/lib/cart';
 import { getHeaderTheme, subscribeHeaderTheme } from '@/lib/headerTheme';
@@ -131,7 +132,8 @@ export default function Header() {
           <LocalClock />
         </div>
 
-        <div className="flex items-center justify-end gap-2">
+        <div className="flex items-center justify-end gap-1 sm:gap-2">
+          <SoundToggle />
           <a
             href="#buy"
             className="focus-ring pointer-events-auto inline-flex items-center gap-1.5 px-2 text-[15px]"

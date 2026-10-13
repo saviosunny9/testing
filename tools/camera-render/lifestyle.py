@@ -12,7 +12,11 @@ only = set(sys.argv[4:])
 
 
 def load(n):
-    return cv2.imread(f'{src}/{n}.jpg')
+    for ext in ('jpg', 'png', 'webp'):
+        img = cv2.imread(f'{src}/{n}.{ext}')
+        if img is not None:
+            return img
+    raise FileNotFoundError(n)
 
 
 def inpaint(img, mask, r=7):
@@ -63,6 +67,15 @@ def repaint_plain(img, mask):
     return out
 
 
+def match_tone(img, mask, ring=25, feather=21):
+    """Scale a patched region so its colour matches the band just outside it (feathered)."""
+    outer = cv2.dilate(mask, np.ones((ring, ring), np.uint8)) & ~mask
+    f = img.astype(float)
+    gain = f[outer > 0].mean(axis=0) / np.maximum(f[mask > 0].mean(axis=0), 1)
+    w = cv2.GaussianBlur((mask > 0).astype(float), (feather, feather), 0)[..., None]
+    return np.clip(f * (1 + (gain - 1) * w), 0, 255).astype(np.uint8)
+
+
 def text_mask(img, box, keep=lambda b, g, r: False, thresh=40):
     """Pixels inside box that differ from the label's (light) ground: printed text and logos."""
     x0, y0, x1, y1 = box
@@ -76,7 +89,7 @@ def text_mask(img, box, keep=lambda b, g, r: False, thresh=40):
     return cv2.dilate(m, np.ones((3, 3), np.uint8))
 
 
-def place(img, render, cx, base_y, height, warm=0.0, expo=1.0, shadow=1.0, blur=0.0, sat=1.0):
+def place(img, render, cx, base_y, height, warm=0.0, expo=1.0, shadow=1.0, blur=0.0, sat=1.0, shadow_rgb=None):
     """Composite a transparent render: product bottom at base_y, product height in px."""
     bg = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
     im = Image.open(render).convert('RGBA')
@@ -89,7 +102,11 @@ def place(img, render, cx, base_y, height, warm=0.0, expo=1.0, shadow=1.0, blur=
     im = im.resize((round(im.width * s), round(im.height * s)), Image.LANCZOS)
     pl, pt, pr, pb = [round(v * s) for v in (pl, pt, pr, pb)]
     r, g, b, a = im.split()
-    a = a.point(lambda v: min(255, int(v * 1.9 * shadow)) if v < 70 else v)
+    # shadow pixels (black, partly transparent) get a smooth gain; the product itself is untouched
+    arr = np.array(Image.merge('RGBA', (r, g, b, a))).astype(float)
+    sh = (arr[..., :3].sum(axis=2) < 12) & (arr[..., 3] < 250)
+    arr[sh, 3] = np.clip(arr[sh, 3] * 1.6 * shadow, 0, 255)
+    r, g, b, a = Image.fromarray(arr.astype(np.uint8)).split()
     rgb = Image.merge('RGB', (r, g, b))
     rgb = ImageEnhance.Brightness(rgb).enhance(expo)
     rgb = ImageEnhance.Color(rgb).enhance(sat)
@@ -98,6 +115,11 @@ def place(img, render, cx, base_y, height, warm=0.0, expo=1.0, shadow=1.0, blur=
     g = g.point(lambda v: min(255, int(v * (1 + 0.015 * warm))))
     b = b.point(lambda v: int(v * (1 - 0.10 * warm)))
     im = Image.merge('RGBA', (r, g, b, a))
+    if shadow_rgb:
+        # sunlit surfaces darken warm, not grey: tint the shadow pixels
+        arr = np.array(im)
+        arr[sh, :3] = shadow_rgb
+        im = Image.fromarray(arr)
     if blur:
         im = im.filter(ImageFilter.GaussianBlur(blur))
     bg.paste(im, (cx - (pl + pr) // 2, base_y - pb), im)
@@ -177,6 +199,31 @@ def playroom():
     img = load(11)
     img = place(img, R(11), 958, 240, 64, warm=1.4, expo=1.0, shadow=0.9)
     save(grain(img, 2.0), 'playroom', 1200)
+
+
+@scene
+def table():
+    """15: another brand's camera on a sunlit table becomes Alaro (its long shadow is kept)."""
+    img = load(15)
+    m = poly_mask(img, [(412, 432), (590, 432), (600, 452), (600, 706), (598, 760), (602, 790), (590, 806), (412, 806),
+                        (400, 790), (404, 760), (402, 706), (402, 452)])
+    img = inpaint(img, cv2.dilate(m, np.ones((9, 9), np.uint8)), 13)
+    img = place(img, R(15), 501, 801, 366, warm=0.8, expo=1.02, shadow=0.25)
+    save(grain(img, 2.2), 'table', 1024)
+
+
+@scene
+def wall():
+    """16: another brand's camera and its shadow are patched out of the wall; Alaro on its wall shelf."""
+    img = load(16)
+    m = poly_mask(img, [(380, 560), (420, 540), (500, 545), (540, 575), (600, 600), (618, 660), (612, 760),
+                        (606, 840), (560, 850), (520, 820), (505, 760), (480, 700), (390, 700), (378, 640)])
+    m = cv2.dilate(m, np.ones((11, 11), np.uint8))
+    patch = np.roll(img, 300, axis=0)  # stucco from higher up the same wall
+    img = cv2.seamlessClone(patch, img, m, (500, 695), cv2.NORMAL_CLONE)
+    img = match_tone(img, m)
+    img = place(img, R(16), 478, 712, 236, warm=1.2, expo=1.04, shadow=0.8, shadow_rgb=(84, 50, 26))
+    save(grain(img, 2.2), 'wall', 736)
 
 
 for name, fn in scenes.items():

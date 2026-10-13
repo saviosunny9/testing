@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ScrollTrigger } from '@/lib/gsap';
+import { registerFilm } from '@/lib/heroSound';
 import { useReducedMotion } from '@/lib/useReducedMotion';
 import CameraHUD from './CameraHUD';
 import FilmPlayer from './FilmPlayer';
@@ -79,9 +80,11 @@ function AnimatedHero({ onWatchFilm }: { onWatchFilm: () => void }) {
     v.addEventListener('playing', onPlaying);
     if (!v.paused && v.readyState >= 3) setPosterHidden(true);
     clock.attach(v);
+    registerFilm(v);
     return () => {
       v.removeEventListener('playing', onPlaying);
       clock.detach();
+      registerFilm(null);
     };
   }, [clock]);
 

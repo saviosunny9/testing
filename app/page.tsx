@@ -12,6 +12,7 @@ import Moments from '@/components/sections/Moments';
 import PageEffects from '@/components/sections/PageEffects';
 import ProductJourney from '@/components/sections/ProductJourney';
 import ProductTiles from '@/components/sections/ProductTiles';
+import Placement from '@/components/sections/Placement';
 import Understands from '@/components/sections/Understands';
 
 export default function Page() {
@@ -25,6 +26,7 @@ export default function Page() {
         <Moments />
         <AppShowcase />
         <ProductTiles />
+        <Placement />
         <AtHome />
         <Evening />
         <Understands />

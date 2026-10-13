@@ -232,15 +232,38 @@ scene.add(ground);
   c.fillStyle = g; c.fillRect(0, 0, 256, 256);
   const m = new THREE.Mesh(new THREE.PlaneGeometry(BASE_R * 2.6, BASE_R * 2.6), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(cv), transparent: true, depthWrite: false }));
   m.rotation.x = -Math.PI / 2; m.position.y = 0.01;
+  m.visible = P.get('mount') !== 'wall';
   scene.add(m);
 }
 
 const key = new THREE.DirectionalLight(0xffffff, DARK ? 2.2 : 2.4);
-key.position.set(+(P.get('keyx') || -14), +(P.get('keyy') || 22), 12); key.castShadow = true;
-key.shadow.mapSize.set(512, 512); key.shadow.radius = 10; key.shadow.blurSamples = 32; key.shadow.bias = -0.0004;
+key.position.set(+(P.get('keyx') || -14), +(P.get('keyy') || 22), +(P.get('keyz') || 12)); key.castShadow = true;
+key.shadow.mapSize.set(512, 512); key.shadow.radius = +(P.get('soft') || 10); key.shadow.blurSamples = 32; key.shadow.bias = -0.0004;
 Object.assign(key.shadow.camera, { left: -24, right: 24, top: 24, bottom: -24, near: 5, far: 80 });
 // a finite ground so nothing beyond the shadow camera catches stray VSM bleed
 ground.geometry = new THREE.CircleGeometry(30, 96);
+
+// mount=wall: the camera stands on its small wall shelf, in front of a shadow-catching wall
+if (P.get('mount') === 'wall') {
+  ground.visible = false;
+  const WALL_Z = -(BASE_R + 1.1);
+  const shelfMat = body;
+  const shelf = mesh(new THREE.CylinderGeometry(BASE_R + 0.5, BASE_R + 0.5, 0.45, 96), shelfMat);
+  shelf.position.set(0, -0.24, -0.4);
+  scene.add(shelf);
+  const arm = mesh(new THREE.BoxGeometry(1.5, 0.45, BASE_R + 0.8), shelfMat);
+  arm.position.set(0, -0.24, WALL_Z + (BASE_R + 0.8) / 2);
+  scene.add(arm);
+  const brace = mesh(new THREE.BoxGeometry(1.0, 2.6, 0.9), shelfMat);
+  brace.position.set(0, -1.6, WALL_Z + 0.45);
+  scene.add(brace);
+  const plate = mesh(new THREE.BoxGeometry(2.4, 3.6, 0.3), shelfMat);
+  plate.position.set(0, -1.4, WALL_Z + 0.15);
+  scene.add(plate);
+  const wall = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.ShadowMaterial({ opacity: +(P.get('wallshadow') || 0.32) }));
+  wall.position.z = WALL_Z; wall.receiveShadow = true;
+  scene.add(wall);
+}
 scene.add(key);
 const fill = new THREE.DirectionalLight(0xffffff, DARK ? 0.15 : 0.6); fill.position.set(16, 8, 10); scene.add(fill);
 const rimL = new THREE.DirectionalLight(0xffffff, DARK ? 3.2 : 0.8); rimL.position.set(10, 14, -16); scene.add(rimL);

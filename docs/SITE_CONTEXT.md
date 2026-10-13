@@ -133,6 +133,7 @@ npm run export       # static site in out/ with relative URLs (see section 9)
 | 5 | Captured on Alaro: moments bento, For family / For business word-tabs | `sections/Moments.tsx` | `#moments` | white |
 | 6 | App showcase: realistic tilted phone | `sections/AppShowcase.tsx` | `#app` | white |
 | 7 | Colour tiles | `sections/ProductTiles.tsx` | `#colours` | white with neutral tiles |
+| 7b | Placement: "Stand it up. Or mount it." two photos (table, wall mount) with `[ 01 ]` hairline captions | `sections/Placement.tsx` | `#placement` | white |
 | 8 | At home: the camera in five real rooms (living room, reading corner, playroom, kitchen, bedroom) | `sections/AtHome.tsx` | `#at-home` | white |
 | 8b | Evening band: wide lamp-lit living-room photo, mono label, the camera tagged `[ ALARO ]` | `sections/Evening.tsx` | | white |
 | 9 | Understands | `sections/Understands.tsx` | | forest |
@@ -229,9 +230,10 @@ Nav: Products (`#buy`), For Home (`#moments`), For Business (`#choose`), Design 
 |---|---|
 | `hero-1080.mp4`, `hero-720.mp4`, `hero-poster.jpg` | the client film, re-encoded (letterbox cropped) |
 | `stills/*.jpg` | warm-graded frames from the film |
+| `audio/hero-music.mp3`, `audio/hero-voice.mp3` | the hero's sound: an original ambient loop (F maj9 – E m7 – D m9 – C add9 at ~63 bpm, exactly the film's 15.28 s) and a voiceover story timed to the film's scenes (Piper "en_US-joe-medium", CC0 voice). Built by `tools/audio/build_audio.py`. **Placeholder voice: swap in a professional recording for launch.** |
 | `moments/*` | 2–3 s loops cut from the film for the hero tiles (webm VP9 + mp4 H.264 + poster), ~1.3 MB total |
 | `product/front-*.webp`, `three4-white`, `pan-left-white`, `pan-right-white`, `rear-red` | transparent renders of the model |
-| `life/*.jpg` | lifestyle photos with the camera composited in. `lounge`, `evening`, `playroom`, `kitchen-family` and `companion` come from the client's reference photography via `tools/camera-render/lifestyle.py`, which also removes other brands' products (a robot vacuum and dock, a speaker, a sunscreen stick, a spray bottle's label, a pet-food bag and frame). `bedroom` is a film composite; `shop-*` are 3D scenes. **Check usage rights for the client photos before launch.** |
+| `life/*.jpg` | lifestyle photos with the camera composited in. `lounge`, `evening`, `playroom`, `kitchen-family` and `companion` come from the client's reference photography via `tools/camera-render/lifestyle.py`, which also removes other brands' products (a robot vacuum and dock, a speaker, a sunscreen stick, a spray bottle's label, a pet-food bag and frame). `table` and `wall` replace another brand's camera in two product photos (the wall mount is rendered with `mount=wall`). `bedroom` is a film composite; `shop-*` are 3D scenes. **Check usage rights for the client photos before launch.** |
 | `app/fonts/switzer/*` | Switzer web fonts + licence note |
 
 **Why the model is our own (first-draft brief, §4):**
@@ -290,3 +292,22 @@ cd out && python3 -m http.server 8080   # then open http://localhost:8080
 ```
 
 The live preview is that export wrapped in a full-screen iframe page on claude.ai.
+
+
+## Sound (hero)
+
+- **Toggle:** the header's music icon (`components/SoundToggle.tsx`): four bars that move while sound is on. Off by default; browsers only allow audio to start from a click.
+- **Engine:** `lib/heroSound.ts`, Web Audio. The music loops sample-exactly on the film length; the voice plays once.
+- **Sync:** turning sound on restarts the film, so the story begins at its first scene. The music ducks to 50% while the voice speaks.
+- **Off and away:**
+  - turning sound off fades out in 0.45 s
+  - the audio pauses while the tab is hidden
+  - a story cut off part-way starts again next time; once it has finished, only the music plays
+- **Voiceover script** (film time → line):
+  - 0.5 "Home is made of little moments."
+  - 3.0 "Game nights that run late."
+  - 5.1 "Wishes, made over candles."
+  - 7.6 "Stories before bed."
+  - 10.1 "And first flights, across the kitchen."
+  - 13.3 "Alaro keeps them close." (spelled "Alahro" for the voice: uh-LAH-roh)
+  - 15.6 "Even when you're away."
