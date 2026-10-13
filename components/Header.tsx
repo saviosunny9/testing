@@ -84,7 +84,7 @@ export default function Header() {
       data-theme={theme}
       data-menu={open ? 'open' : 'closed'}
     >
-      <div className="header-shade pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/30 to-transparent" />
+      <div className="header-shade pointer-events-none absolute inset-x-0 top-2 h-28 bg-gradient-to-b from-black/30 to-transparent" />
 
       {/* Full-screen menu */}
       <div

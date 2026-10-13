@@ -407,7 +407,14 @@ html.lenis body {
   top: 0;
   height: 100svh;
   overflow: hidden;
+  --hero-gap: 8px;
   background: linear-gradient(180deg, #e3e7e9 0%, #eef0f1 55%, #fafafa 100%);
+}
+/* white margin around the film while it plays; it fades away as the film closes into the camera */
+.hero-canvas {
+  position: absolute;
+  inset: 0;
+  background: #fff;
 }
 /* giant wordmark behind the final composition, white on the cool gradient */
 .hero-word {
@@ -428,9 +435,10 @@ html.lenis body {
 
 .cam-frame {
   position: absolute;
-  inset: 0;
+  inset: var(--hero-gap, 0px);
   z-index: 10;
   overflow: hidden;
+  border-radius: 4px;
   background: #000;
 }
 .cam-media {
@@ -458,6 +466,7 @@ html.lenis body {
 .hero-gradient {
   position: absolute;
   inset: auto 0 0 0;
+  border-radius: inherit;
   height: 55vh;
   background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.62));
   pointer-events: none;

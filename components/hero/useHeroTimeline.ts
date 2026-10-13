@@ -31,11 +31,13 @@ export function useHeroTimeline({ track, stage, frameTarget, camFrame, camVideo 
     const ctx = gsap.context(() => {
       const q = gsap.utils.selector(stageEl);
 
-      /** The camera's glass face (an ellipse), relative to the stage. */
+      /** The camera's glass face (an ellipse), in the film frame's own coordinates (the frame is inset from the stage). */
       const face = () => {
         const s = stageEl.getBoundingClientRect();
         const f = targetEl.getBoundingClientRect();
-        return { x: f.left - s.left + f.width / 2, y: f.top - s.top + f.height / 2, rx: f.width / 2, ry: f.height / 2 };
+        const ox = frameEl.offsetLeft;
+        const oy = frameEl.offsetTop;
+        return { x: f.left - s.left + f.width / 2 - ox, y: f.top - s.top + f.height / 2 - oy, rx: f.width / 2, ry: f.height / 2 };
       };
 
       /**
@@ -46,11 +48,13 @@ export function useHeroTimeline({ track, stage, frameTarget, camFrame, camVideo 
       let geo = { W: 0, H: 0, x: 0, y: 0, rx: 0, ry: 0, r0: 0, vl: 0, vt: 0, vw: 1, vh: 1 };
       const measure = () => {
         const f = face();
+        const W = frameEl.clientWidth;
+        const H = frameEl.clientHeight;
         geo = {
-          W: stageEl.clientWidth,
-          H: stageEl.clientHeight,
+          W,
+          H,
           ...f,
-          r0: Math.hypot(Math.max(f.x, stageEl.clientWidth - f.x), Math.max(f.y, stageEl.clientHeight - f.y)) * 1.02,
+          r0: Math.hypot(Math.max(f.x, W - f.x), Math.max(f.y, H - f.y)) * 1.02,
           vl: videoEl.offsetLeft,
           vt: videoEl.offsetTop,
           vw: videoEl.offsetWidth || 1,
@@ -176,6 +180,8 @@ export function useHeroTimeline({ track, stage, frameTarget, camFrame, camVideo 
         .fromTo(q('.cam-glass'), { opacity: 0 }, { opacity: 1, duration: 0.1, ease: 'power1.out' }, 0.4)
         .fromTo(media, { scale: 1 }, { scale: 0.86, duration: 0.12, ease: 'power2.in' }, 0.62)
         .fromTo(frameEl, { opacity: 1 }, { opacity: 0, duration: 0.12, ease: 'power2.in' }, 0.62)
+        // the white margin gives way to the stage's ground once the film has closed
+        .fromTo(q('.hero-canvas'), { opacity: 1 }, { opacity: 0, duration: 0.12, ease: 'power1.inOut' }, 0.52)
         .to(q('.cam-glass'), { opacity: 0, duration: 0.1, ease: 'power1.in' }, 0.66)
         .fromTo(q('.hero-cam-dot'), { opacity: 0 }, { opacity: 1, duration: 0.05, ease: 'power1.out' }, 0.72)
         .fromTo(q('.preview-item'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: 0.03, duration: 0.14, ease: 'power2.out' }, 0.66)

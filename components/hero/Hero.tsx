@@ -86,6 +86,7 @@ function AnimatedHero({ onWatchFilm }: { onWatchFilm: () => void }) {
   return (
     <section id="hero" ref={track} className="hero-track" aria-label="Introduction">
       <div ref={stage} className="hero-stage" id="top">
+        <div className="hero-canvas" aria-hidden />
         <span className="hero-word arm-hidden z-[1]" aria-hidden>
           alaro
         </span>
@@ -127,11 +128,13 @@ function AnimatedHero({ onWatchFilm }: { onWatchFilm: () => void }) {
 function StaticHero({ onWatchFilm }: { onWatchFilm: () => void }) {
   return (
     <>
-      <section id="hero" data-header-theme="dark" className="relative h-[100svh] overflow-hidden bg-black" aria-label="Introduction">
+      <section id="hero" data-header-theme="dark" className="relative h-[100svh] overflow-hidden bg-white" aria-label="Introduction">
         <span id="top" />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={POSTER} alt="" className="absolute inset-0 h-full w-full object-cover" />
-        <div className="hero-gradient" />
+        <div className="absolute inset-[8px] overflow-hidden rounded-[4px] bg-black">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={POSTER} alt="" className="absolute inset-0 h-full w-full object-cover" />
+          <div className="hero-gradient" />
+        </div>
         <HeroCopy onWatchFilm={onWatchFilm} className="absolute inset-0" />
       </section>
 

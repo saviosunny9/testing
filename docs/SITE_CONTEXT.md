@@ -151,7 +151,7 @@ Nav: Products (`#buy`), For Home (`#moments`), For Business (`#choose`), Design 
 
 ### Hero (`components/hero/`)
 
-**Opening:** a full-bleed film, grainy and black and white, with the bottom-row copy (eyebrow, H1 "The intelligence / behind your space." with the second line at 55% white, Watch the film / Buy Alaro, description) and an intro character reveal.
+**Opening:** a film in an 8px white frame (`.cam-frame`, inset by `--hero-gap`; the white `.hero-canvas` behind it fades out as the film closes into the camera), grainy and black and white, with the bottom-row copy (eyebrow, H1 "The intelligence / behind your space." with the second line at 55% white, Watch the film / Buy Alaro, description) and an intro character reveal.
 
 **Scroll timeline** (`useHeroTimeline.ts`): one ScrollTrigger over a 360vh track (300vh on mobile).
 
