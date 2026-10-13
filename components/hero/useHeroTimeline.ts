@@ -56,8 +56,25 @@ export function useHeroTimeline({ track, stage, frameTarget, camFrame, camVideo 
       const tiles = q('.moment-tile');
       /** Offset that pulls a tile toward the stage centre (it starts hidden under the big film). */
       const pull = (axis: 'x' | 'y') => (_i: number, el: HTMLElement) => {
-        const c = axis === 'x' ? el.offsetLeft + el.offsetWidth / 2 - stageEl.clientWidth / 2 : el.offsetTop + el.offsetHeight / 2 - stageEl.clientHeight / 2;
+        // offsets (not rects) so transforms already applied don't skew it; tiles sit inside a zone
+        const zone = el.parentElement!;
+        const c =
+          axis === 'x'
+            ? zone.offsetLeft + el.offsetLeft + el.offsetWidth / 2 - stageEl.clientWidth / 2
+            : zone.offsetTop + el.offsetTop + el.offsetHeight / 2 - stageEl.clientHeight / 2;
         return -c * 0.42;
+      };
+
+      // The tiles' clips load on first play and only run while the tiles are showing.
+      const clips = q('.moment-video') as HTMLVideoElement[];
+      let clipsOn = false;
+      const setClips = (on: boolean) => {
+        if (on === clipsOn) return;
+        clipsOn = on;
+        clips.forEach((v) => {
+          if (on) void v.play().catch(() => {});
+          else v.pause();
+        });
       };
 
       gsap.set(frameEl, { clipPath: 'inset(0px 0px 0px 0px round 0px)' });
@@ -80,8 +97,12 @@ export function useHeroTimeline({ track, stage, frameTarget, camFrame, camVideo 
           end: 'bottom bottom',
           scrub: 0.8,
           invalidateOnRefresh: true,
-          onUpdate: (self) => setHeroProgress(self.progress),
+          onUpdate: (self) => {
+            setHeroProgress(self.progress);
+            setClips(self.progress > 0.12);
+          },
           onToggle: (self) => {
+            setClips(self.progress > 0.12);
             frameEl.style.willChange = self.isActive ? 'clip-path' : '';
             videoEl.style.willChange = self.isActive ? 'transform' : '';
           },
@@ -137,8 +158,13 @@ export function useHeroTimeline({ track, stage, frameTarget, camFrame, camVideo 
 
       // Pause the video while the hero is out of view.
       const io = new IntersectionObserver(([entry]) => {
-        if (entry.isIntersecting) void videoEl.play().catch(() => {});
-        else videoEl.pause();
+        if (entry.isIntersecting) {
+          void videoEl.play().catch(() => {});
+          setClips((tl.scrollTrigger?.progress ?? 0) > 0.12);
+        } else {
+          videoEl.pause();
+          setClips(false);
+        }
       });
       io.observe(trackEl);
 

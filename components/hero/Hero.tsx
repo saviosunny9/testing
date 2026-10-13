@@ -139,11 +139,11 @@ function StaticHero({ onWatchFilm }: { onWatchFilm: () => void }) {
         <HeroCopy onWatchFilm={onWatchFilm} className="absolute inset-0" />
       </section>
 
-      <section className="relative h-[100svh] min-h-[700px] overflow-hidden bg-paper" aria-label="The Alaro app">
+      <section className="hero-geo relative h-[100svh] min-h-[700px] overflow-hidden bg-paper" aria-label="The Alaro app">
         <span className="hero-word" aria-hidden>
           alaro
         </span>
-        <MomentTiles />
+        <MomentTiles video={false} />
         <PhoneBody />
         <div className="frame-rect z-10 overflow-hidden bg-black">
           {/* eslint-disable-next-line @next/next/no-img-element */}

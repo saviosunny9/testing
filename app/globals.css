@@ -506,7 +506,6 @@ html.lenis body {
 /* The phone's screen in the final state: a portrait 9:19.5 iPhone display.
    JS reads this rect; the phone body, HUD and caption share it. */
 .frame-rect {
-  --ph: min(62svh, 640px);
   position: absolute;
   left: 50%;
   top: 44%;
@@ -514,12 +513,6 @@ html.lenis body {
   width: calc(var(--ph) * 9 / 19.5);
   transform: translate(-50%, -50%);
   border-radius: calc(var(--ph) * 0.068);
-}
-@media (max-width: 767px) {
-  .frame-rect {
-    --ph: min(54svh, 520px);
-    top: 44%;
-  }
 }
 .frame-target {
   visibility: hidden;
@@ -579,8 +572,31 @@ html.lenis body {
   }
 }
 
-/* Moments that gather around the phone. Positions come from CSS custom properties so desktop and
-   mobile layouts can differ without extra markup. */
+/* Moments that gather around the phone, in two zones either side of the phone + caption column.
+   --cw is that column's width: tiles can never reach the phone or the caption. Inside a zone,
+   positions are % of the zone, so they scale together on every screen. */
+.hero-stage,
+.hero-geo {
+  --ph: min(62svh, 640px);
+  --cw: max(calc(var(--ph) * 9 / 19.5 + 10rem), 34rem, 36vw);
+  --zone-top: max(5.5rem, 10svh);
+}
+.moment-zone {
+  position: absolute;
+  top: var(--zone-top);
+  bottom: 4svh;
+  /* capped so the zone stays tall relative to its width and the tiles never stack into each other */
+  width: min(calc(50% - var(--cw) / 2 - clamp(1.25rem, 3vw, 4rem)), 56svh);
+}
+.moment-zone-left {
+  right: calc(50% + var(--cw) / 2);
+}
+.moment-zone-right {
+  left: calc(50% + var(--cw) / 2);
+}
+.preview-col {
+  width: min(92vw, calc(var(--cw) - 2rem));
+}
 .moment-tile {
   position: absolute;
   left: var(--x);
@@ -592,7 +608,26 @@ html.lenis body {
   background: var(--paper-2);
   box-shadow: 0 30px 50px -34px rgba(13, 14, 13, 0.45);
 }
-@media (max-width: 767px) {
+/* Phones and portrait tablets: no room beside the phone, so tiles tuck behind its edges and stay
+   inside its height, clear of the caption underneath. */
+@media (max-width: 767px), (orientation: portrait) and (max-width: 1100px) {
+  .hero-stage,
+  .hero-geo {
+    --cw: 40rem;
+  }
+  .moment-zone {
+    top: calc(44% - var(--ph) / 2);
+    bottom: auto;
+    height: var(--ph);
+    width: 50%;
+  }
+  .moment-zone-left {
+    left: 0;
+    right: auto;
+  }
+  .moment-zone-right {
+    left: 50%;
+  }
   .moment-tile {
     left: var(--mx, var(--x));
     top: var(--my, var(--y));
@@ -602,7 +637,15 @@ html.lenis body {
     display: none;
   }
 }
-.moment-tile img {
+@media (max-width: 767px) {
+  .hero-stage,
+  .hero-geo {
+    --ph: min(54svh, 520px);
+  }
+}
+.moment-tile img,
+.moment-tile video {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
