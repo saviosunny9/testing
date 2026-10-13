@@ -10,6 +10,7 @@ const jakarta = Plus_Jakarta_Sans({
   weight: ['300', '400', '500', '600', '700'],
   variable: '--font-jakarta',
   display: 'swap',
+  preload: false,
 });
 
 const instrument = Instrument_Serif({
@@ -18,6 +19,7 @@ const instrument = Instrument_Serif({
   style: 'italic',
   variable: '--font-instrument',
   display: 'swap',
+  preload: false,
 });
 
 const mono = JetBrains_Mono({
@@ -25,6 +27,7 @@ const mono = JetBrains_Mono({
   weight: ['400', '500'],
   variable: '--font-mono',
   display: 'swap',
+  preload: false,
 });
 
 export const metadata: Metadata = {

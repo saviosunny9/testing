@@ -47,3 +47,9 @@ every frame is full-bleed. `public/media/stills/` holds frames used by the lower
 The brand moodboard referenced in the brief (`docs/reference/moodboard.webp`) was not provided.
 
 Placeholder content to replace before launch: price (£89), testimonial names/quotes, footer links.
+
+## Static export
+
+`npm run export` writes a self-contained static copy to `out/` with relative asset URLs and fonts
+inlined (`scripts/relativize-export.mjs`), so it can be hosted from any sub-path. Serve `out/` with any static file
+server.
