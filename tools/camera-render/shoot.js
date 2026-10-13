@@ -10,5 +10,7 @@ const { chromium } = require('playwright');
   await page.goto('http://127.0.0.1:' + (process.env.PORT || 4000) + '/' + (process.env.PAGE || 'render.html') + '?' + q);
   await page.waitForFunction(() => window.__done === true, null, { timeout: 180000 });
   await page.locator('canvas').screenshot({ path: out, omitBackground: true });
+  const meta = await page.evaluate(() => window.__meta);
+  if (meta) require('fs').writeFileSync(out.replace(/\.png$/, '.json'), JSON.stringify(meta, null, 1));
   await browser.close();
 })();

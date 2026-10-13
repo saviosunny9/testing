@@ -17,7 +17,7 @@ const wait = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
 /**
  * The scroll interaction (§5): one ScrollTrigger scrubbing a master timeline
- * that turns the full-bleed film into the framed live camera preview.
+ * that closes the full-bleed film into the Alaro camera's glass face.
  */
 export function useHeroTimeline({ track, stage, frameTarget, camFrame, camVideo }: HeroRefs, enabled: boolean) {
   useEffect(() => {
@@ -31,26 +31,49 @@ export function useHeroTimeline({ track, stage, frameTarget, camFrame, camVideo 
     const ctx = gsap.context(() => {
       const q = gsap.utils.selector(stageEl);
 
-      /** The final rect as an inset() relative to the stage. */
-      const clipTarget = () => {
+      /** The camera's glass face (an ellipse), relative to the stage. */
+      const face = () => {
         const s = stageEl.getBoundingClientRect();
         const f = targetEl.getBoundingClientRect();
-        const r = parseFloat(getComputedStyle(targetEl).borderTopLeftRadius) || 28;
-        return `inset(${f.top - s.top}px ${s.right - f.right}px ${s.bottom - f.bottom}px ${f.left - s.left}px round ${r}px)`;
+        return { x: f.left - s.left + f.width / 2, y: f.top - s.top + f.height / 2, rx: f.width / 2, ry: f.height / 2 };
       };
 
-      /** Transform that makes the (16:9, cover-sized) video cover the phone screen exactly. */
-      const fit = () => {
-        const s = stageEl.getBoundingClientRect();
-        const f = targetEl.getBoundingClientRect();
-        const w = videoEl.offsetWidth;
-        const h = videoEl.offsetHeight;
-        return {
-          scale: Math.max(f.width / w, f.height / h),
-          x: f.left - s.left + f.width / 2 - (videoEl.offsetLeft + w / 2),
-          y: f.top - s.top + f.height / 2 - (videoEl.offsetTop + h / 2),
+      /**
+       * The aperture: one value k (0 → 1) drives both the ellipse the film is clipped to and the film's own
+       * transform, so the film always covers whatever part of the ellipse is on screen (no letterboxing).
+       */
+      const ap = { k: 0 };
+      let geo = { W: 0, H: 0, x: 0, y: 0, rx: 0, ry: 0, r0: 0, vl: 0, vt: 0, vw: 1, vh: 1 };
+      const measure = () => {
+        const f = face();
+        geo = {
+          W: stageEl.clientWidth,
+          H: stageEl.clientHeight,
+          ...f,
+          r0: Math.hypot(Math.max(f.x, stageEl.clientWidth - f.x), Math.max(f.y, stageEl.clientHeight - f.y)) * 1.02,
+          vl: videoEl.offsetLeft,
+          vt: videoEl.offsetTop,
+          vw: videoEl.offsetWidth || 1,
+          vh: videoEl.offsetHeight || 1,
         };
       };
+      const aperture = () => {
+        const { k } = ap;
+        const g = geo;
+        const rx = g.r0 + (g.rx - g.r0) * k;
+        const ry = g.r0 + (g.ry - g.r0) * k;
+        frameEl.style.clipPath = `ellipse(${rx}px ${ry}px at ${g.x}px ${g.y}px)`;
+        // the visible part of the ellipse: its box, cut to the stage
+        const l = Math.max(0, g.x - rx), r = Math.min(g.W, g.x + rx);
+        const t = Math.max(0, g.y - ry), b = Math.min(g.H, g.y + ry);
+        const scale = Math.max((r - l) / g.vw, (b - t) / g.vh) * (1.06 - 0.06 * k);
+        gsap.set(videoEl, {
+          scale,
+          x: (l + r) / 2 - (g.vl + g.vw / 2),
+          y: (t + b) / 2 - (g.vt + g.vh / 2),
+        });
+      };
+      measure();
 
       const media = q('.cam-media');
       const tiles = q('.moment-tile');
@@ -77,16 +100,22 @@ export function useHeroTimeline({ track, stage, frameTarget, camFrame, camVideo 
         });
       };
 
-      gsap.set(frameEl, { clipPath: 'inset(0px 0px 0px 0px round 0px)' });
       // Explicit start states: invalidateOnRefresh re-records staggered fromTo children,
       // so they must already be at their "from" values before the timeline exists.
-      gsap.set(videoEl, { scale: 1.06, x: 0, y: 0 });
+      aperture();
       gsap.set(media, { filter: 'grayscale(1) contrast(1.12) brightness(0.9)' });
       gsap.set(q('.film-grain'), { opacity: 0.55 });
-      gsap.set(q('.phone-body'), { opacity: 0 });
       gsap.set(q('.hero-word'), { opacity: 0, yPercent: 12 });
+      gsap.set(q('.hero-cam-img'), { scale: 1.25 });
+      gsap.set(q('.cam-glass'), { opacity: 0 });
+      gsap.set(q('.hero-cam-dot'), { opacity: 0 });
+      // the film dissolves into the glass from the face's centre
+      const setOrigin = () => {
+        const f = face();
+        gsap.set(media, { transformOrigin: `${f.x}px ${f.y}px` });
+      };
+      setOrigin();
       gsap.set(tiles, { opacity: 0, scale: 1.18, x: pull('x'), y: pull('y') });
-      gsap.set(q('.hud-item'), { opacity: 0, y: 6 });
       gsap.set(q('.preview-item'), { opacity: 0, y: 20 });
 
       const tl = gsap.timeline({
@@ -132,14 +161,9 @@ export function useHeroTimeline({ track, stage, frameTarget, camFrame, camVideo 
           0.03,
         )
         .fromTo(q('.film-grain'), { opacity: 0.55 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 0.03)
-        // The film shrinks into the phone screen...
-        .to(frameEl, { clipPath: clipTarget, duration: 0.46, ease: 'power2.inOut' }, 0.06)
-        .fromTo(
-          videoEl,
-          { scale: 1.06, x: 0, y: 0 },
-          { scale: () => fit().scale, x: () => fit().x, y: () => fit().y, duration: 0.46, ease: 'power2.inOut' },
-          0.06,
-        )
+        // The film closes like an aperture into the camera's glass face, while the camera settles back...
+        .fromTo(ap, { k: 0 }, { k: 1, duration: 0.46, ease: 'power3.inOut', onUpdate: aperture }, 0.06)
+        .fromTo(q('.hero-cam-img'), { scale: 1.25 }, { scale: 1, duration: 0.46, ease: 'power3.inOut' }, 0.06)
         // ...uncovering the moments around it, which settle into place as it lands.
         .fromTo(
           tiles,
@@ -148,10 +172,14 @@ export function useHeroTimeline({ track, stage, frameTarget, camFrame, camVideo 
           0.16,
         )
         .fromTo(q('.hero-word'), { opacity: 0, yPercent: 12 }, { opacity: 1, yPercent: 0, duration: 0.36, ease: 'power3.out' }, 0.2)
-        .fromTo(q('.phone-body'), { opacity: 0 }, { opacity: 1, duration: 0.1, ease: 'power2.out' }, 0.44)
-        .fromTo(q('.hud-item'), { opacity: 0, y: 6 }, { opacity: 1, y: 0, stagger: 0.02, duration: 0.08, ease: 'power2.out' }, 0.5)
-        .fromTo(q('.preview-item'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: 0.03, duration: 0.14, ease: 'power2.out' }, 0.56)
-        .to({}, { duration: 0.2 });
+        // Behind the glass for a beat, then the film goes in and the glass is just glass.
+        .fromTo(q('.cam-glass'), { opacity: 0 }, { opacity: 1, duration: 0.1, ease: 'power1.out' }, 0.4)
+        .fromTo(media, { scale: 1 }, { scale: 0.86, duration: 0.12, ease: 'power2.in' }, 0.62)
+        .fromTo(frameEl, { opacity: 1 }, { opacity: 0, duration: 0.12, ease: 'power2.in' }, 0.62)
+        .to(q('.cam-glass'), { opacity: 0, duration: 0.1, ease: 'power1.in' }, 0.66)
+        .fromTo(q('.hero-cam-dot'), { opacity: 0 }, { opacity: 1, duration: 0.05, ease: 'power1.out' }, 0.72)
+        .fromTo(q('.preview-item'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: 0.03, duration: 0.14, ease: 'power2.out' }, 0.66)
+        .to({}, { duration: 0.16 });
 
       stageEl.classList.add('is-armed');
       setHeroProgress(tl.scrollTrigger?.progress ?? 0);
@@ -168,12 +196,19 @@ export function useHeroTimeline({ track, stage, frameTarget, camFrame, camVideo 
       });
       io.observe(trackEl);
 
+      const onRefresh = () => {
+        measure();
+        aperture();
+        setOrigin();
+      };
+      ScrollTrigger.addEventListener('refresh', onRefresh);
       const refresh = () => ScrollTrigger.refresh();
       videoEl.addEventListener('loadedmetadata', refresh);
       void document.fonts?.ready.then(refresh);
 
       return () => {
         io.disconnect();
+        ScrollTrigger.removeEventListener('refresh', onRefresh);
         videoEl.removeEventListener('loadedmetadata', refresh);
       };
     }, stageEl);

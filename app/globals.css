@@ -503,82 +503,72 @@ html.lenis body {
   }
 }
 
-/* The phone's screen in the final state: a portrait 9:19.5 iPhone display.
-   JS reads this rect; the phone body, HUD and caption share it. */
-.frame-rect {
+/* The camera at the centre of the hero's end state. --ch is the render's height; the product (camera body)
+   is centred on the stage at 44% down, using the render's own geometry (components/hero/HeroCamera.tsx). */
+.hero-cam {
   position: absolute;
-  left: 50%;
-  top: 44%;
-  height: var(--ph);
-  width: calc(var(--ph) * 9 / 19.5);
-  transform: translate(-50%, -50%);
-  border-radius: calc(var(--ph) * 0.068);
+  height: var(--ch);
+  width: calc(var(--ch) * 1439 / 1642);
+  left: calc(50% - var(--ch) * 1439 / 1642 * 0.3614);
+  top: calc(44% - var(--ch) * 0.4906);
+  pointer-events: none;
 }
-.frame-target {
+.hero-cam-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+}
+.cam-target {
+  position: absolute;
   visibility: hidden;
-  pointer-events: none;
 }
-
-/* iPhone body around the screen rect: titanium edge, black bezel, side buttons */
-.phone-body {
-  pointer-events: none;
-}
-.phone-body .frame {
+/* the status light at the top of the glass comes on once the film has gone in */
+.hero-cam-dot {
   position: absolute;
-  inset: calc(var(--ph) * -0.019);
-  border-radius: calc(var(--ph) * 0.087);
-  background: #0b0b0c;
+  width: calc(var(--ch) * 0.013);
+  height: calc(var(--ch) * 0.013);
+  min-width: 4px;
+  min-height: 4px;
+  border-radius: 9999px;
+  transform: translate(-50%, -50%);
+  background: #7dffa6;
   box-shadow:
-    0 0 0 calc(var(--ph) * 0.004) #cfcfcc,
-    0 0 0 calc(var(--ph) * 0.0065) #8f908c,
-    0 70px 90px -50px rgba(13, 14, 13, 0.55),
-    0 30px 40px -28px rgba(13, 14, 13, 0.3);
+    0 0 6px 2px rgba(84, 200, 120, 0.85),
+    0 0 18px 6px rgba(84, 200, 120, 0.35);
+  opacity: 0;
 }
-.phone-body .btn-nub {
+.hero-cam-dot.is-on {
+  opacity: 1;
+}
+.cam-glass {
   position: absolute;
-  width: calc(var(--ph) * 0.007);
-  border-radius: 3px;
-  background: linear-gradient(90deg, #a3a3a0, #d6d6d3);
+  border-radius: 50%;
+  background:
+    radial-gradient(60% 46% at 30% 22%, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0) 70%),
+    radial-gradient(closest-side, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.55) 100%);
+  box-shadow:
+    inset 0 0 0 calc(var(--ch) * 0.006) rgba(0, 0, 0, 0.85),
+    inset 0 calc(var(--ch) * -0.02) calc(var(--ch) * 0.05) rgba(0, 0, 0, 0.35);
+  opacity: 0;
 }
-
-/* Minimal live-view overlay on the phone */
-.hud {
-  container-type: size;
-  color: #fff;
-}
-.hud-island {
+.hero-caption {
   position: absolute;
-  left: 50%;
-  top: 1.7cqh;
-  width: 31cqw;
-  height: 4.2cqh;
+  left: 36.14%;
+  top: calc(96.59% + 2.6svh);
   transform: translateX(-50%);
-  border-radius: 9999px;
-  background: #000;
 }
 
-.rec-dot {
-  border-radius: 9999px;
-  background: var(--rec);
-  animation: rec-pulse 1.4s ease-in-out infinite;
-}
-@keyframes rec-pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.35;
-  }
-}
-
-/* Moments that gather around the phone, in two zones either side of the phone + caption column.
-   --cw is that column's width: tiles can never reach the phone or the caption. Inside a zone,
+/* Moments that gather around the camera, in two zones either side of the camera + caption column.
+   --cw is that column's width: tiles can never reach the camera or the caption. Inside a zone,
    positions are % of the zone, so they scale together on every screen. */
 .hero-stage,
 .hero-geo {
-  --ph: min(62svh, 640px);
-  --cw: max(calc(var(--ph) * 9 / 19.5 + 10rem), 34rem, 36vw);
+  --ch: min(66svh, 680px);
+  /* the camera body's height and width, from the render */
+  --ph: calc(var(--ch) * 0.9507);
+  --pw: calc(var(--ch) * 0.5834);
+  --cw: max(calc(var(--pw) + 8rem), 34rem, 36vw);
   --zone-top: max(5.5rem, 10svh);
 }
 .moment-zone {
@@ -640,7 +630,7 @@ html.lenis body {
 @media (max-width: 767px) {
   .hero-stage,
   .hero-geo {
-    --ph: min(54svh, 520px);
+    --ch: min(48svh, 420px);
   }
 }
 .moment-tile img,
@@ -773,7 +763,6 @@ html.intro-pending .intro-hide {
   html.intro-pending .intro-hide {
     opacity: 1;
   }
-  .rec-dot,
   .marquee-track,
   .film-grain {
     animation: none !important;

@@ -21,8 +21,8 @@ export const COPY = {
     buy: `Buy ${BRAND_NAME}`,
   },
   preview: {
-    eyebrow: 'The Alaro app',
-    headline: 'Every moment, right in your pocket.',
-    sub: 'Live view, gentle alerts for the people and pets you love, and the moments worth keeping, saved automatically.',
+    eyebrow: 'Alaro smart camera',
+    headline: 'Every moment, kept.',
+    sub: 'It sees what happens at home, understands what matters, and keeps the moments you would hate to miss.',
   },
 } as const;

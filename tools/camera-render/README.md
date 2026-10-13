@@ -30,3 +30,8 @@ The site uses trimmed WebP versions of these renders in `public/media/product/`.
   bottle, and composites a render per scene (`r10.png` … `r14.png`, shot with `view=custom` to match each photo's
   angle and light). Needs `opencv-python-headless`.
   `python3 lifestyle.py <photo dir> <render dir> <out dir> [scene ...]`
+- The hero camera (`public/media/hero/alaro-camera.webp`) is
+  `node shoot.js cam.png "color=white&view=custom&cam=-6,12,62&target=0,7.2,0&fov=22&pan=-16&tilt=0&keyx=-12&keyy=26&keyz=22&soft=16&w=2340&h=2600"`,
+  trimmed to its alpha bounds. `shoot.js` also writes `cam.json`: where the glass face, lens and status dot land on the
+  canvas, which `components/hero/HeroCamera.tsx` uses (as fractions of the trimmed image). Other params added:
+  `keyz` (key light depth), `soft` (shadow softness), `mount=wall` (wall shelf + shadow-catching wall, `wallshadow`).

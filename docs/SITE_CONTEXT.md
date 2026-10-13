@@ -128,7 +128,7 @@ npm run export       # static site in out/ with relative URLs (see section 9)
 | # | Section | File | Anchor | Surface |
 |---|---|---|---|---|
 | 0 | Header (fixed) | `components/Header.tsx` | | white text over film / dark, ink elsewhere |
-| 1 | Hero: film → phone with moments around it | `components/hero/*` | `#hero`, `#top` | film, then paper |
+| 1 | Hero: film closes into the Alaro camera's glass, moments around it | `components/hero/*` | `#hero`, `#top` | film, then paper |
 | 2–4 | Product journey (one 3D canvas across three sections) | `sections/ProductJourney.tsx` | `#design`, `#see`, `#private` | paper, white, forest |
 | 5 | Captured on Alaro: moments bento, For family / For business word-tabs | `sections/Moments.tsx` | `#moments` | white |
 | 6 | App showcase: realistic tilted phone | `sections/AppShowcase.tsx` | `#app` | white |
@@ -160,13 +160,14 @@ Nav: Products (`#buy`), For Home (`#moments`), For Business (`#choose`), Design 
 |---|---|
 | 0–0.18 | Copy and gradient fade out |
 | 0.03–0.23 | Grain fades; the film turns to colour |
-| 0.06–0.52 | `.cam-frame` clip-path shrinks to `.frame-rect`, a **portrait 9:19.5 phone screen** at the centre; the video scales to cover it |
-| 0.16–0.6 | Six moment tiles (`MomentTiles.tsx`), each a short looping clip from the film (`media/moments/*.webm|mp4`, poster `.jpg`), settle from a pull toward the centre at 1.18×. They sit in two zones either side of the phone + caption column (`--cw`), so they can never touch the caption; clips load on first play and run only while progress > 0.12 and the hero is on screen. On phones and portrait tablets four tiles tuck behind the phone's edges within its height. Reduced motion shows the posters. |
-| 0.44 | The iPhone body (`PhoneBody.tsx`) fades in |
-| 0.5 | Minimal HUD (`CameraHUD.tsx`): Dynamic Island, "● LIVE · {room}" pill, clock, and the app's three controls (talk, snapshot, record) |
-| 0.56 | Caption: "The Alaro app / Every moment, right in your pocket." |
+| 0.06–0.52 | **Aperture:** one value drives an `ellipse()` clip on `.cam-frame`, from covering the stage down to the camera's glass face (`.cam-target`), and the film's own cover-fit to the visible part of that ellipse, so it never letterboxes. Meanwhile the camera render (`HeroCamera.tsx`, `media/hero/alaro-camera*.webp`) settles from 1.25× to 1× around its face. |
+| 0.16–0.6 | Six moment tiles (`MomentTiles.tsx`), each a short looping clip from the film (`media/moments/*.webm|mp4`, poster `.jpg`), settle from a pull toward the centre at 1.18×. They sit in two zones either side of the camera + caption column (`--cw`), so they can never touch it or the caption. Clips load on first play and run only while progress > 0.12 and the hero is on screen. On phones and portrait tablets four tiles tuck behind the camera's edges within its height. Reduced motion shows the posters. |
+| 0.4–0.62 | The film plays inside the glass under a highlight and rim shade (`.cam-glass`) |
+| 0.62–0.74 | The film shrinks into the glass and fades; the render's real glass and lens remain. Then the status light comes on (`.hero-cam-dot`, green). |
+| 0.66 | Caption under the camera: "Alaro smart camera / Every moment, kept." |
 
-- **Reduced motion:** a static poster hero, then the same phone and collage composition as a normal section.
+- **Camera geometry:** `CAMERA` in `HeroCamera.tsx` holds the render's face ellipse, status dot and body box as fractions of the image. CSS (`.hero-cam`, `--ch` image height, `--ph`/`--pw` body size) centres the body at 44% of the stage. Re-render with `tools/camera-render` (`shoot.js` writes the matching `.json`) and update both if the model changes.
+- **Reduced motion:** a static poster hero, then the camera and collage composition as a normal section.
 - **Film player:** "Watch the film" opens `FilmPlayer.tsx` (unchanged).
 
 ### Product journey (`ProductJourney.tsx`, `lib/three/*`)
@@ -251,10 +252,10 @@ Nav: Products (`#buy`), For Home (`#moments`), For Business (`#choose`), Design 
 ```
 app/layout.tsx            Switzer (next/font/local), metadata, intro-hide script, Header, Lenis
 app/page.tsx              section order
-app/globals.css           tokens, type scale, buttons, hero/phone/HUD/grain, moment tiles, journey, device
+app/globals.css           tokens, type scale, buttons, hero camera/grain, moment tiles, journey, device
 app/fonts/switzer/        font files + LICENSE.md
-components/hero/          Hero, HeroCopy, MomentTiles, PhoneBody, CameraHUD, PreviewCopy, FilmPlayer,
-                          scenes.ts, videoClock.ts, useHeroTimeline.ts
+components/hero/          Hero, HeroCopy, HeroCamera (+ CameraGlass), MomentTiles, PreviewCopy, FilmPlayer,
+                          useHeroTimeline.ts
 components/sections/      ProductJourney, AppShowcase, ProductTiles, Moments, AtHome, Understands, AskAlaro,
                           Control, Experience + ProductViewer, ChooseWay, Faq, Closing, PageEffects
 lib/three/alaroCamera.ts  procedural camera model + studio environment
@@ -272,7 +273,7 @@ Removed in this draft: the "How it works" shelf scene (`HowItWorks.tsx`, `shelfS
 
 - **Business facts:** price ₹7,499 and EMI, specs (14 cm / 7.4 cm, 2K HDR, 350° / 75°), delivery, returns, warranty and FAQ answers.
 - **Brand colours:** the values above are provisional, pending the client's next references.
-- **Names:** Mira, Arlo, Zoe, Leo, Milo and Grandpa are used in captions and the HUD.
+- **Names:** Mira, Arlo, Zoe, Leo, Milo and Grandpa are used in captions.
 - **3D model:** a licensed GLB still needs sourcing (see §6). Real shop and lifestyle photography is also outstanding.
 - **Demo-only features:** Ask Alaro, the cart counter and the footer email form.
 - **Not yet verified:** real-device Safari/Chrome H.264 playback, Lighthouse scores, and frame rate on mid-range phones. Tests so far used headless Chromium at 1440, 1024, 390 and 360px.

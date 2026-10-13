@@ -287,6 +287,17 @@ const cam = new THREE.PerspectiveCamera(v.fov, W / H, 0.1, 200);
 cam.position.set(...v.pos); cam.lookAt(...v.target);
 
 renderer.render(scene, cam);
+// where the glass face, its centre and the status dot land on the canvas (0..1), for layouts that line up with them
+{
+  scene.updateMatrixWorld(true);
+  const at = (x, y, z) => { const v = head.localToWorld(new THREE.Vector3(x, y, z)).project(cam); return [(v.x + 1) / 2, (1 - v.y) / 2]; };
+  const r = HEAD_R - 0.1;
+  window.__meta = {
+    w: W, h: H,
+    face: at(0, 0, APEX), faceRight: at(r, 0, domeZ(r)), faceLeft: at(-r, 0, domeZ(r)), faceTop: at(0, r, domeZ(r)), faceBottom: at(0, -r, domeZ(r)),
+    lens: at(0, 0.12, APEX + 0.25), dot: at(0, HEAD_R * 0.78, domeZ(HEAD_R * 0.78)),
+  };
+}
 window.__done = true;
 </script>
 </body>

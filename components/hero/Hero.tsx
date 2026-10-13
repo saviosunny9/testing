@@ -1,17 +1,15 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ScrollTrigger } from '@/lib/gsap';
 import { registerFilm } from '@/lib/heroSound';
 import { useReducedMotion } from '@/lib/useReducedMotion';
-import CameraHUD from './CameraHUD';
 import FilmPlayer from './FilmPlayer';
 import HeroCopy from './HeroCopy';
 import MomentTiles from './MomentTiles';
-import PhoneBody from './PhoneBody';
+import HeroCamera, { CameraGlass } from './HeroCamera';
 import PreviewCopy from './PreviewCopy';
 import { useHeroIntro, useHeroTimeline } from './useHeroTimeline';
-import { VideoClock } from './videoClock';
 
 const POSTER = '/media/hero-poster.jpg';
 const SRC_1080 = '/media/hero-1080.mp4';
@@ -60,7 +58,6 @@ function AnimatedHero({ onWatchFilm }: { onWatchFilm: () => void }) {
   const frameTarget = useRef<HTMLDivElement>(null);
   const camFrame = useRef<HTMLDivElement>(null);
   const camVideo = useRef<HTMLVideoElement>(null);
-  const clock = useMemo(() => new VideoClock(), []);
   const [posterHidden, setPosterHidden] = useState(false);
 
   useHeroTimeline({ track, stage, frameTarget, camFrame, camVideo }, true);
@@ -79,26 +76,23 @@ function AnimatedHero({ onWatchFilm }: { onWatchFilm: () => void }) {
     const onPlaying = () => setPosterHidden(true);
     v.addEventListener('playing', onPlaying);
     if (!v.paused && v.readyState >= 3) setPosterHidden(true);
-    clock.attach(v);
     registerFilm(v);
     return () => {
       v.removeEventListener('playing', onPlaying);
-      clock.detach();
       registerFilm(null);
     };
-  }, [clock]);
+  }, []);
 
   return (
     <section id="hero" ref={track} className="hero-track" aria-label="Introduction">
       <div ref={stage} className="hero-stage" id="top">
-        <div ref={frameTarget} className="frame-rect frame-target" aria-hidden />
         <span className="hero-word arm-hidden z-[1]" aria-hidden>
           alaro
         </span>
         <MomentTiles className="arm-hidden z-[2]" />
-        <PhoneBody className="arm-hidden z-[5]" />
+        <HeroCamera ref={frameTarget} className="z-[4]" />
 
-        <div ref={camFrame} className="cam-frame">
+        <div ref={camFrame} className="cam-frame z-[6]">
           <div className={`cam-media ${posterHidden ? 'poster-hidden' : ''}`} style={{ backgroundImage: `url(${POSTER})` }}>
             <video
               ref={camVideo}
@@ -119,7 +113,7 @@ function AnimatedHero({ onWatchFilm }: { onWatchFilm: () => void }) {
           <div className="hero-gradient" />
         </div>
 
-        <CameraHUD clock={clock} className="arm-hidden z-20" />
+        <CameraGlass className="z-[7]" />
         <HeroCopy onWatchFilm={onWatchFilm} className="absolute inset-0 z-30" />
         <PreviewCopy className="arm-hidden z-30" />
       </div>
@@ -129,9 +123,8 @@ function AnimatedHero({ onWatchFilm }: { onWatchFilm: () => void }) {
 
 /* -------------------------------------------------------------------------- */
 
-/** prefers-reduced-motion: static colour hero, then the phone preview as its own section. */
+/** prefers-reduced-motion: static colour hero, then the camera and its moments as their own section. */
 function StaticHero({ onWatchFilm }: { onWatchFilm: () => void }) {
-  const clock = useMemo(() => new VideoClock(), []);
   return (
     <>
       <section id="hero" data-header-theme="dark" className="relative h-[100svh] overflow-hidden bg-black" aria-label="Introduction">
@@ -142,17 +135,12 @@ function StaticHero({ onWatchFilm }: { onWatchFilm: () => void }) {
         <HeroCopy onWatchFilm={onWatchFilm} className="absolute inset-0" />
       </section>
 
-      <section className="hero-geo relative h-[100svh] min-h-[700px] overflow-hidden bg-paper" aria-label="The Alaro app">
+      <section className="hero-geo relative h-[100svh] min-h-[700px] overflow-hidden bg-paper" aria-label="The Alaro camera">
         <span className="hero-word" aria-hidden>
           alaro
         </span>
         <MomentTiles video={false} />
-        <PhoneBody />
-        <div className="frame-rect z-10 overflow-hidden bg-black">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={POSTER} alt="" className="absolute inset-0 h-full w-full object-cover" />
-        </div>
-        <CameraHUD clock={clock} live={false} className="z-20" />
+        <HeroCamera still className="z-[4]" />
         <PreviewCopy className="z-30" />
       </section>
     </>

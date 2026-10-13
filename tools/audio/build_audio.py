@@ -1,5 +1,5 @@
 # Builds the hero film's sound: an original ambient music loop (synthesised here, no samples) and a short
-# voiceover story timed to the film's scenes (lib/../components/hero/scenes.ts).
+# voiceover story timed to the film's scenes (living room 0 s, game night 2.8 s, birthday 4.8 s, story time 7.2 s, kitchen 9.7 s, cat 13.1 s).
 #
 #   pip install piper-tts onnxruntime numpy
 #   python3 build_audio.py <piper voice .onnx> <out dir>

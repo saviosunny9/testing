@@ -7,7 +7,7 @@
  * media-element volume is fixed.
  */
 
-const LOOP = 15.28; // film length (components/hero/scenes.ts VIDEO_DURATION)
+const LOOP = 15.28; // the hero film's length in seconds
 const MUSIC = '/media/audio/hero-music.mp3';
 const VOICE = '/media/audio/hero-voice.mp3';
 const DUCK = 0.5; // music level while the voice speaks
