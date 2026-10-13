@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { gsap, ScrollTrigger } from '@/lib/gsap';
+import { gsap, ScrollTrigger, SplitText } from '@/lib/gsap';
 import { refreshHeaderTheme } from '@/lib/headerTheme';
 import { prefersReducedMotion } from '@/lib/useReducedMotion';
 
@@ -11,6 +11,7 @@ import { prefersReducedMotion } from '@/lib/useReducedMotion';
  * - Past the hero, the header gets a frosted bar.
  * - `[data-reveal]` elements fade up once as they enter.
  * - `[data-parallax="n"]` elements drift n% of their height while in view.
+ * - `[data-read]` paragraphs darken word by word, from faint to their own colour, as they rise.
  */
 export default function PageEffects() {
   useEffect(() => {
@@ -43,6 +44,17 @@ export default function PageEffects() {
         start: 'top 90%',
         once: true,
         onEnter: (batch) => gsap.to(batch, { opacity: 1, y: 0, duration: 1.1, ease: 'expo.out', stagger: 0.07, overwrite: true }),
+      });
+
+      gsap.utils.toArray<HTMLElement>('[data-read]').forEach((el) => {
+        const to = getComputedStyle(el).color;
+        const split = SplitText.create(el, { type: 'words', wordsClass: 'read-word' });
+        gsap.to(split.words, {
+          color: to,
+          ease: 'none',
+          stagger: 0.1,
+          scrollTrigger: { trigger: el, start: 'top 88%', end: 'top 42%', scrub: 0.6 },
+        });
       });
 
       gsap.utils.toArray<HTMLElement>('[data-parallax]').forEach((el) => {

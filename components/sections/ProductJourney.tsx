@@ -168,27 +168,31 @@ export default function ProductJourney() {
 
       {/* 1 */}
       <section id="design" className="journey-section relative bg-paper">
+        <span className="guide-v max-md:hidden" aria-hidden />
         <div className="journey-copy container-x relative z-10 grid md:grid-cols-12">
           <div className="md:col-span-5">
             <p data-reveal className="eyebrow">
-              Design
+              01 · Design
             </p>
             <h2 data-reveal className="display h-section mt-4">
               Designed to disappear <span className="hl">into your home.</span>
             </h2>
-            <p data-reveal className="lede mt-6 max-w-[34ch]">
+            <p data-read className="body-lg mt-7 max-w-[30ch] text-ink">
               A soft-touch shell in three quiet finishes, small enough for any shelf. No blinking lights, nothing that looks like a
               security camera.
             </p>
-            <dl data-reveal className="mt-10 grid max-w-[420px] grid-cols-3 gap-6 border-t border-line pt-6">
+            <dl data-reveal className="stat-row mt-12 max-w-[460px]">
               {[
-                ['14 cm', 'tall'],
-                ['7.4 cm', 'base'],
-                ['3', 'finishes'],
-              ].map(([v, l]) => (
+                ['14', 'cm', 'Height'],
+                ['7.4', 'cm', 'Base'],
+                ['3', '', 'Finishes'],
+              ].map(([v, u, l]) => (
                 <div key={l}>
-                  <dt className="h-small tnum">{v}</dt>
-                  <dd className="mt-1 text-[13px] text-muted">{l}</dd>
+                  <dt className="label label-br">{l}</dt>
+                  <dd className="stat tnum mt-5 text-ink">
+                    {v}
+                    {u && <span className="ml-1 text-[0.42em] tracking-[-0.02em] text-muted">{u}</span>}
+                  </dd>
                 </div>
               ))}
             </dl>
@@ -199,30 +203,34 @@ export default function ProductJourney() {
 
       {/* 2 */}
       <section id="see" className="journey-section relative bg-white">
+        <span className="guide-v max-md:hidden" aria-hidden />
         <div className="journey-copy container-x relative z-10 grid md:grid-cols-12">
           <div className="md:col-span-5 md:col-start-8">
             <p data-reveal className="eyebrow">
-              Pan and tilt
+              02 · Pan and tilt
             </p>
             <h2 data-reveal className="display h-section mt-4">
               Turns to see <span className="hl">the whole room.</span>
             </h2>
-            <p data-reveal className="lede mt-6 max-w-[34ch]">
+            <p data-read className="body-lg mt-7 max-w-[30ch] text-ink">
               Look around from your phone, or let {BRAND_NAME} quietly follow the action on its own. One camera covers what used to
               take three.
             </p>
-            <ul data-reveal className="mt-10 max-w-[420px] divide-y divide-line border-y border-line">
+            <dl data-reveal className="stat-row mt-12 max-w-[460px]">
               {[
-                ['350°', 'pan, edge to edge'],
-                ['75°', 'tilt, floor to ceiling'],
-                ['2K HDR', 'sharp in bright windows and dim corners'],
-              ].map(([v, l]) => (
-                <li key={v} className="flex items-baseline gap-4 py-3.5">
-                  <span className="h-small tnum w-[5.5rem] shrink-0">{v}</span>
-                  <span className="text-[15px] text-muted">{l}</span>
-                </li>
+                ['350', '°', 'Pan'],
+                ['75', '°', 'Tilt'],
+                ['2K', 'HDR', 'Video'],
+              ].map(([v, u, l]) => (
+                <div key={l}>
+                  <dt className="label label-br">{l}</dt>
+                  <dd className="stat tnum mt-5 text-ink">
+                    {v}
+                    <span className="ml-0.5 text-[0.42em] tracking-[-0.02em] text-muted">{u}</span>
+                  </dd>
+                </div>
               ))}
-            </ul>
+            </dl>
             <Still src="/media/product/pan-right-white.webp" alt={`${BRAND_NAME} camera turning its head`} />
           </div>
         </div>
@@ -230,31 +238,31 @@ export default function ProductJourney() {
 
       {/* 3 */}
       <section id="private" data-header-theme="dark" className="journey-section on-dark relative bg-forest text-white">
+        <span className="guide-v max-md:hidden" aria-hidden />
         <div className="journey-copy container-x relative z-10 grid md:grid-cols-12">
           <div className="md:col-span-5">
             <p data-reveal className="eyebrow">
-              Privacy
+              03 · Privacy
             </p>
             <h2 data-reveal className="display h-section mt-4">
               Private <span className="hl">by design.</span>
             </h2>
-            <p data-reveal className="lede mt-6 max-w-[34ch]">
+            <p data-read className="body-lg mt-7 max-w-[30ch] text-white">
               Turn on privacy mode and the lens tips down and stops recording. What it learns about your home stays in your home.
             </p>
-            <ul data-reveal className="mt-10 grid max-w-[440px] gap-5">
+            <ul data-reveal className="mt-12 max-w-[460px] border-t border-white/15">
               {[
                 { icon: Cpu, t: 'Recognition on the camera', d: 'Faces and pets are recognised on the device, not in the cloud.' },
                 { icon: KeyRound, t: 'End-to-end encrypted', d: 'Only your family’s phones hold the keys.' },
                 { icon: Lock, t: 'Privacy mode', d: 'One tap, and it looks away.' },
-              ].map(({ icon: Icon, t, d }) => (
-                <li key={t} className="flex gap-4">
-                  <span className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/10">
-                    <Icon size={16} strokeWidth={1.7} />
-                  </span>
+              ].map(({ icon: Icon, t, d }, i) => (
+                <li key={t} className="grid grid-cols-[2.5rem_1fr_auto] gap-x-3 border-b border-white/15 py-4">
+                  <span className="label pt-1">0{i + 1}</span>
                   <div>
-                    <p className="h-small">{t}</p>
-                    <p className="mt-1 text-[15px] text-white/65">{d}</p>
+                    <p className="text-[17px] font-normal tracking-[-0.02em]">{t}</p>
+                    <p className="mt-1 text-[14px] text-white/60">{d}</p>
                   </div>
+                  <Icon size={16} strokeWidth={1.4} className="mt-1 text-white/55" aria-hidden />
                 </li>
               ))}
             </ul>

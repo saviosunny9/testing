@@ -25,7 +25,7 @@ function PhoneOverlay() {
   return (
     <div className="pointer-events-none absolute bottom-[-8%] right-[4%] w-[30%] min-w-[130px] max-w-[190px] rounded-[30px] bg-[#0b0b0c] p-[6px] shadow-[0_40px_60px_-30px_rgba(0,0,0,.5),0_0_0_2px_#c9c9cc] md:right-[-6%]">
       <div className="overflow-hidden rounded-[25px] bg-white">
-        <div className="flex items-center justify-between px-3 pt-2.5 text-[9px] font-semibold text-ink">
+        <div className="flex items-center justify-between px-3 pt-2.5 text-[9px] font-medium text-ink">
           <span>{BRAND_NAME.toUpperCase()}.</span>
           <span className="text-muted">•••</span>
         </div>
@@ -34,8 +34,8 @@ function PhoneOverlay() {
           <img src="/media/stills/sofa.jpg" alt="" loading="lazy" className="h-full w-full object-cover" />
         </div>
         <div className="px-3 pb-3 pt-3">
-          <p className="text-[8px] font-semibold tracking-[0.12em] text-muted">TODAY AT HOME</p>
-          <p className="mt-1 text-[12px] font-semibold text-ink">Everyone’s home.</p>
+          <p className="text-[8px] font-medium tracking-[0.12em] text-muted">TODAY AT HOME</p>
+          <p className="mt-1 text-[12px] font-medium text-ink">Everyone’s home.</p>
           <p className="text-[9px] text-muted">3 moments to catch up on</p>
           <div className="mt-2 grid grid-cols-3 gap-1">
             {['/media/stills/gamenight.jpg', '/media/stills/milo.jpg', '/media/stills/birthday.jpg'].map((s) => (
@@ -75,7 +75,7 @@ export default function Experience() {
         <div className="md:col-span-6">
           <div className="relative md:sticky md:top-24">
             <div
-              className="relative aspect-[4/5] overflow-hidden rounded-[32px] transition-colors duration-700"
+              className="relative aspect-[4/5] overflow-hidden rounded-[3px] transition-colors duration-700"
               style={{ background: `var(--tint-${color})` }}
             >
               <ProductViewer color={color} className="absolute inset-0 h-full w-full cursor-grab active:cursor-grabbing" />
@@ -123,9 +123,9 @@ export default function Experience() {
             })}
           </ol>
 
-          <div data-reveal className="mt-10 rounded-[28px] bg-surface p-7 md:p-8">
+          <div data-reveal className="mt-10 rounded-[3px] bg-surface p-7 md:p-8">
             <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <h3 className="text-[19px] font-semibold text-ink">{BRAND_NAME} Smart Camera</h3>
+              <h3 className="text-[19px] font-medium text-ink">{BRAND_NAME} Smart Camera</h3>
               <p className="display text-[1.75rem] text-ink">{PRICE}</p>
             </div>
             <p className="mt-1 text-[13px] text-muted">or ₹625/mo. for 12 mo. with no-cost EMI</p>

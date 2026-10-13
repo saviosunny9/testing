@@ -26,7 +26,7 @@ export default function AtHome() {
 
         <div className="mt-12 grid gap-3 md:grid-cols-4 md:grid-rows-[280px_280px_300px] lg:grid-rows-[320px_320px_340px]">
           {SCENES.map((s) => (
-            <figure key={s.src} data-reveal className={`group relative aspect-[16/10] overflow-hidden rounded-[24px] bg-surface md:aspect-auto ${s.span}`}>
+            <figure key={s.src} data-reveal className={`group relative aspect-[16/10] overflow-hidden rounded-[3px] bg-surface md:aspect-auto ${s.span}`}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={s.src}
@@ -40,7 +40,7 @@ export default function AtHome() {
                 <span className="absolute -left-2 -top-2 h-4 w-4 rounded-full border-2 border-white bg-fresh shadow" />
               </span>
               <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/55 to-transparent p-5 pt-14 text-white">
-                <p className="text-[17px] font-semibold tracking-[-0.03em]">{s.room}</p>
+                <p className="text-[17px] font-medium tracking-[-0.03em]">{s.room}</p>
                 <p className="text-[13px] text-white/80">{s.where}</p>
               </figcaption>
             </figure>

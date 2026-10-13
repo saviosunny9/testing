@@ -36,7 +36,7 @@ export default function ProductTiles() {
             <article
               key={t.id}
               data-reveal
-              className="group relative flex aspect-[4/5] w-[80vw] max-w-[420px] shrink-0 snap-center flex-col overflow-hidden rounded-[28px] p-7 md:w-auto md:max-w-none"
+              className="group relative flex aspect-[4/5] w-[80vw] max-w-[420px] shrink-0 snap-center flex-col overflow-hidden rounded-[3px] p-7 md:w-auto md:max-w-none"
               style={{ background: t.bg }}
             >
               <div className="relative z-10 flex items-start justify-between gap-4">

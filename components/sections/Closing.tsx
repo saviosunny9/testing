@@ -8,7 +8,7 @@ export function ClosingCTA() {
   return (
     <section className="bg-white pb-24 md:pb-32">
       <div className="container-x">
-        <div className="relative overflow-hidden rounded-[32px] bg-paper px-6 pt-20 text-center md:pt-24">
+        <div className="relative overflow-hidden rounded-[3px] bg-paper px-6 pt-20 text-center md:pt-24">
           <h2 data-reveal className="display h-section mx-auto max-w-[16ch] text-ink">
             Ready to bring {BRAND_NAME} into your space?
           </h2>
@@ -50,7 +50,7 @@ export function ClosingCTA() {
 export function Footer() {
   const [done, setDone] = useState(false);
   return (
-    <footer data-header-theme="dark" className="on-dark bg-black py-16 text-white">
+    <footer data-header-theme="dark" className="on-dark overflow-hidden bg-black pt-16 text-white">
       <div className="container-x">
         <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
           <div>
@@ -99,6 +99,9 @@ export function Footer() {
           <span>Made for the moments that matter.</span>
         </div>
       </div>
+      <p aria-hidden className="h-mega mt-16 select-none overflow-hidden whitespace-nowrap text-center leading-[0.78] text-white/[.08]">
+        alaro
+      </p>
     </footer>
   );
 }

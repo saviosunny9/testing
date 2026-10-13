@@ -67,6 +67,7 @@ export function useHeroTimeline({ track, stage, frameTarget, camFrame, camVideo 
       gsap.set(media, { filter: 'grayscale(1) contrast(1.12) brightness(0.9)' });
       gsap.set(q('.film-grain'), { opacity: 0.55 });
       gsap.set(q('.phone-body'), { opacity: 0 });
+      gsap.set(q('.hero-word'), { opacity: 0, yPercent: 12 });
       gsap.set(tiles, { opacity: 0, scale: 1.18, x: pull('x'), y: pull('y') });
       gsap.set(q('.hud-item'), { opacity: 0, y: 6 });
       gsap.set(q('.preview-item'), { opacity: 0, y: 20 });
@@ -125,6 +126,7 @@ export function useHeroTimeline({ track, stage, frameTarget, camFrame, camVideo 
           { opacity: 1, scale: 1, x: 0, y: 0, duration: 0.34, ease: 'power3.out', stagger: 0.025 },
           0.16,
         )
+        .fromTo(q('.hero-word'), { opacity: 0, yPercent: 12 }, { opacity: 1, yPercent: 0, duration: 0.36, ease: 'power3.out' }, 0.2)
         .fromTo(q('.phone-body'), { opacity: 0 }, { opacity: 1, duration: 0.1, ease: 'power2.out' }, 0.44)
         .fromTo(q('.hud-item'), { opacity: 0, y: 6 }, { opacity: 1, y: 0, stagger: 0.02, duration: 0.08, ease: 'power2.out' }, 0.5)
         .fromTo(q('.preview-item'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: 0.03, duration: 0.14, ease: 'power2.out' }, 0.56)

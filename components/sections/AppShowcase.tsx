@@ -35,7 +35,7 @@ function AppScreen() {
 
   return (
     <div className="flex h-full flex-col bg-[#0f100f] text-white">
-      <div className="flex items-center justify-between px-[7%] pt-[5.5%] text-[10px] font-semibold">
+      <div className="flex items-center justify-between px-[7%] pt-[5.5%] text-[10px] font-medium">
         <span>9:41</span>
         <span className="opacity-80">5G</span>
       </div>
@@ -44,14 +44,14 @@ function AppScreen() {
           <LogoMark size={13} />
         </span>
         <div className="leading-tight">
-          <p className="text-[13px] font-semibold">Home</p>
+          <p className="text-[13px] font-medium">Home</p>
           <p className="text-[10px] text-white/55">3 cameras · everyone’s in</p>
         </div>
       </div>
 
       <div className="relative mx-[5%] mt-[6%] aspect-[4/5] overflow-hidden rounded-[18px] bg-black">
         <video ref={videoRef} className="h-full w-full object-cover" muted loop playsInline preload="none" poster="/media/hero-poster.jpg" aria-hidden />
-        <span className="absolute left-2.5 top-2.5 inline-flex items-center gap-1.5 rounded-full bg-black/45 px-2.5 py-1 text-[9px] font-semibold backdrop-blur">
+        <span className="absolute left-2.5 top-2.5 inline-flex items-center gap-1.5 rounded-full bg-black/45 px-2.5 py-1 text-[9px] font-medium backdrop-blur">
           <span className="h-1.5 w-1.5 rounded-full bg-rec" /> LIVE · Living Room
         </span>
         <span className="absolute bottom-2.5 left-2.5 inline-flex items-center gap-1 rounded-full bg-black/45 px-2.5 py-1 text-[9px] backdrop-blur">
@@ -60,7 +60,7 @@ function AppScreen() {
       </div>
 
       <div className="mt-[6%] flex items-baseline justify-between px-[7%]">
-        <p className="text-[12px] font-semibold">Today’s moments</p>
+        <p className="text-[12px] font-medium">Today’s moments</p>
         <p className="text-[10px] text-white/50">See all</p>
       </div>
       <ul className="mt-2 space-y-1.5 px-[5%]">
@@ -109,19 +109,18 @@ export default function AppShowcase() {
           <h2 data-reveal className="display h-section mt-4">
             Your home, <span className="hl">at a glance.</span>
           </h2>
-          <p data-reveal className="lede mt-6 max-w-[38ch]">
+          <p data-read className="body-lg mt-7 max-w-[30ch] text-ink">
             Everything the camera understands, organised so you can catch up in seconds, not scrub through hours.
           </p>
-          <ul className="mt-10 grid gap-7">
-            {POINTS.map(({ icon: Icon, t, d }) => (
-              <li data-reveal key={t} className="flex gap-4">
-                <span className="mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-full bg-paper text-ink">
-                  <Icon size={17} strokeWidth={1.7} />
-                </span>
+          <ul className="mt-12 max-w-[520px] border-t border-line">
+            {POINTS.map(({ icon: Icon, t, d }, i) => (
+              <li data-reveal key={t} className="grid grid-cols-[2.5rem_1fr_auto] gap-x-3 border-b border-line py-5">
+                <span className="label pt-1">0{i + 1}</span>
                 <div>
-                  <p className="h-small">{t}</p>
-                  <p className="mt-1 max-w-[40ch] text-[15px] text-muted">{d}</p>
+                  <p className="text-[17px] tracking-[-0.02em] text-ink">{t}</p>
+                  <p className="mt-1 max-w-[40ch] text-[14px] text-muted">{d}</p>
                 </div>
+                <Icon size={16} strokeWidth={1.4} className="mt-1 text-muted" aria-hidden />
               </li>
             ))}
           </ul>

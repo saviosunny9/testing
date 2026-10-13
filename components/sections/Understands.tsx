@@ -23,16 +23,16 @@ export default function Understands() {
     <section data-header-theme="dark" className="on-dark section bg-forest text-white">
       <div className="container-x grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
         <div className="flex flex-col gap-4 md:sticky md:top-24 md:self-start">
-          <figure data-reveal className="relative aspect-[4/3] overflow-hidden rounded-[28px] bg-forest-2">
+          <figure data-reveal className="relative aspect-[4/3] overflow-hidden rounded-[3px] bg-forest-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/media/stills/kitchen.jpg" alt="A mum swinging her toddler in a bright kitchen" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
-            <span className="absolute left-[5%] top-[28%] rounded-[10px] bg-black/40 px-3 py-1.5 text-[12px] font-medium backdrop-blur-md">
+            <span className="absolute left-[5%] top-[28%] rounded-[2px] bg-black/40 px-3 py-1.5 text-[12px] font-medium backdrop-blur-md">
               ↗ Playtime · 4:08 PM
             </span>
-            <span className="absolute right-[6%] top-[52%] rounded-[10px] bg-black/40 px-3 py-1.5 text-[12px] font-medium backdrop-blur-md">
+            <span className="absolute right-[6%] top-[52%] rounded-[2px] bg-black/40 px-3 py-1.5 text-[12px] font-medium backdrop-blur-md">
               ✦ Leo and Mum
             </span>
-            <span className="absolute bottom-[5%] left-[5%] inline-flex items-center gap-2 rounded-[10px] bg-white/90 px-3 py-1.5 text-[11px] font-semibold tracking-[0.06em] text-ink">
+            <span className="absolute bottom-[5%] left-[5%] inline-flex items-center gap-2 rounded-[2px] bg-white/90 px-3 py-1.5 text-[11px] font-medium tracking-[0.06em] text-ink">
               <span className="h-1.5 w-1.5 rounded-full bg-rec" /> KITCHEN · LIVE
             </span>
           </figure>
@@ -42,20 +42,20 @@ export default function Understands() {
         </div>
 
         <div className="flex min-w-0 flex-col gap-4 md:gap-5">
-          <article data-reveal className="rounded-[28px] bg-forest-2 p-8 md:p-10">
-            <p className="text-[1.5rem] font-medium leading-[1.3] tracking-[-0.02em] md:text-[1.75rem]">
+          <article data-reveal className="rounded-[3px] bg-forest-2 p-8 md:p-10">
+            <p className="body-lg">
               {BRAND_NAME} uses visual intelligence to understand{' '}
               <span className="text-white/45">people, pets, objects and activity around your space.</span>
             </p>
           </article>
 
-          <article data-reveal className="rounded-[28px] bg-forest-2 p-8 md:p-10">
+          <article data-reveal className="rounded-[3px] bg-forest-2 p-8 md:p-10">
             <h3 className="display text-[1.9rem] md:text-[2.25rem]">Your day, in 5 minutes.</h3>
             <p className="mt-2 text-white/60">See the moments that mattered while you were away.</p>
             <div className="mt-8 grid grid-cols-5 gap-2">
               {DIGEST.map((d) => (
                 <div key={d.t} className="flex flex-col gap-2">
-                  <div className="aspect-[3/4] overflow-hidden rounded-[10px]">
+                  <div className="aspect-[3/4] overflow-hidden rounded-[2px]">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={d.src} alt="" loading="lazy" className="h-full w-full object-cover" />
                   </div>
@@ -65,7 +65,7 @@ export default function Understands() {
             </div>
           </article>
 
-          <article data-reveal className="overflow-hidden rounded-[28px] bg-forest-2 pt-8 md:pt-10">
+          <article data-reveal className="overflow-hidden rounded-[3px] bg-forest-2 pt-8 md:pt-10">
             <h3 className="display px-8 text-[1.9rem] md:px-10 md:text-[2.25rem]">
               Intelligence that notices <span className="text-white/45">the little things.</span>
             </h3>

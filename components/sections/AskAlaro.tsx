@@ -60,7 +60,7 @@ export default function AskAlaro() {
   return (
     <section id="ask" className="section bg-white">
       <div className="container-x">
-        <div className="grid items-center gap-12 rounded-[32px] bg-paper px-6 py-14 md:grid-cols-12 md:gap-10 md:px-14 md:py-20">
+        <div className="grid items-center gap-12 rounded-[3px] bg-paper px-6 py-14 md:grid-cols-12 md:gap-10 md:px-14 md:py-20">
           <div className="md:col-span-5">
             <p data-reveal className="eyebrow">
               Ask {BRAND_NAME}
@@ -93,12 +93,12 @@ export default function AskAlaro() {
           </div>
 
           <div data-reveal className="md:col-span-7">
-            <div className="overflow-hidden rounded-[24px] bg-white shadow-[0_40px_80px_-40px_rgba(0,0,0,.25),0_0_0_1px_rgba(0,0,0,.04)]">
+            <div className="overflow-hidden rounded-[3px] bg-white shadow-[0_40px_80px_-40px_rgba(0,0,0,.25),0_0_0_1px_rgba(0,0,0,.04)]">
               <div className="flex items-center gap-3 border-b border-[#ececf0] px-5 py-4">
                 <span className="grid h-8 w-8 place-items-center rounded-full bg-forest text-white">
                   <LogoMark size={15} />
                 </span>
-                <span className="text-[15px] font-semibold text-ink">Ask {BRAND_NAME}</span>
+                <span className="text-[15px] font-medium text-ink">Ask {BRAND_NAME}</span>
                 <span className="ml-auto text-[12px] text-muted">Your home, in a conversation</span>
               </div>
 
@@ -112,7 +112,7 @@ export default function AskAlaro() {
                   </div>
                 ) : (
                   <div key={answerKey + question} className="animate-[fadeUp_.5s_ease]">
-                    <p className="flex items-center gap-2 text-[12px] font-semibold tracking-[0.08em] text-ink">
+                    <p className="flex items-center gap-2 text-[12px] font-medium tracking-[0.08em] text-ink">
                       <LogoMark size={13} /> {BRAND_NAME.toUpperCase()}
                     </p>
                     <p className="mt-2 text-[15px] text-ink-2">{answer.text}</p>

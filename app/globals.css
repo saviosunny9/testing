@@ -2,29 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Restrained editorial system: warm off-white, white, charcoal and black surfaces; forest and fresh
-   green only as small non-text accents. Text is always black, white or grey. Colour comes from the
-   photography, the film and the product itself. */
+/* Quiet technical editorial (after drone.riotters.com): cool off-white grounds, slate ink, light
+   type, hairline grids and square-cornered imagery. Forest and fresh green stay as the brand's small
+   accents. Text is only slate, grey or white. */
 :root {
-  --bg: #ffffff;
-  --paper: #f5f5f2; /* warm off-white */
-  --paper-2: #ebebe6;
-  --ink: #161715; /* near-black text */
-  --ink-2: #3a3b38;
-  --muted: #6b6d68; /* grey text */
-  --muted-2: #9a9c96; /* lighter grey, second-line emphasis */
-  --line: #deded8;
-  --charcoal: #222321;
-  --black: #0d0e0d;
+  --bg: #fafafa;
+  --paper: #f1f2f2; /* cool off-white */
+  --paper-2: #e6e8e9;
+  --ink: #1f2d33; /* slate text */
+  --ink-2: #3d4a50;
+  --muted: #7d868a; /* grey text */
+  --muted-2: #a3aaad; /* second-tone words in headlines */
+  --faint: #cfd4d6; /* unread words in scroll-reveal text */
+  --line: #d9dddf; /* hairlines */
+  --charcoal: #1f2d33;
+  --black: #111a1e;
   --forest: #172d25; /* brand dark */
   --forest-2: #213c31;
   --fresh: #54c878; /* brand accent, non-text only */
   --rec: #ff3b30;
 
   /* neutral grounds for the three product finishes */
-  --tint-graphite: #ebecea;
-  --tint-white: #f5f5f2;
-  --tint-red: #f1edea;
+  --tint-graphite: #eceeef;
+  --tint-white: #f3f4f4;
+  --tint-red: #f2efee;
 
   --shadow-soft: 0 30px 60px -32px rgba(13, 14, 13, 0.28), 0 12px 24px -16px rgba(13, 14, 13, 0.14);
 
@@ -46,8 +47,12 @@ body {
   font-family: var(--font-switzer), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   font-size: 17px;
   font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: -0.01em;
+  line-height: 1.45;
+  letter-spacing: -0.015em;
+}
+::selection {
+  background: var(--ink);
+  color: #fff;
 }
 
 /* Lenis */
@@ -67,30 +72,82 @@ html.lenis body {
 
 @layer components {
   /* ---- Type scale (Switzer). Every section uses these; no one-off sizes. ---- */
+  /* Light, large and tightly tracked; never bold. */
   .display {
-    font-weight: 600;
-    letter-spacing: -0.04em;
-    line-height: 0.96;
+    font-weight: 300;
+    letter-spacing: -0.045em;
+    line-height: 1;
     text-wrap: balance;
   }
   .h-hero {
-    font-size: clamp(3rem, 7.2vw, 7.75rem);
+    font-size: clamp(2.75rem, 5.6vw, 6rem);
     letter-spacing: -0.05em;
-    line-height: 0.9;
+    line-height: 1;
+  }
+  .h-mega {
+    font-size: clamp(5rem, 15vw, 15rem);
+    font-weight: 300;
+    letter-spacing: -0.06em;
+    line-height: 0.86;
   }
   .h-section {
-    font-size: clamp(2.4rem, 5vw, 4.75rem);
+    font-size: clamp(2.5rem, 4.8vw, 5rem);
   }
   .h-card {
-    font-size: clamp(1.45rem, 2.1vw, 1.9rem);
-    line-height: 1.04;
-    letter-spacing: -0.032em;
+    font-size: clamp(1.5rem, 2.2vw, 2.1rem);
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+    font-weight: 300;
   }
   .h-small {
     font-size: 1.1875rem;
-    font-weight: 600;
-    line-height: 1.2;
+    font-weight: 400;
+    line-height: 1.25;
     letter-spacing: -0.02em;
+  }
+  /* big light paragraph, as on the reference's "Engineered around…" blocks */
+  .body-lg {
+    font-size: clamp(1.25rem, 1.9vw, 1.9rem);
+    font-weight: 300;
+    line-height: 1.3;
+    letter-spacing: -0.03em;
+  }
+  .stat {
+    font-size: clamp(2.6rem, 4.6vw, 4.5rem);
+    font-weight: 300;
+    letter-spacing: -0.05em;
+    line-height: 1;
+  }
+  /* mono technical label: ▪ PAYLOAD / [ MAX RANGE ] */
+  .label {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .label-sq::before {
+    content: '';
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    margin-right: 0.9em;
+    vertical-align: 0.15em;
+    background: currentColor;
+    opacity: 0.6;
+  }
+  .label-br::before {
+    content: '[\00a0\00a0';
+  }
+  .label-br::after {
+    content: '\00a0\00a0]';
+  }
+  .on-dark .label {
+    color: rgba(255, 255, 255, 0.55);
+  }
+  .hairline {
+    border-color: var(--line);
   }
   /* emphasis through contrast, never colour */
   .hl {
@@ -100,19 +157,31 @@ html.lenis body {
     color: rgba(255, 255, 255, 0.5);
   }
   .eyebrow {
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--muted);
+  }
+  .eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    margin-right: 0.9em;
+    vertical-align: 0.15em;
+    background: currentColor;
+    opacity: 0.6;
   }
   .on-dark .eyebrow {
     color: rgba(255, 255, 255, 0.6);
   }
   .lede {
     font-size: clamp(1.0625rem, 1.3vw, 1.3125rem);
-    line-height: 1.45;
-    letter-spacing: -0.015em;
+    font-weight: 300;
+    line-height: 1.4;
+    letter-spacing: -0.02em;
     color: var(--muted);
   }
   .on-dark .lede {
@@ -129,12 +198,12 @@ html.lenis body {
     align-items: center;
     justify-content: center;
     gap: 0.45rem;
-    height: 2.875rem;
-    padding: 0 1.4rem;
-    border-radius: 9999px;
+    height: 2.75rem;
+    padding: 0 1.25rem;
+    border-radius: 3px;
     font-size: 0.9375rem;
-    font-weight: 500;
-    letter-spacing: -0.01em;
+    font-weight: 400;
+    letter-spacing: -0.015em;
     white-space: nowrap;
     transition:
       background-color 0.25s ease,
@@ -151,9 +220,17 @@ html.lenis body {
     cursor: not-allowed;
   }
   .btn-sm {
-    height: 2.375rem;
-    padding: 0 1.05rem;
+    height: 2.25rem;
+    padding: 0 0.95rem;
     font-size: 0.875rem;
+  }
+  /* the reference's quiet grey "menu" button */
+  .btn-quiet {
+    background: var(--paper-2);
+    color: var(--ink);
+  }
+  .btn-quiet:hover {
+    background: var(--line);
   }
   /* primary: charcoal on light */
   .btn-dark,
@@ -219,7 +296,7 @@ html.lenis body {
   }
 
   .tile {
-    border-radius: 28px;
+    border-radius: 3px;
     overflow: hidden;
     background: var(--paper);
   }
@@ -255,6 +332,22 @@ html.lenis body {
 .site-header[data-solid='true'] .header-shade {
   opacity: 0;
 }
+.site-header .header-menu {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+.site-header[data-theme='light'] .header-menu {
+  background: var(--paper-2);
+  color: var(--ink);
+}
+.site-header .header-muted {
+  opacity: 0.65;
+}
 .site-header .header-buy {
   background: #fff;
   color: var(--ink);
@@ -274,7 +367,7 @@ html.lenis body {
   border-bottom: 1px solid transparent;
 }
 .site-header[data-solid='true']:not([data-menu='open']) .header-bar {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(250, 250, 250, 0.82);
   -webkit-backdrop-filter: blur(20px) saturate(160%);
   backdrop-filter: blur(20px) saturate(160%);
   border-bottom-color: rgba(13, 14, 13, 0.06);
@@ -289,11 +382,11 @@ html.lenis body {
 }
 
 .menu-overlay {
-  clip-path: circle(0% at calc(100% - 40px) 40px);
+  clip-path: inset(0 0 100% 0);
   transition: clip-path 0.7s cubic-bezier(0.65, 0, 0.35, 1);
 }
 .menu-overlay[data-open='true'] {
-  clip-path: circle(150% at calc(100% - 40px) 40px);
+  clip-path: inset(0 0 0 0);
 }
 
 /* ----------------------------------------------------------------------------
@@ -314,7 +407,23 @@ html.lenis body {
   top: 0;
   height: 100svh;
   overflow: hidden;
-  background: var(--paper);
+  background: linear-gradient(180deg, #e3e7e9 0%, #eef0f1 55%, #fafafa 100%);
+}
+/* giant wordmark behind the final composition, white on the cool gradient */
+.hero-word {
+  position: absolute;
+  inset: 0 0 8svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(9rem, 34vw, 40rem);
+  font-weight: 300;
+  letter-spacing: -0.07em;
+  line-height: 0.8;
+  color: rgba(255, 255, 255, 0.9);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
 }
 
 .cam-frame {
@@ -478,7 +587,7 @@ html.lenis body {
   top: var(--y);
   width: var(--w);
   aspect-ratio: var(--ar);
-  border-radius: clamp(14px, 1.4vw, 22px);
+  border-radius: 3px;
   overflow: hidden;
   background: var(--paper-2);
   box-shadow: 0 30px 50px -34px rgba(13, 14, 13, 0.45);
@@ -663,5 +772,102 @@ html.intro-pending .intro-hide {
   to {
     opacity: 1;
     transform: none;
+  }
+}
+
+/* Scroll-read text: words darken from faint to ink as the paragraph moves up the screen. */
+[data-read] .read-word {
+  color: var(--faint);
+}
+.on-dark [data-read] .read-word,
+.on-dark[data-read] .read-word {
+  color: rgba(255, 255, 255, 0.25);
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-read] .read-word {
+    color: inherit !important;
+  }
+}
+
+/* hairline guides used in section layouts */
+.guide-v {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: var(--line);
+  pointer-events: none;
+}
+.on-dark .guide-v {
+  background: rgba(255, 255, 255, 0.12);
+}
+.site-header[data-menu='open'] .header-menu {
+  background: var(--paper-2);
+  color: var(--ink);
+}
+
+/* huge light word-tabs, underline on the active one */
+.word-tab {
+  position: relative;
+  padding-bottom: 0.18em;
+  font-size: clamp(1.75rem, 5.2vw, 5.25rem);
+  color: var(--muted-2);
+  transition: color 0.35s ease;
+}
+.word-tab:hover {
+  color: var(--muted);
+}
+.word-tab::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.word-tab.is-active {
+  color: var(--ink);
+}
+.word-tab.is-active::after {
+  transform: scaleX(1);
+}
+
+/* stat row: big light figures in hairline columns */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+}
+.stat-row > * {
+  padding: 1.4rem 1.25rem 0 0;
+}
+.stat-row > * + * {
+  border-left: 1px solid var(--line);
+  padding-left: 1.25rem;
+}
+.on-dark .stat-row,
+.on-dark .stat-row > * + * {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+@media (max-width: 479px) {
+  .stat-row > * {
+    padding-right: 0.6rem;
+  }
+  .stat-row > * + * {
+    padding-left: 0.75rem;
+  }
+  .stat-row .label {
+    letter-spacing: 0.06em;
+  }
+  .stat-row .label-br::before {
+    content: '[';
+  }
+  .stat-row .label-br::after {
+    content: ']';
   }
 }

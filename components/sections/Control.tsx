@@ -38,16 +38,16 @@ function AppDemo() {
   return (
     <div className="relative mx-auto h-[88%] translate-y-[8%] rounded-[36px] bg-[#0b0b0c] p-[7px] shadow-[0_30px_60px_-30px_rgba(0,0,0,.45),0_0_0_2px_#c9c9cc] [aspect-ratio:9/19]">
       <div className="flex h-full flex-col overflow-hidden rounded-[30px] bg-black text-white">
-        <div className="flex items-center justify-between px-4 pt-3 text-[10px] font-semibold">
+        <div className="flex items-center justify-between px-4 pt-3 text-[10px] font-medium">
           <span>9:41</span>
           <span className="h-[18px] w-16 rounded-full bg-[#0b0b0c] ring-1 ring-white/5" />
           <span>82%</span>
         </div>
-        <p className="mt-3 px-4 text-[13px] font-semibold">Family Room</p>
+        <p className="mt-3 px-4 text-[13px] font-medium">Family Room</p>
         <div className="relative mx-3 mt-2 aspect-video overflow-hidden rounded-[12px]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/media/stills/gamenight.jpg" alt="" loading="lazy" className="h-full w-full object-cover" />
-          <span className="absolute left-2 top-2 inline-flex items-center gap-1 rounded-full bg-black/45 px-2 py-0.5 text-[8px] font-semibold backdrop-blur">
+          <span className="absolute left-2 top-2 inline-flex items-center gap-1 rounded-full bg-black/45 px-2 py-0.5 text-[8px] font-medium backdrop-blur">
             <span className="h-1.5 w-1.5 rounded-full bg-rec" /> LIVE
           </span>
         </div>
@@ -201,7 +201,7 @@ export default function Control() {
       >
         {CARDS.map((c) => (
           <article key={c.title} data-card className="w-[82vw] max-w-[540px] shrink-0 snap-start md:w-[46vw]">
-            <div className={`relative aspect-[4/3] overflow-hidden rounded-[28px] ${c.bg}`}>{c.media}</div>
+            <div className={`relative aspect-[4/3] overflow-hidden rounded-[3px] ${c.bg}`}>{c.media}</div>
             <h3 className="h-card display mt-6 text-ink">{c.title}</h3>
             <p className="mt-2 max-w-[44ch] text-[15px] text-muted">{c.body}</p>
           </article>

@@ -8,7 +8,7 @@ type Mode = 'family' | 'business';
 
 function Photo({ src, alt, className = '', children }: { src: string; alt: string; className?: string; children?: React.ReactNode }) {
   return (
-    <figure data-reveal className={`group relative overflow-hidden rounded-[24px] bg-surface ${className}`}>
+    <figure data-reveal className={`group relative overflow-hidden rounded-[3px] bg-surface ${className}`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={src}
@@ -49,7 +49,7 @@ function FamilyGrid() {
       </Photo>
       <div
         data-reveal
-        className="flex flex-col items-center justify-center gap-6 rounded-[24px] bg-paper p-8 text-center"
+        className="flex flex-col items-center justify-center gap-6 rounded-[3px] bg-paper p-8 text-center"
       >
         <p className="max-w-[26ch] text-[1.125rem] font-medium leading-snug text-ink">
           The moments you’d never want to miss, captured, remembered and shared just for you.
@@ -73,7 +73,7 @@ function BusinessGrid() {
           <p className="display mt-2 max-w-[13ch] text-[1.75rem] text-ink">Keep an eye on the shop floor.</p>
         </figcaption>
       </Photo>
-      <div data-reveal className="rounded-[24px] bg-forest p-6 text-white">
+      <div data-reveal className="rounded-[3px] bg-forest p-6 text-white">
         <p className="text-[13px] text-white/60">Today at the shop</p>
         <ul className="mt-4 space-y-3 text-[15px]">
           {[
@@ -92,7 +92,7 @@ function BusinessGrid() {
           ))}
         </ul>
       </div>
-      <div data-reveal className="flex flex-col rounded-[24px] bg-paper p-6">
+      <div data-reveal className="flex flex-col rounded-[3px] bg-paper p-6">
         <p className="text-[13px] text-muted">Footfall today</p>
         <p className="display mt-1 text-[2.25rem] text-ink">
           142 <span className="text-[1rem] font-medium text-muted">visitors</span>
@@ -110,7 +110,7 @@ function BusinessGrid() {
       </Photo>
       <div
         data-reveal
-        className="flex flex-col items-center justify-center gap-6 rounded-[24px] bg-paper p-8 text-center"
+        className="flex flex-col items-center justify-center gap-6 rounded-[3px] bg-paper p-8 text-center"
       >
         <p className="max-w-[24ch] text-[1.125rem] font-medium leading-snug text-ink">
           Openings, deliveries and quiet hours, summed up before you ask.
@@ -128,30 +128,33 @@ export default function Moments() {
   return (
     <section id="moments" className="section bg-white">
       <div className="container-x">
-        <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
-          <p data-reveal className="eyebrow">
-            Captured on Alaro
-          </p>
-          <h2 data-reveal className="display h-section mt-4 text-ink">
-            You can’t be everywhere. <span className="hl">But you can still be part of it.</span>
-          </h2>
-          <div data-reveal role="tablist" aria-label="Show moments for" className="mt-9 inline-flex rounded-full bg-paper p-1">
-            {(['family', 'business'] as const).map((m) => (
-              <button
-                key={m}
-                role="tab"
-                type="button"
-                aria-selected={mode === m}
-                aria-controls={`moments-${m}`}
-                onClick={() => setMode(m)}
-                className={`focus-ring rounded-full px-5 py-2 text-[14px] font-medium transition-all duration-300 ${
-                  mode === m ? 'bg-charcoal text-white' : 'text-muted hover:text-ink'
-                }`}
-              >
-                {m === 'family' ? 'For Family' : 'For Business'}
-              </button>
-            ))}
+        <div className="grid gap-8 md:grid-cols-12 md:items-end">
+          <div className="md:col-span-7">
+            <p data-reveal className="eyebrow">
+              Captured on Alaro
+            </p>
+            <h2 data-reveal className="display h-section mt-5 max-w-[16ch] text-ink">
+              You can’t be everywhere. <span className="hl">But you can still be part of it.</span>
+            </h2>
           </div>
+          <p data-reveal className="label label-br text-muted md:col-span-5 md:justify-self-end">
+            Real moments · Real homes
+          </p>
+        </div>
+        <div data-reveal role="tablist" aria-label="Show moments for" className="mt-14 flex flex-wrap gap-x-6 gap-y-2 border-b border-line md:gap-x-10">
+          {(['family', 'business'] as const).map((m) => (
+            <button
+              key={m}
+              role="tab"
+              type="button"
+              aria-selected={mode === m}
+              aria-controls={`moments-${m}`}
+              onClick={() => setMode(m)}
+              className={`word-tab focus-ring display ${mode === m ? 'is-active' : ''}`}
+            >
+              {m === 'family' ? 'For family' : 'For business'}
+            </button>
+          ))}
         </div>
 
         <div className="mt-12 md:mt-16">

@@ -89,6 +89,9 @@ function AnimatedHero({ onWatchFilm }: { onWatchFilm: () => void }) {
     <section id="hero" ref={track} className="hero-track" aria-label="Introduction">
       <div ref={stage} className="hero-stage" id="top">
         <div ref={frameTarget} className="frame-rect frame-target" aria-hidden />
+        <span className="hero-word arm-hidden z-[1]" aria-hidden>
+          alaro
+        </span>
         <MomentTiles className="arm-hidden z-[2]" />
         <PhoneBody className="arm-hidden z-[5]" />
 
@@ -137,6 +140,9 @@ function StaticHero({ onWatchFilm }: { onWatchFilm: () => void }) {
       </section>
 
       <section className="relative h-[100svh] min-h-[700px] overflow-hidden bg-paper" aria-label="The Alaro app">
+        <span className="hero-word" aria-hidden>
+          alaro
+        </span>
         <MomentTiles />
         <PhoneBody />
         <div className="frame-rect z-10 overflow-hidden bg-black">

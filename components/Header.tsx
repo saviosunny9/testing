@@ -21,9 +21,32 @@ export function LogoMark({ size = 20 }: { size?: number | string }) {
 
 export function Logo({ className = '' }: { className?: string }) {
   return (
-    <span className={`inline-flex items-center gap-2 ${className}`}>
-      <LogoMark />
-      <span className="display text-[1.2rem] tracking-[-0.03em]">{BRAND_NAME}</span>
+    <span className={`inline-flex items-center gap-2.5 ${className}`}>
+      <LogoMark size={22} />
+      <span className="text-[1.15rem] font-normal tracking-[-0.03em]">{BRAND_NAME.toLowerCase()}</span>
+    </span>
+  );
+}
+
+/** Viewer's local time, e.g. "IST 11:07 am", like the reference header. */
+function LocalClock() {
+  const [text, setText] = useState('');
+  useEffect(() => {
+    const fmt = () => {
+      const d = new Date();
+      const tz =
+        new Intl.DateTimeFormat('en', { timeZoneName: 'short' }).formatToParts(d).find((p) => p.type === 'timeZoneName')?.value ?? '';
+      const h = d.getHours();
+      const t = `${((h + 11) % 12) + 1}:${String(d.getMinutes()).padStart(2, '0')} ${h < 12 ? 'am' : 'pm'}`;
+      setText(`${tz} ${t}`.trim());
+    };
+    fmt();
+    const id = window.setInterval(fmt, 15_000);
+    return () => window.clearInterval(id);
+  }, []);
+  return (
+    <span className="tnum" suppressHydrationWarning>
+      {text}
     </span>
   );
 }
@@ -60,84 +83,72 @@ export default function Header() {
       data-theme={theme}
       data-menu={open ? 'open' : 'closed'}
     >
-      <div className="header-shade pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/35 to-transparent" />
+      <div className="header-shade pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/30 to-transparent" />
 
-      {/* Mobile menu */}
+      {/* Full-screen menu */}
       <div
-        id="mobile-menu"
-        className="menu-overlay pointer-events-auto fixed inset-0 flex flex-col bg-white px-6 pb-10 pt-24 text-ink lg:hidden"
+        id="site-menu"
+        className="menu-overlay pointer-events-auto fixed inset-0 flex flex-col bg-[var(--bg)] px-5 pb-10 pt-24 text-ink md:px-8"
         data-open={open}
         aria-hidden={!open}
         inert={!open}
       >
-        <nav aria-label="Mobile" className="flex flex-col">
-          {NAV_LINKS.map((l) => (
-            <a
-              key={l.href + l.label}
-              href={l.href}
-              onClick={close}
-              className="display focus-ring border-b border-line py-4 text-[1.75rem] font-medium"
-            >
-              {l.label}
+        <div className="grid flex-1 gap-10 md:grid-cols-2">
+          <nav aria-label="Menu" className="flex flex-col">
+            {NAV_LINKS.map((l, i) => (
+              <a
+                key={l.href + l.label}
+                href={l.href}
+                onClick={close}
+                className="display focus-ring flex items-baseline gap-5 border-b border-line py-3 text-[clamp(2.25rem,5vw,4.25rem)] transition-colors hover:text-muted"
+              >
+                <span className="label">{String(i + 1).padStart(2, '0')}</span>
+                {l.label}
+              </a>
+            ))}
+          </nav>
+          <div className="flex flex-col justify-end gap-6 md:items-end">
+            <p className="body-lg max-w-[22ch] text-muted md:text-right">The intelligence behind your space.</p>
+            <a href="#buy" onClick={close} className="btn btn-dark">
+              Buy {BRAND_NAME}
             </a>
-          ))}
-        </nav>
-        <a href="#buy" onClick={close} className="btn btn-dark mt-8 self-start">
-          Buy {BRAND_NAME}
-        </a>
+          </div>
+        </div>
       </div>
 
-      <div className="header-bar intro-hide relative flex items-center px-5 py-5 lg:px-10 lg:py-6">
-        <div className="flex flex-1 items-center">
+      <div className="header-bar intro-hide relative grid grid-cols-[1fr_auto] items-center px-5 py-4 md:grid-cols-[1fr_auto_1fr] md:px-8 md:py-5">
+        <div className="flex items-center gap-4">
           <a href="#top" className="focus-ring pointer-events-auto" aria-label={`${BRAND_NAME} home`}>
             <Logo />
           </a>
+          <span className="header-muted hidden items-center gap-4 text-[15px] lg:inline-flex">
+            <span className="h-[5px] w-[5px] bg-current opacity-60" aria-hidden />
+            Smart home camera
+          </span>
         </div>
 
-        <nav aria-label="Primary" className="hidden items-center gap-7 whitespace-nowrap lg:flex">
-          {NAV_LINKS.map((l) => (
-            <a
-              key={l.href + l.label}
-              href={l.href}
-              className="focus-ring pointer-events-auto text-[0.8125rem] opacity-85 transition-opacity hover:opacity-100"
-            >
-              {l.label}
-            </a>
-          ))}
-        </nav>
+        <div className="header-muted hidden text-[15px] md:block">
+          <LocalClock />
+        </div>
 
-        <div className="flex flex-1 items-center justify-end gap-4">
-          <a href="#buy" className="header-buy btn btn-sm focus-ring pointer-events-auto hidden !h-8 !px-4 !text-[0.8125rem] lg:inline-flex">
-            Buy
-          </a>
+        <div className="flex items-center justify-end gap-2">
           <a
             href="#buy"
-            className="focus-ring pointer-events-auto inline-flex items-center gap-1.5 text-[0.8125rem] opacity-85 hover:opacity-100"
-            aria-label={`Cart, ${cart} ${cart === 1 ? 'item' : 'items'}`}
+            className="focus-ring pointer-events-auto inline-flex items-center gap-1.5 px-2 text-[15px]"
+            aria-label={`Bag, ${cart} ${cart === 1 ? 'item' : 'items'}`}
           >
-            <ShoppingBag size={17} strokeWidth={1.6} />
-            <span className="hidden lg:inline">Cart ({cart})</span>
-            {cart > 0 && <span className="grid h-4 min-w-4 place-items-center rounded-full bg-fresh px-1 text-[10px] font-semibold text-ink lg:hidden">{cart}</span>}
+            <ShoppingBag size={16} strokeWidth={1.4} />
+            <span className="tnum">({cart})</span>
           </a>
           <button
             ref={toggleRef}
             type="button"
-            className="focus-ring pointer-events-auto relative -mr-2 grid h-10 w-10 place-items-center lg:hidden"
-            aria-label={open ? 'Close menu' : 'Open menu'}
+            className="header-menu btn btn-sm focus-ring pointer-events-auto min-w-[5rem]"
             aria-expanded={open}
-            aria-controls="mobile-menu"
+            aria-controls="site-menu"
             onClick={() => setOpen((o) => !o)}
           >
-            <span className="relative block h-[9px] w-5">
-              <span
-                className="absolute left-0 top-0 h-[1.5px] w-5 rounded-full bg-current transition-transform duration-500 ease-[cubic-bezier(.65,0,.35,1)]"
-                style={{ transform: open ? 'translateY(3.75px) rotate(45deg)' : 'none' }}
-              />
-              <span
-                className="absolute bottom-0 left-0 h-[1.5px] w-5 rounded-full bg-current transition-transform duration-500 ease-[cubic-bezier(.65,0,.35,1)]"
-                style={{ transform: open ? 'translateY(-3.75px) rotate(-45deg)' : 'none' }}
-              />
-            </span>
+            {open ? 'close' : 'menu'}
           </button>
         </div>
       </div>

@@ -15,7 +15,7 @@ export default function ChooseWay() {
           </h2>
         </div>
         <div className="mt-12 grid gap-4 md:mt-16 md:grid-cols-2">
-          <a data-reveal href="#moments" className="group focus-ring relative block aspect-[4/3] overflow-hidden rounded-[28px] bg-surface">
+          <a data-reveal href="#moments" className="group focus-ring relative block aspect-[4/3] overflow-hidden rounded-[3px] bg-surface">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/media/stills/kitchen.jpg"
@@ -31,7 +31,7 @@ export default function ChooseWay() {
               <ArrowUpRight size={22} strokeWidth={1.6} className="shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </div>
           </a>
-          <a data-reveal href="#moments" className="group focus-ring relative block aspect-[4/3] overflow-hidden rounded-[28px] bg-surface">
+          <a data-reveal href="#moments" className="group focus-ring relative block aspect-[4/3] overflow-hidden rounded-[3px] bg-surface">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/media/life/shop-grocery.jpg"

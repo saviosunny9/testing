@@ -14,7 +14,7 @@ const HeroCopy = forwardRef<HTMLDivElement, Props>(function HeroCopy({ onWatchFi
     >
       <div className="flex w-full flex-col items-center gap-8 max-md:text-center md:flex-row md:items-end md:justify-between md:gap-12">
         <div className="flex flex-col gap-4 max-md:items-center">
-          <span className="hero-reveal intro-hide text-[13px] font-medium tracking-[0.02em] text-white/70">{eyebrow}</span>
+          <span className="hero-reveal intro-hide label label-sq !text-white/75">{eyebrow}</span>
           <h1 className="hero-h1 display h-hero intro-hide">
             <span className="block">{headline.lead}</span>
             <span className="block text-white/55">{headline.trail}</span>

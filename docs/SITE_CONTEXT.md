@@ -45,54 +45,71 @@ npm run export       # static site in out/ with relative URLs (see section 9)
 
 ## 3. Design system (`app/globals.css`, `tailwind.config.ts`)
 
-**Direction (first-draft brief, Oct 2026):** restrained and editorial. Surfaces are warm off-white, white, charcoal and black. Forest green is the brand dark, and fresh green is a small non-text accent. **Text is only black, white or grey**, so no coloured words, headings, eyebrows or labels. Colour comes from the film, the photography and the product finishes.
+**Direction (riotters-style pass, Oct 2026):** quiet and technical, modelled on the client's screenshots of drone.riotters.com. The live site could not be fetched from this environment, so the screenshots are the reference. The rules:
+- light, large, tightly tracked type, and **no bold anywhere** (max weight 500)
+- two-tone headlines: ink, then grey
+- mono uppercase labels (`▪ 01 · DESIGN`, `[ PAN ]`)
+- hairline grids and dividers, square-ish corners (3px)
+- a cool off-white ground with slate ink
+- forest green stays the brand dark; fresh green is a small non-text accent
+- **text is only slate, white or grey**; colour comes from the film, photography and product finishes
 
-### Colour tokens (provisional, from the moodboard)
+### Colour tokens
 
 | Token | Value | Use |
 |---|---|---|
-| `--bg` | `#ffffff` | page |
-| `--paper` / `--paper-2` | `#f5f5f2` / `#ebebe6` | warm off-white surfaces, tiles, accordions |
-| `--ink` | `#161715` | text |
-| `--ink-2` | `#3a3b38` | secondary dark text |
-| `--muted` | `#6b6d68` | body copy, eyebrows |
-| `--muted-2` | `#9a9c96` | `.hl` second-line emphasis (grey) |
-| `--line` | `#deded8` | hairlines |
-| `--charcoal` / `--black` | `#222321` / `#0d0e0d` | primary buttons, footer |
-| `--forest` / `--forest-2` | `#172d25` / `#213c31` | brand dark sections and cards (Privacy, Understands, shop timeline card) |
-| `--fresh` | `#54c878` | non-text accents only: focus ring, room markers, cart badge, selected dots |
-| `--tint-graphite` / `--tint-white` / `--tint-red` | `#ebecea` / `#f5f5f2` / `#f1edea` | neutral grounds behind each product finish |
+| `--bg` | `#fafafa` | page |
+| `--paper` / `--paper-2` | `#f1f2f2` / `#e6e8e9` | cool off-white surfaces, tiles, menu button |
+| `--ink` / `--charcoal` | `#1f2d33` | slate text, primary buttons |
+| `--ink-2` | `#3d4a50` | secondary dark text |
+| `--muted` | `#7d868a` | body copy, labels |
+| `--muted-2` | `#a3aaad` | `.hl` second-line grey, inactive word-tabs |
+| `--faint` | `#cfd4d6` | start colour of scroll-read words |
+| `--line` | `#d9dddf` | hairlines |
+| `--black` | `#111a1e` | footer |
+| `--forest` / `--forest-2` | `#172d25` / `#213c31` | brand dark sections (Privacy, Understands) |
+| `--fresh` | `#54c878` | non-text accents only: focus ring, room markers, cart badge |
+| `--tint-graphite` / `--tint-white` / `--tint-red` | `#eceeef` / `#f3f4f4` / `#f2efee` | grounds behind each product finish |
 
-Tailwind keeps the aliases `surface`, `surface-2`, `night` and `night-2`, mapped onto paper and forest, so older class names stay neutral.
+### Type: Switzer (light) + Geist Mono
 
-### Type: Switzer
-
-- **Font files:** self-hosted in `app/fonts/switzer/` (weights 400, 400 italic, 500, 600, 700) through `next/font/local`.
-- **Licence:** Switzer is © Indian Type Foundry, used under the ITF Free Font License (Fontshare). Details are in `app/fonts/switzer/LICENSE.md`.
-- **Scale:** one scale used everywhere, with no one-off sizes.
+- **Fonts:**
+  - Switzer 300, 400, 400 italic and 500, self-hosted in `app/fonts/switzer/` through `next/font/local` (600/700 removed)
+  - Geist Mono 400 (`--font-mono`), via `next/font/google`, for labels
+- **Licence:** Switzer is © Indian Type Foundry, ITF Free Font License; see `app/fonts/switzer/LICENSE.md`.
 
 | Class | Size | Weight / tracking / leading |
 |---|---|---|
-| `.h-hero` | `clamp(3rem, 7.2vw, 7.75rem)` | 600 / -0.05em / 0.9 |
-| `.h-section` | `clamp(2.4rem, 5vw, 4.75rem)` | 600 / -0.04em / 0.96 |
-| `.h-card` | `clamp(1.45rem, 2.1vw, 1.9rem)` | 600 / -0.032em / 1.04 |
-| `.h-small` | 19px | 600 / -0.02em |
-| body | 17px | 400 / -0.01em / 1.5 |
-| `.lede` | `clamp(1.0625rem, 1.3vw, 1.3125rem)` | grey |
-| `.eyebrow` | 12px | 500, uppercase, +0.08em, grey |
+| `.display` | (modifier) | 300 / -0.045em / 1 |
+| `.h-hero` | `clamp(2.75rem, 5.6vw, 6rem)` | 300 / -0.05em / 1 |
+| `.h-mega` | `clamp(5rem, 15vw, 15rem)` | 300 / -0.06em (footer wordmark) |
+| `.h-section` | `clamp(2.5rem, 4.8vw, 5rem)` | 300 |
+| `.h-card` | `clamp(1.5rem, 2.2vw, 2.1rem)` | 300 / -0.035em |
+| `.h-small` | 19px | 400 / -0.02em |
+| `.body-lg` | `clamp(1.25rem, 1.9vw, 1.9rem)` | 300 / -0.03em / 1.3 (big paragraphs) |
+| `.stat` | `clamp(2.6rem, 4.6vw, 4.5rem)` | 300 / -0.05em (figures) |
+| `.label` / `.eyebrow` | 11px mono | uppercase, +0.14em, grey; `.label-sq` adds ▪, `.label-br` wraps in [ ] |
 
-- **Emphasis:** `.hl` greys the second half of a headline ("Designed to disappear **into your home.**"). Inside `.on-dark` it becomes 50% white.
-- **Dark sections:** add `on-dark` so eyebrows, ledes, `.hl` and links switch to white or grey.
+- **Emphasis:** `.hl` greys the second half of a headline. Inside `.on-dark` it becomes 50% white.
+- **Dark sections:** add `on-dark` so labels, `.hl`, hairlines and links switch to white or grey.
 
 ### Components
 
+- **Header:**
+  - left: logo ▪ "Smart home camera"
+  - centre: a live local clock ("UTC 11:18 am")
+  - right: bag (n) and a grey `menu` button
+  - the menu is a full-screen overlay with numbered display links
 - **Buttons:**
-  - `.btn-dark` (charcoal, primary; `.btn-navy` is an alias)
-  - `.btn-light` (white, used over the film and dark sections)
-  - `.btn-glass` (frosted, over video) and `.btn-outline`
-  - all have a green focus ring
-- **Selected states:** the Family/Business toggle and Ask chips use charcoal fill with white text; the colour swatch uses an ink ring.
-- **Radii:** 22–32px on cards, pills for buttons. Shadows are neutral.
+  - 3px radius, weight 400
+  - `.btn-dark` (slate), `.btn-light`, `.btn-glass`, `.btn-quiet` (paper-2), `.btn-outline`
+- **Word-tabs (`.word-tab`):** huge light words; the active one is ink with a 2px underline that draws in. Used for For family / For business.
+- **Stat row (`.stat-row`):** three hairline columns, a `[ LABEL ]` and a big light figure with a small grey unit.
+- **Numbered hairline lists:** `01` mono number, title, grey detail and a thin icon at the right. Used in Privacy, the app points and the FAQ.
+- **Scroll-read text (`[data-read]`):** words darken from `--faint` to the paragraph's colour as it rises (SplitText + scrub in `PageEffects`). Off for reduced motion.
+- **Guides:** `.guide-v` is a vertical centre hairline in the journey sections.
+- **Wordmarks:** the giant `.hero-word` "alaro" sits behind the hero's end composition; an `.h-mega` "alaro" at 8% white closes the footer.
+- **Radii:** 3px on cards, tiles and images. Phone and app-UI radii stay realistic. Shadows are neutral.
 
 ### Motion rules
 
@@ -113,7 +130,7 @@ Tailwind keeps the aliases `surface`, `surface-2`, `night` and `night-2`, mapped
 | 0 | Header (fixed) | `components/Header.tsx` | | white text over film / dark, ink elsewhere |
 | 1 | Hero: film → phone with moments around it | `components/hero/*` | `#hero`, `#top` | film, then paper |
 | 2–4 | Product journey (one 3D canvas across three sections) | `sections/ProductJourney.tsx` | `#design`, `#see`, `#private` | paper, white, forest |
-| 5 | Captured on Alaro: moments bento, Family/Business toggle | `sections/Moments.tsx` | `#moments` | white |
+| 5 | Captured on Alaro: moments bento, For family / For business word-tabs | `sections/Moments.tsx` | `#moments` | white |
 | 6 | App showcase: realistic tilted phone | `sections/AppShowcase.tsx` | `#app` | white |
 | 7 | Colour tiles | `sections/ProductTiles.tsx` | `#colours` | white with neutral tiles |
 | 8 | At home: camera composited into real rooms | `sections/AtHome.tsx` | `#at-home` | white |
