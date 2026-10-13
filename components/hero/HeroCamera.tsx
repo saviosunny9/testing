@@ -10,11 +10,11 @@ import { forwardRef, type CSSProperties } from 'react';
 export const CAMERA = {
   src: '/media/hero/alaro-camera.webp',
   srcSm: '/media/hero/alaro-camera-sm.webp',
-  w: 1439,
-  h: 1642,
-  face: { cx: 0.343, cy: 0.296, rx: 0.3045, ry: 0.2717 },
-  dot: { x: 0.3374, y: 0.0791 },
-  product: { cx: 0.3614, top: 0.0152, bottom: 0.9659 },
+  w: 1446,
+  h: 1680,
+  face: { cx: 0.3427, cy: 0.3143, rx: 0.303, ry: 0.2656 },
+  dot: { x: 0.3371, y: 0.1024 },
+  product: { cx: 0.361, top: 0.0399, bottom: 0.969 },
 };
 
 const pct = (n: number) => `${(n * 100).toFixed(2)}%`;

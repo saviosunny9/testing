@@ -508,9 +508,9 @@ html.lenis body {
 .hero-cam {
   position: absolute;
   height: var(--ch);
-  width: calc(var(--ch) * 1439 / 1642);
-  left: calc(50% - var(--ch) * 1439 / 1642 * 0.3614);
-  top: calc(44% - var(--ch) * 0.4906);
+  width: calc(var(--ch) * 1446 / 1680);
+  left: calc(50% - var(--ch) * 1446 / 1680 * 0.361);
+  top: calc(44% - var(--ch) * 0.5045);
   pointer-events: none;
 }
 .hero-cam-img {
@@ -554,8 +554,8 @@ html.lenis body {
 }
 .hero-caption {
   position: absolute;
-  left: 36.14%;
-  top: calc(96.59% + 2.6svh);
+  left: 36.1%;
+  top: calc(96.9% + 2.6svh);
   transform: translateX(-50%);
 }
 
@@ -566,8 +566,8 @@ html.lenis body {
 .hero-geo {
   --ch: min(66svh, 680px);
   /* the camera body's height and width, from the render */
-  --ph: calc(var(--ch) * 0.9507);
-  --pw: calc(var(--ch) * 0.5834);
+  --ph: calc(var(--ch) * 0.9292);
+  --pw: calc(var(--ch) * 0.5702);
   --cw: max(calc(var(--pw) + 8rem), 34rem, 36vw);
   --zone-top: max(5.5rem, 10svh);
 }
@@ -639,49 +639,6 @@ html.lenis body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-/* ----------------------------------------------------------------------------
-   Product journey: one sticky WebGL canvas behind three sections
----------------------------------------------------------------------------- */
-.journey-stage {
-  position: absolute;
-  inset: 0;
-  z-index: 5;
-  pointer-events: none;
-}
-.journey-sticky {
-  position: sticky;
-  top: 0;
-  height: 100svh;
-}
-.journey-section {
-  padding-block: 6rem;
-}
-@media (min-width: 768px) {
-  /* 200svh per section with the copy held in place for the first half */
-  .journey-section {
-    min-height: 200svh;
-    padding-block: 0;
-  }
-  .journey-copy {
-    position: sticky;
-    top: 0;
-    height: 100svh;
-    align-items: center;
-  }
-  .journey[data-fallback='true'] .journey-section {
-    min-height: 100svh;
-  }
-  .journey[data-fallback='true'] .journey-copy {
-    position: relative;
-  }
-}
-.journey[data-fallback='true'] .journey-stage {
-  display: none;
-}
-.journey[data-fallback='true'] .journey-still {
-  display: block;
 }
 
 /* ----------------------------------------------------------------------------

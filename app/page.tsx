@@ -10,7 +10,7 @@ import Experience from '@/components/sections/Experience';
 import Faq from '@/components/sections/Faq';
 import Moments from '@/components/sections/Moments';
 import PageEffects from '@/components/sections/PageEffects';
-import ProductJourney from '@/components/sections/ProductJourney';
+import CameraJourney from '@/components/sections/CameraJourney';
 import ProductTiles from '@/components/sections/ProductTiles';
 import Placement from '@/components/sections/Placement';
 import Understands from '@/components/sections/Understands';
@@ -22,7 +22,7 @@ export default function Page() {
         <div id="hero-wrap">
           <Hero />
         </div>
-        <ProductJourney />
+        <CameraJourney />
         <Moments />
         <AppShowcase />
         <ProductTiles />

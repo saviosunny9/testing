@@ -107,7 +107,6 @@ npm run export       # static site in out/ with relative URLs (see section 9)
 - **Stat row (`.stat-row`):** three hairline columns, a `[ LABEL ]` and a big light figure with a small grey unit.
 - **Numbered hairline lists:** `01` mono number, title, grey detail and a thin icon at the right. Used in Privacy, the app points and the FAQ.
 - **Scroll-read text (`[data-read]`):** words darken from `--faint` to the paragraph's colour as it rises (SplitText + scrub in `PageEffects`). Off for reduced motion.
-- **Guides:** `.guide-v` is a vertical centre hairline in the journey sections.
 - **Wordmarks:** the giant `.hero-word` "alaro" sits behind the hero's end composition; an `.h-mega` "alaro" at 8% white closes the footer.
 - **Radii:** 3px on cards, tiles and images. Phone and app-UI radii stay realistic. Shadows are neutral.
 
@@ -117,7 +116,7 @@ npm run export       # static site in out/ with relative URLs (see section 9)
 - `[data-reveal]` fades up once on enter; `[data-parallax]` drifts an element while in view.
 - `prefers-reduced-motion`:
   - static hero composition
-  - journey shown as still renders
+  - the camera journey shown as stacked stills
   - no Lenis
 - The hero intro never locks scrolling.
 
@@ -129,7 +128,7 @@ npm run export       # static site in out/ with relative URLs (see section 9)
 |---|---|---|---|---|
 | 0 | Header (fixed) | `components/Header.tsx` | | white text over film / dark, ink elsewhere |
 | 1 | Hero: film closes into the Alaro camera's glass, moments around it | `components/hero/*` | `#hero`, `#top` | film, then paper |
-| 2–4 | Product journey (one 3D canvas across three sections) | `sections/ProductJourney.tsx` | `#design`, `#see`, `#private` | paper, white, forest |
+| 2–4 | Camera journey: one pinned section; copy changes on scroll while the camera (rendered frames) stays on the right | `sections/CameraJourney.tsx` | `#design` | paper, white, forest |
 | 5 | Captured on Alaro: moments bento, For family / For business word-tabs | `sections/Moments.tsx` | `#moments` | white |
 | 6 | App showcase: realistic tilted phone | `sections/AppShowcase.tsx` | `#app` | white |
 | 7 | Colour tiles | `sections/ProductTiles.tsx` | `#colours` | white with neutral tiles |
@@ -170,32 +169,26 @@ Nav: Products (`#buy`), For Home (`#moments`), For Business (`#choose`), Design 
 - **Reduced motion:** a static poster hero, then the camera and collage composition as a normal section.
 - **Film player:** "Watch the film" opens `FilmPlayer.tsx` (unchanged).
 
-### Product journey (`ProductJourney.tsx`, `lib/three/*`)
+### Camera journey (`CameraJourney.tsx`, `public/media/camera/f00–f32.webp`)
 
-**How it works:**
-- One sticky WebGL canvas (`.journey-stage` → `.journey-sticky`) sits behind three sections.
-- Each section is 200svh on desktop, with its copy column sticky for the first 100svh, so copy and camera take turns.
-- The canvas is contained by the journey wrapper and never overlaps neighbouring sections.
+**How it works:** one pinned section (`#design`, 300svh). The camera sits in the right column; the copy in the left column changes as you scroll. Each frame is a render of the hero camera, so the same object carries from the hero into this section.
 
-**The three sections:**
+- **Frames:** 33 renders from `tools/camera-render/sequence.js`, cropped to one shared box (1119 × 1300). f00–f22 pan the head from −61° to +49° in 5° steps; f09 is the hero's own view (−16°); f23–f32 tip the head from 7.5° to 75°.
+- **Scroll mapping** (`frameAt`):
+  - 0–⅓ Design: pan turns right (f09 → f22)
+  - ⅓–⅔ Pan and tilt: sweeps left across the room (f22 → f00)
+  - ⅔–1 Privacy: back to centre, then tips down (f00 → f09 → f23–f32)
+- **Panels** cross-fade in one grid cell, so the section never changes height. The background moves from paper to white to forest (`on-dark`), and the header switches to light type over the forest panel.
+- **Arrival:** the camera fades in from 30% of the viewport width to the left as the section comes up, which reads as it coming across from the hero. This is a hand-off, not a shared-element morph.
+- **Preloading:** all 33 frames load once the section is within 150% of a screen.
 
-| Section | Background | Copy | Camera |
-|---|---|---|---|
-| **Design** (`#design`) | paper | left: "Designed to disappear into your home." + 14 cm / 7.4 cm / 3 finishes | right, turning slowly to show its form |
-| **Pan and tilt** (`#see`) | white | right: "Turns to see the whole room." + 350° / 75° / 2K HDR | glides left (scale dips to 0.8 while travelling), then pans its head left and right |
-| **Privacy** (`#private`) | forest | left: "Private by design." + on-device recognition, encryption, privacy mode | glides right; the head tips down (privacy mode) |
+| Panel | Copy |
+|---|---|
+| 01 Design | "Designed to disappear into your home." + 14 cm / 7.4 cm / 3 finishes |
+| 02 Pan and tilt | "Turns to see the whole room." + 350° / 75° / 2K HDR |
+| 03 Privacy | "Private by design." + on-device recognition, end-to-end encryption, privacy mode |
 
-**Loading and fallbacks:**
-- three.js loads when the journey is within about one screen of the viewport.
-- On mobile, with reduced motion, or if WebGL or the module fails, `data-fallback="true"` hides the canvas and shows still renders in each section.
-
-**3D model:** the procedural `lib/three/alaroCamera.ts` (see section 6 for why a downloaded model wasn't used). It has:
-- a soft-touch matte shell (speckle roughness and bump map)
-- a domed black glass face with controlled studio reflections
-- a detailed lens (barrel, aperture, coated ring)
-- a speaker grille, rear arm and hinge, and a USB-C port
-- a Switzer "alaro." logo
-- a soft contact shadow plus a VSM shadow on an invisible floor
+**Mobile and reduced motion:** a stacked version (each panel with a still frame) shows below 768px or when reduced motion is on. The previous three.js journey (`ProductJourney.tsx`, `lib/three/*`) was removed; `lib/three` is still used by `ProductViewer`.
 
 ### App showcase (`AppShowcase.tsx`)
 
@@ -240,8 +233,8 @@ Nav: Products (`#buy`), For Home (`#moments`), For Business (`#choose`), Design 
 **Why the model is our own (first-draft brief, §4):**
 - The brief asked for a licensed online model matching Alaro's form.
 - From the build environment, Sketchfab and the reference sites were unreachable (blocked by network policy), so no third-party model could be searched, compared or licence-checked.
-- Following the brief's fallback, the existing procedural model was upgraded instead (materials, lens, shadows) and is used consistently across the hero renders, the journey and the buy viewer.
-- **If a licensed GLB is sourced later**, it can replace `createAlaroCamera()` in `lib/three/stage.ts`. The journey only needs `group`, `pan` (head yaw) and `tilt` (head pitch) handles.
+- Following the brief's fallback, the existing procedural model was upgraded instead (materials, lens, shadows) and is used consistently across the hero renders, the camera journey frames and the buy viewer.
+- **If a licensed GLB is sourced later**, it can replace `createAlaroCamera()` in `lib/three/stage.ts`, then the journey frames need re-rendering (`tools/camera-render/sequence.js`).
 
 **Imagery:** no stock photography is used; network access to stock sites was blocked. Real lifestyle and shop photography is still wanted.
 
@@ -252,11 +245,11 @@ Nav: Products (`#buy`), For Home (`#moments`), For Business (`#choose`), Design 
 ```
 app/layout.tsx            Switzer (next/font/local), metadata, intro-hide script, Header, Lenis
 app/page.tsx              section order
-app/globals.css           tokens, type scale, buttons, hero camera/grain, moment tiles, journey, device
+app/globals.css           tokens, type scale, buttons, hero camera/grain, moment tiles, device
 app/fonts/switzer/        font files + LICENSE.md
 components/hero/          Hero, HeroCopy, HeroCamera (+ CameraGlass), MomentTiles, PreviewCopy, FilmPlayer,
                           useHeroTimeline.ts
-components/sections/      ProductJourney, AppShowcase, ProductTiles, Moments, AtHome, Understands, AskAlaro,
+components/sections/      CameraJourney, AppShowcase, ProductTiles, Moments, AtHome, Understands, AskAlaro,
                           Control, Experience + ProductViewer, ChooseWay, Faq, Closing, PageEffects
 lib/three/alaroCamera.ts  procedural camera model + studio environment
 lib/three/stage.ts        WebGL stage + contact shadow
