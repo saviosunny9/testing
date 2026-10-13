@@ -13,7 +13,7 @@ where the code and assets live, and which parts are still placeholders.
 ## 0. Current state (read this first)
 
 - **Hero:** the film plays in an 8px white frame. On scroll it closes like an aperture into the glass face of a rendered Alaro camera at the centre, which keeps the moment clips around it. Caption: "Every moment, kept." Reduced motion shows the same composition still.
-- **Camera journey (`#design`):** one pinned section. The copy on the left changes (Design → Pan and tilt → Privacy) while the same rendered camera stays on the right, turning and tipping its head by scroll position. Forest green on the privacy panel.
+- **Camera journey (`#design`):** one pinned section in a sunlit living room (the client's family photo). The copy on the left changes (Design → Pan and tilt → Privacy) while the same rendered camera stays on the coffee table, turning and tipping its head by scroll position.
 - **Placement:** "Stand it up. Or mount it." two photos: Alaro on a sunlit table (the client's own Alaro render, `life/table.jpg`) and Alaro on its wall mount (composited, `life/wall.jpg`).
 - **Client Alaro photos:** `life/table.jpg` is on the Placement table slot; `life/family-home.jpg` (boy running to his parents, camera on the wall) is the For Family card in Choose your way.
 - **Lifestyle photos:** the client's reference photographs with other brands' products removed and Alaro composited in (built by `tools/camera-render/lifestyle.py`). Usage rights need checking before launch.
@@ -139,7 +139,7 @@ npm run export       # static site in out/ with relative URLs (see section 9)
 |---|---|---|---|---|
 | 0 | Header (fixed) | `components/Header.tsx` | | white text over film / dark, ink elsewhere |
 | 1 | Hero: film closes into the Alaro camera's glass, moments around it | `components/hero/*` | `#hero`, `#top` | film, then paper |
-| 2–4 | Camera journey: one pinned section; copy changes on scroll while the camera (rendered frames) stays on the right | `sections/CameraJourney.tsx` | `#design` | paper, white, forest |
+| 2–4 | Camera journey: one pinned section in a home scene; copy changes on scroll while the camera (rendered frames) stays on the coffee table | `sections/CameraJourney.tsx` | `#design` | paper, white, forest |
 | 5 | Captured on Alaro: moments bento, For family / For business word-tabs | `sections/Moments.tsx` | `#moments` | white |
 | 6 | App showcase: realistic tilted phone | `sections/AppShowcase.tsx` | `#app` | white |
 | 7 | Colour tiles | `sections/ProductTiles.tsx` | `#colours` | white with neutral tiles |
@@ -179,26 +179,27 @@ Nav: Products (`#buy`), For Home (`#moments`), For Business (`#choose`), Design 
 - **Reduced motion:** a static poster hero, then the camera and collage composition as a normal section.
 - **Film player:** "Watch the film" opens `FilmPlayer.tsx` (unchanged).
 
-### Camera journey (`CameraJourney.tsx`, `public/media/camera/f00–f32.webp`)
+### Camera journey (`CameraJourney.tsx`, `public/media/camera/f00–f32.webp`, `public/media/life/family-scene.jpg`)
 
-**How it works:** one pinned section (`#design`, 300svh). The camera sits in the right column; the copy in the left column changes as you scroll. Each frame is a render of the hero camera, so the same object carries from the hero into this section.
+**How it works:** one pinned section (`#design`, 300svh). A sunlit living room (the client's family photo) fills the section, and the rendered Alaro camera stands on the coffee table in it. The copy sits on the left over a dark gradient and changes as you scroll; the scene and camera stay put.
 
+- **Scene:** `family-scene.jpg` is the client's photo with its own small wall camera painted out (so only one camera shows). `.cj-scene` is sized like `object-fit: cover` for a 16:9 photo (`--cover-w`), and the camera (`.cj-cam`) is positioned in percentages of the photo (left 62%, top 57.8%, width 11.6%), so it stays on the table at any screen size. A light sepia/warm filter takes the studio edge off the render.
 - **Frames:** 33 renders from `tools/camera-render/sequence.js`, cropped to one shared box (1119 × 1300). f00–f22 pan the head from −61° to +49° in 5° steps; f09 is the hero's own view (−16°); f23–f32 tip the head from 7.5° to 75°.
 - **Scroll mapping** (`frameAt`):
   - 0–⅓ Design: pan turns right (f09 → f22)
   - ⅓–⅔ Pan and tilt: sweeps left across the room (f22 → f00)
   - ⅔–1 Privacy: back to centre, then tips down (f00 → f09 → f23–f32)
-- **Panels** cross-fade in one grid cell, so the section never changes height. The background moves from paper to white to forest (`on-dark`), and the header switches to light type over the forest panel.
-- **Arrival:** the camera fades in from 30% of the viewport width to the left as the section comes up, which reads as it coming across from the hero. This is a hand-off, not a shared-element morph.
+- **Panels** cross-fade in one grid cell, so the section never changes height. Copy is deliberately short (one sentence each).
+- **Arrival:** the camera fades and scales in on the table as the section comes up.
 - **Preloading:** all 33 frames load once the section is within 150% of a screen.
 
 | Panel | Copy |
 |---|---|
-| 01 Design | "Designed to disappear into your home." + 14 cm / 7.4 cm / 3 finishes |
-| 02 Pan and tilt | "Turns to see the whole room." + 350° / 75° / 2K HDR |
-| 03 Privacy | "Private by design." + on-device recognition, end-to-end encryption, privacy mode |
+| 01 Design | "Designed to disappear into your home." + "A soft-touch shell in three quiet finishes, small enough for any shelf." + 14 cm / 7.4 cm / 3 finishes |
+| 02 Pan and tilt | "Turns to see the whole room." + "Look around from your phone, or let Alaro follow the action on its own." + 350° / 75° / 2K HDR |
+| 03 Privacy | "Private by design." + "Turn on privacy mode and the lens tips down and stops recording." + on-device recognition, end-to-end encryption, privacy mode |
 
-**Mobile and reduced motion:** a stacked version (each panel with a still frame) shows below 768px or when reduced motion is on. The previous three.js journey (`ProductJourney.tsx`, `lib/three/*`) was removed; `lib/three` is still used by `ProductViewer`.
+**Mobile and reduced motion:** a stacked version shows below 768px or when reduced motion is on: each panel has the photo as its background with the large camera still below the copy. `life/family-home.jpg` (the untouched original, wall camera included) is still the For Family card.
 
 ### App showcase (`AppShowcase.tsx`)
 

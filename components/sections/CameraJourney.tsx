@@ -1,7 +1,7 @@
 'use client';
 
 import { Cpu, KeyRound, Lock } from 'lucide-react';
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
 import { BRAND_NAME } from '@/lib/brand';
 import { gsap, ScrollTrigger } from '@/lib/gsap';
 
@@ -11,6 +11,7 @@ import { gsap, ScrollTrigger } from '@/lib/gsap';
  * frames 23–32 tip the head down-to-up (7.5° → 75°).
  */
 const FRAMES = 33;
+const SCENE = '/media/life/family-scene.jpg';
 const frame = (i: number) => `/media/camera/f${String(i).padStart(2, '0')}.webp`;
 const CENTRE = 9;
 const RIGHT = 22;
@@ -45,10 +46,7 @@ function DesignCopy() {
       <h2 className="display h-section mt-4">
         Designed to disappear <span className="hl">into your home.</span>
       </h2>
-      <p className="body-lg mt-7 max-w-[30ch]">
-        A soft-touch shell in three quiet finishes, small enough for any shelf. No blinking lights, nothing that looks like a security
-        camera.
-      </p>
+      <p className="body-lg mt-7 max-w-[28ch]">A soft-touch shell in three quiet finishes, small enough for any shelf.</p>
       <dl className="stat-row mt-12 max-w-[460px]">
         {[
           ['14', 'cm', 'Height'],
@@ -75,9 +73,7 @@ function SeeCopy() {
       <h2 className="display h-section mt-4">
         Turns to see <span className="hl">the whole room.</span>
       </h2>
-      <p className="body-lg mt-7 max-w-[30ch]">
-        Look around from your phone, or let {BRAND_NAME} quietly follow the action on its own. One camera covers what used to take three.
-      </p>
+      <p className="body-lg mt-7 max-w-[28ch]">Look around from your phone, or let {BRAND_NAME} follow the action on its own.</p>
       <dl className="stat-row mt-12 max-w-[460px]">
         {[
           ['350', '°', 'Pan'],
@@ -104,12 +100,10 @@ function PrivacyCopy() {
       <h2 className="display h-section mt-4">
         Private <span className="hl">by design.</span>
       </h2>
-      <p className="body-lg mt-7 max-w-[30ch]">
-        Turn on privacy mode and the lens tips down and stops recording. What it learns about your home stays in your home.
-      </p>
+      <p className="body-lg mt-7 max-w-[28ch]">Turn on privacy mode and the lens tips down and stops recording.</p>
       <ul className="mt-12 max-w-[460px] border-t border-white/15">
         {[
-          { icon: Cpu, t: 'Recognition on the camera', d: 'Faces and pets are recognised on the device, not in the cloud.' },
+          { icon: Cpu, t: 'Recognition on the camera', d: 'Faces and pets are recognised on the device.' },
           { icon: KeyRound, t: 'End-to-end encrypted', d: 'Only your family’s phones hold the keys.' },
           { icon: Lock, t: 'Privacy mode', d: 'One tap, and it looks away.' },
         ].map(({ icon: Icon, t, d }, i) => (
@@ -129,19 +123,38 @@ function PrivacyCopy() {
 
 const PANELS = [DesignCopy, SeeCopy, PrivacyCopy];
 
+/* ----------------------------------------------------------------- the scene */
+
+/**
+ * A sunlit living room (the client's photo, with its own wall camera painted out) fills the section, and the
+ * rendered camera stands on the coffee table in it. The scene is sized like `object-fit: cover` for a 16:9 photo, and
+ * the camera is positioned in percentages of the photo, so it stays on the table at any screen size.
+ */
+function Scene({ camRef }: { camRef: RefObject<HTMLImageElement | null> }) {
+  return (
+    <div className="absolute inset-0 overflow-hidden bg-[#2a1a10]" aria-hidden>
+      <div className="cj-scene">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={SCENE} width={1600} height={900} alt="" decoding="async" className="block h-full w-full" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img ref={camRef} src={frame(CENTRE)} width={1119} height={1300} alt="" decoding="async" className="cj-cam" />
+      </div>
+      {/* keeps the copy readable over the left of the photo */}
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(22,13,6,0.88)_0%,rgba(22,13,6,0.76)_30%,rgba(22,13,6,0.32)_50%,rgba(22,13,6,0.05)_63%,rgba(22,13,6,0)_72%)]" />
+    </div>
+  );
+}
+
 /* ----------------------------------------------------------------- pinned (desktop) */
 
 function Pinned() {
   const root = useRef<HTMLElement>(null);
-  const sticky = useRef<HTMLDivElement>(null);
-  const visual = useRef<HTMLDivElement>(null);
-  const img = useRef<HTMLImageElement>(null);
+  const cam = useRef<HTMLImageElement>(null);
   const [active, setActive] = useState(0);
 
   useEffect(() => {
     const r = root.current!;
-    const s = sticky.current!;
-    const im = img.current!;
+    const im = cam.current!;
     const shown = { f: CENTRE, a: 0 };
 
     // fetch the sequence once the section is close, so scrolling never waits on a frame
@@ -174,34 +187,29 @@ function Pinned() {
           if (a !== shown.a) {
             shown.a = a;
             setActive(a);
-            // the privacy panel is dark, so the header switches to light type over it
-            if (a === 2) s.dataset.headerTheme = 'dark';
-            else delete s.dataset.headerTheme;
           }
         },
       });
 
-      // the camera arrives from the hero: it starts off to the left and settles into its column
+      // the camera arrives in the room as the section comes up
       gsap.fromTo(
-        visual.current,
-        { x: () => -window.innerWidth * 0.3, opacity: 0 },
-        { x: 0, opacity: 1, ease: 'none', scrollTrigger: { trigger: r, start: 'top bottom', end: 'top top', scrub: true } },
+        im,
+        { opacity: 0, scale: 0.8, transformOrigin: '36% 97%' },
+        { opacity: 1, scale: 1, ease: 'none', scrollTrigger: { trigger: r, start: 'top 70%', end: 'top 10%', scrub: true } },
       );
     }, r);
 
     return () => {
       io.disconnect();
       ctx.revert();
-      delete s.dataset.headerTheme;
     };
   }, []);
 
-  const surface = active === 2 ? 'bg-forest on-dark text-white' : active === 1 ? 'bg-white text-ink' : 'bg-paper text-ink';
-
   return (
     <section ref={root} id="design" className="relative h-[300svh]" aria-label="Camera features">
-      <div ref={sticky} className={`sticky top-0 h-[100svh] overflow-hidden transition-colors duration-700 ${surface}`}>
-        <div className="container-x grid h-full items-center gap-10 md:grid-cols-12">
+      <div data-header-theme="dark" className="on-dark sticky top-0 h-[100svh] overflow-hidden text-white">
+        <Scene camRef={cam} />
+        <div className="container-x relative grid h-full items-center md:grid-cols-12">
           <div className="grid md:col-span-5">
             {PANELS.map((Panel, i) => (
               <div
@@ -214,19 +222,6 @@ function Pinned() {
                 <Panel />
               </div>
             ))}
-          </div>
-
-          <div ref={visual} className="flex justify-center md:col-span-6 md:col-start-7">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              ref={img}
-              src={frame(CENTRE)}
-              width={1119}
-              height={1300}
-              alt={`The ${BRAND_NAME} camera`}
-              decoding="async"
-              className="block h-auto max-h-[min(78svh,760px)] w-auto max-w-full"
-            />
           </div>
         </div>
       </div>
@@ -242,26 +237,32 @@ function Stacked() {
   return (
     <>
       {PANELS.map((Panel, i) => (
-        <section
-          key={i}
-          id={i === 0 ? 'design' : undefined}
-          className={`section ${i === 2 ? 'on-dark bg-forest text-white' : i === 1 ? 'bg-white' : 'bg-paper'}`}
-        >
-          <div className="container-x grid items-center gap-10 md:grid-cols-12">
-            <div className="md:col-span-5">
+        <section key={i} id={i === 0 ? 'design' : undefined} data-header-theme="dark" className="section on-dark relative overflow-hidden text-white">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={SCENE}
+            width={1600}
+            height={900}
+            alt=""
+            loading="lazy"
+            aria-hidden
+            className="absolute inset-0 h-full w-full object-cover"
+            style={{ objectPosition: '68% 50%' }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[rgba(22,13,6,0.78)] via-[rgba(22,13,6,0.6)] to-[rgba(22,13,6,0.78)]" aria-hidden />
+          <div className="container-x relative">
+            <div className="md:max-w-[520px]">
               <Panel />
             </div>
-            <div className="flex justify-center md:col-span-6 md:col-start-7">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={frame(STILLS[i])}
-                width={1119}
-                height={1300}
-                alt={`The ${BRAND_NAME} camera`}
-                loading="lazy"
-                className="block h-auto w-[80%] max-w-[420px]"
-              />
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={frame(STILLS[i])}
+              width={1119}
+              height={1300}
+              alt={`The ${BRAND_NAME} camera`}
+              loading="lazy"
+              className="cj-cam-still mx-auto mt-10 block h-auto w-[68%] max-w-[360px] md:ml-auto md:mr-0"
+            />
           </div>
         </section>
       ))}

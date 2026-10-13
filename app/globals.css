@@ -893,3 +893,25 @@ html.intro-pending .intro-hide {
     transform: scaleY(0.75);
   }
 }
+
+/* camera journey: the photo covers the section like object-fit: cover (16:9), and the camera stands on the coffee table */
+.cj-scene {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--cover-w);
+  aspect-ratio: 16 / 9;
+  transform: translate(-50%, -50%);
+}
+.cj-cam {
+  position: absolute;
+  left: 62%;
+  top: 57.8%;
+  width: 11.6%;
+  height: auto;
+}
+/* sunlit warm room: take the cool studio edge off the render */
+.cj-cam,
+.cj-cam-still {
+  filter: sepia(0.16) saturate(1.08) brightness(0.97) contrast(1.02);
+}
