@@ -10,6 +10,16 @@ where the code and assets live, and which parts are still placeholders.
 
 ---
 
+## 0. Current state (read this first)
+
+- **Hero:** the film plays in an 8px white frame. On scroll it closes like an aperture into the glass face of a rendered Alaro camera at the centre, which keeps the moment clips around it. Caption: "Every moment, kept." Reduced motion shows the same composition still.
+- **Camera journey (`#design`):** one pinned section. The copy on the left changes (Design → Pan and tilt → Privacy) while the same rendered camera stays on the right, turning and tipping its head by scroll position. Forest green on the privacy panel.
+- **Placement:** "Stand it up. Or mount it." two lifestyle photos with Alaro in them.
+- **Lifestyle photos:** the client's reference photographs with other brands' products removed and Alaro composited in (built by `tools/camera-render/lifestyle.py`). Usage rights need checking before launch.
+- **Sound:** a music icon in the header turns the hero's ambient music and a short voiceover on and off (off by default). The voice is a placeholder synthetic voice.
+- **Known gaps:** the moment clips and the camera journey were checked in headless Chromium, not on real phones; the 8px hero frame was not checked on a phone.
+
+
 ## 1. Product and audience
 
 Alaro is an indoor smart home camera with a pan/tilt head (the head swivels and tips up and down). It recognises people, pets and objects on the device itself, so alerts read like "Mira's home"
