@@ -26,7 +26,7 @@ const HeroCopy = forwardRef<HTMLDivElement, Props>(function HeroCopy({ onWatchFi
             <button type="button" onClick={onWatchFilm} className="btn btn-glass">
               <Play size={13} strokeWidth={0} className="fill-white" /> {watchFilm}
             </button>
-            <a href="#buy" className="btn btn-dark">
+            <a href="#buy" className="btn btn-light">
               {buy}
             </a>
           </div>

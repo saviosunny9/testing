@@ -5,7 +5,7 @@ export const NAV_LINKS = [
   { label: 'Products', href: '#buy' },
   { label: 'For Home', href: '#moments' },
   { label: 'For Business', href: '#choose' },
-  { label: 'How it works', href: '#how' },
+  { label: 'Design', href: '#design' },
   { label: 'Support', href: '#faq' },
 ] as const;
 
@@ -21,8 +21,8 @@ export const COPY = {
     buy: `Buy ${BRAND_NAME}`,
   },
   preview: {
-    eyebrow: 'Live view in the Alaro app',
-    headline: 'Always there, even when you’re not.',
-    sub: 'Live HD, smart alerts for the people and pets you love, and the moments that matter, saved automatically.',
+    eyebrow: 'The Alaro app',
+    headline: 'Every moment, right in your pocket.',
+    sub: 'Live view, gentle alerts for the people and pets you love, and the moments worth keeping, saved automatically.',
   },
 } as const;

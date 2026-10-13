@@ -6,6 +6,7 @@ import { useReducedMotion } from '@/lib/useReducedMotion';
 import CameraHUD from './CameraHUD';
 import FilmPlayer from './FilmPlayer';
 import HeroCopy from './HeroCopy';
+import MomentTiles from './MomentTiles';
 import PhoneBody from './PhoneBody';
 import PreviewCopy from './PreviewCopy';
 import { useHeroIntro, useHeroTimeline } from './useHeroTimeline';
@@ -88,6 +89,7 @@ function AnimatedHero({ onWatchFilm }: { onWatchFilm: () => void }) {
     <section id="hero" ref={track} className="hero-track" aria-label="Introduction">
       <div ref={stage} className="hero-stage" id="top">
         <div ref={frameTarget} className="frame-rect frame-target" aria-hidden />
+        <MomentTiles className="arm-hidden z-[2]" />
         <PhoneBody className="arm-hidden z-[5]" />
 
         <div ref={camFrame} className="cam-frame">
@@ -134,7 +136,8 @@ function StaticHero({ onWatchFilm }: { onWatchFilm: () => void }) {
         <HeroCopy onWatchFilm={onWatchFilm} className="absolute inset-0" />
       </section>
 
-      <section className="relative h-[100svh] min-h-[640px] overflow-hidden bg-white" aria-label="Live view preview">
+      <section className="relative h-[100svh] min-h-[700px] overflow-hidden bg-paper" aria-label="The Alaro app">
+        <MomentTiles />
         <PhoneBody />
         <div className="frame-rect z-10 overflow-hidden bg-black">
           {/* eslint-disable-next-line @next/next/no-img-element */}

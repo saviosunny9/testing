@@ -146,7 +146,7 @@ export default function Experience() {
                       className="peer sr-only"
                     />
                     <span
-                      className="block h-8 w-8 rounded-full ring-1 ring-black/10 ring-offset-[3px] ring-offset-surface transition-shadow peer-checked:ring-2 peer-checked:ring-blue peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-blue"
+                      className="block h-8 w-8 rounded-full ring-1 ring-black/10 ring-offset-[3px] ring-offset-surface transition-shadow peer-checked:ring-2 peer-checked:ring-ink peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-fresh"
                       style={{ background: c.swatch }}
                     />
                     <span className="sr-only">{c.name}</span>
@@ -175,7 +175,7 @@ export default function Experience() {
             <ul className="mt-6 grid gap-x-6 gap-y-2 text-[13px] text-ink-2 sm:grid-cols-2">
               {['Free delivery in 2–4 days', '30-day free returns', '2-year warranty', 'UPI, cards and EMI'].map((t) => (
                 <li key={t} className="flex items-center gap-2">
-                  <Check size={14} strokeWidth={2} className="text-live" /> {t}
+                  <Check size={14} strokeWidth={2} className="text-forest" /> {t}
                 </li>
               ))}
             </ul>

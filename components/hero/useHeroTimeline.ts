@@ -3,7 +3,6 @@
 import { type RefObject, useEffect } from 'react';
 import { gsap, ScrollTrigger, SplitText } from '@/lib/gsap';
 import { setHeroProgress } from '@/lib/headerTheme';
-import { lockScroll, unlockScroll } from '@/lib/lenis';
 
 export type HeroRefs = {
   track: RefObject<HTMLElement | null>;
@@ -54,18 +53,23 @@ export function useHeroTimeline({ track, stage, frameTarget, camFrame, camVideo 
       };
 
       const media = q('.cam-media');
+      const tiles = q('.moment-tile');
+      /** Offset that pulls a tile toward the stage centre (it starts hidden under the big film). */
+      const pull = (axis: 'x' | 'y') => (_i: number, el: HTMLElement) => {
+        const c = axis === 'x' ? el.offsetLeft + el.offsetWidth / 2 - stageEl.clientWidth / 2 : el.offsetTop + el.offsetHeight / 2 - stageEl.clientHeight / 2;
+        return -c * 0.42;
+      };
+
       gsap.set(frameEl, { clipPath: 'inset(0px 0px 0px 0px round 0px)' });
       // Explicit start states: invalidateOnRefresh re-records staggered fromTo children,
       // so they must already be at their "from" values before the timeline exists.
-      gsap.set(videoEl, { scale: 1.08, x: 0, y: 0 });
+      gsap.set(videoEl, { scale: 1.06, x: 0, y: 0 });
       gsap.set(media, { filter: 'grayscale(1) contrast(1.12) brightness(0.9)' });
       gsap.set(q('.film-grain'), { opacity: 0.55 });
       gsap.set(q('.phone-body'), { opacity: 0 });
-      gsap.set(q('.detection'), { opacity: 0 });
-      gsap.set(q('.hud-item'), { opacity: 0, y: 8 });
-      gsap.set(q('.det-corner'), { strokeDashoffset: 1 });
-      gsap.set(q('.det-label > span'), { opacity: 0, y: 8 });
-      gsap.set(q('.preview-item'), { opacity: 0, y: 24 });
+      gsap.set(tiles, { opacity: 0, scale: 1.18, x: pull('x'), y: pull('y') });
+      gsap.set(q('.hud-item'), { opacity: 0, y: 6 });
+      gsap.set(q('.preview-item'), { opacity: 0, y: 20 });
 
       const tl = gsap.timeline({
         defaults: { ease: 'none' },
@@ -90,14 +94,14 @@ export function useHeroTimeline({ track, stage, frameTarget, camFrame, camVideo 
           opacity: 0,
           y: () => -0.05 * window.innerHeight,
           filter: 'blur(6px)',
-          duration: 0.2,
+          duration: 0.18,
           immediateRender: false,
           // A filter on an ancestor disables the glass button's backdrop-filter, so drop it at rest.
           onReverseComplete: () => gsap.set(q('.hero-copy'), { clearProps: 'filter' }),
         },
         0,
       )
-        .to(q('.hero-gradient'), { opacity: 0, duration: 0.2 }, 0)
+        .to(q('.hero-gradient'), { opacity: 0, duration: 0.18 }, 0)
         // Grainy black-and-white film clears up and takes on colour early in the scroll.
         .fromTo(
           media,
@@ -106,19 +110,24 @@ export function useHeroTimeline({ track, stage, frameTarget, camFrame, camVideo 
           0.03,
         )
         .fromTo(q('.film-grain'), { opacity: 0.55 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 0.03)
-        .to(frameEl, { clipPath: clipTarget, duration: 0.46, ease: 'power2.inOut' }, 0.08)
+        // The film shrinks into the phone screen...
+        .to(frameEl, { clipPath: clipTarget, duration: 0.46, ease: 'power2.inOut' }, 0.06)
         .fromTo(
           videoEl,
-          { scale: 1.08, x: 0, y: 0 },
+          { scale: 1.06, x: 0, y: 0 },
           { scale: () => fit().scale, x: () => fit().x, y: () => fit().y, duration: 0.46, ease: 'power2.inOut' },
-          0.08,
+          0.06,
         )
-        .fromTo(q('.phone-body'), { opacity: 0 }, { opacity: 1, duration: 0.12, ease: 'power2.out' }, 0.42)
-        .fromTo(q('.hud-item'), { opacity: 0, y: 8 }, { opacity: 1, y: 0, stagger: 0.02, duration: 0.1, ease: 'power2.out' }, 0.52)
-        .fromTo(q('.detection'), { opacity: 0 }, { opacity: 1, duration: 0.04 }, 0.6)
-        .fromTo(q('.det-corner'), { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.08 }, 0.6)
-        .fromTo(q('.det-label > span'), { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.06 }, 0.64)
-        .fromTo(q('.preview-item'), { opacity: 0, y: 24 }, { opacity: 1, y: 0, stagger: 0.03, duration: 0.15, ease: 'power2.out' }, 0.6)
+        // ...uncovering the moments around it, which settle into place as it lands.
+        .fromTo(
+          tiles,
+          { opacity: 0, scale: 1.18, x: pull('x'), y: pull('y') },
+          { opacity: 1, scale: 1, x: 0, y: 0, duration: 0.34, ease: 'power3.out', stagger: 0.025 },
+          0.16,
+        )
+        .fromTo(q('.phone-body'), { opacity: 0 }, { opacity: 1, duration: 0.1, ease: 'power2.out' }, 0.44)
+        .fromTo(q('.hud-item'), { opacity: 0, y: 6 }, { opacity: 1, y: 0, stagger: 0.02, duration: 0.08, ease: 'power2.out' }, 0.5)
+        .fromTo(q('.preview-item'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: 0.03, duration: 0.14, ease: 'power2.out' }, 0.56)
         .to({}, { duration: 0.2 });
 
       stageEl.classList.add('is-armed');
@@ -150,8 +159,8 @@ export function useHeroTimeline({ track, stage, frameTarget, camFrame, camVideo 
 }
 
 /**
- * Load-in sequence copied from Sequel (§4.3). Runs once fonts are ready and the
- * video is playing (each capped so a stalled network never blocks the page).
+ * Load-in sequence. Runs once fonts are ready and the video is playing (each capped so a
+ * stalled network never holds the page), and never locks scrolling.
  */
 export function useHeroIntro({ stage, camVideo }: Pick<HeroRefs, 'stage' | 'camVideo'>, enabled: boolean) {
   useEffect(() => {
@@ -161,30 +170,21 @@ export function useHeroIntro({ stage, camVideo }: Pick<HeroRefs, 'stage' | 'camV
     const root = document.documentElement;
     let cancelled = false;
     let split: SplitText | null = null;
-    let unlockTimer = 0;
-    let locked = false;
 
-    const unlock = () => {
-      if (!locked) return;
-      locked = false;
-      window.clearTimeout(unlockTimer);
-      unlockScroll();
-    };
-
-    if (window.scrollY < 10) {
-      locked = true;
-      lockScroll();
-      unlockTimer = window.setTimeout(unlock, 2500);
+    // The page stays scrollable during the intro; it only plays when we're at the very top.
+    if (window.scrollY > 10) {
+      root.classList.remove('intro-pending');
+      return;
     }
 
     const ctx = gsap.context(() => {});
 
-    const fontsReady = Promise.race([document.fonts?.ready ?? Promise.resolve(), wait(3000)]);
+    const fontsReady = Promise.race([document.fonts?.ready ?? Promise.resolve(), wait(1500)]);
     const videoPlaying = new Promise<void>((resolve) => {
       if (!videoEl.paused && videoEl.readyState >= 3) return resolve();
       videoEl.addEventListener('playing', () => resolve(), { once: true });
       // Autoplay can be blocked (low-power mode); start anyway over the poster.
-      wait(2500).then(resolve);
+      wait(1200).then(resolve);
     });
 
     Promise.all([fontsReady, videoPlaying]).then(() => {
@@ -207,7 +207,7 @@ export function useHeroIntro({ stage, camVideo }: Pick<HeroRefs, 'stage' | 'camV
           .to(videoEl, { opacity: 1, duration: 1.2, ease: 'power1.out' }, 0)
           .to(
             split.chars,
-            { opacity: 1, filter: 'blur(0px)', stagger: 0.02, duration: 0.9, ease: 'power2.out', onComplete: unlock },
+            { opacity: 1, filter: 'blur(0px)', stagger: 0.02, duration: 0.9, ease: 'power2.out' },
             0.15,
           )
           .addLabel('charsEnd')
@@ -218,7 +218,6 @@ export function useHeroIntro({ stage, camVideo }: Pick<HeroRefs, 'stage' | 'camV
 
     return () => {
       cancelled = true;
-      unlock();
       ctx.revert();
       split?.revert();
       root.classList.remove('intro-pending');

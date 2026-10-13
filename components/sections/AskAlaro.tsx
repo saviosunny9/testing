@@ -60,7 +60,7 @@ export default function AskAlaro() {
   return (
     <section id="ask" className="section bg-white">
       <div className="container-x">
-        <div className="grid items-center gap-12 rounded-[32px] bg-sky px-6 py-14 md:grid-cols-12 md:gap-10 md:px-14 md:py-20">
+        <div className="grid items-center gap-12 rounded-[32px] bg-paper px-6 py-14 md:grid-cols-12 md:gap-10 md:px-14 md:py-20">
           <div className="md:col-span-5">
             <p data-reveal className="eyebrow">
               Ask {BRAND_NAME}
@@ -82,7 +82,7 @@ export default function AskAlaro() {
                   onClick={() => ask(q)}
                   className={`focus-ring rounded-full border px-4 py-2 text-[14px] transition-colors ${
                     answerKey === q && state === 'answered'
-                      ? 'border-blue bg-blue text-white'
+                      ? 'border-charcoal bg-charcoal text-white'
                       : 'border-line bg-white text-ink hover:border-ink'
                   }`}
                 >
@@ -95,7 +95,7 @@ export default function AskAlaro() {
           <div data-reveal className="md:col-span-7">
             <div className="overflow-hidden rounded-[24px] bg-white shadow-[0_40px_80px_-40px_rgba(0,0,0,.25),0_0_0_1px_rgba(0,0,0,.04)]">
               <div className="flex items-center gap-3 border-b border-[#ececf0] px-5 py-4">
-                <span className="grid h-8 w-8 place-items-center rounded-full bg-blue text-white">
+                <span className="grid h-8 w-8 place-items-center rounded-full bg-forest text-white">
                   <LogoMark size={15} />
                 </span>
                 <span className="text-[15px] font-semibold text-ink">Ask {BRAND_NAME}</span>
@@ -150,7 +150,7 @@ export default function AskAlaro() {
                   placeholder="Ask anything about your day…"
                   className="min-w-0 flex-1 bg-transparent text-[15px] text-ink placeholder:text-[#a1a1a6] focus:outline-none"
                 />
-                <button type="submit" aria-label="Send" className="focus-ring grid h-8 w-8 place-items-center rounded-full bg-blue text-white">
+                <button type="submit" aria-label="Send" className="focus-ring grid h-8 w-8 place-items-center rounded-full bg-charcoal text-white">
                   <ArrowUp size={16} strokeWidth={2} />
                 </button>
               </form>

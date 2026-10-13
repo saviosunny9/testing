@@ -37,7 +37,7 @@ export default function AtHome() {
               />
               <span className="pointer-events-none absolute" style={{ left: `${s.mark.x}%`, top: `${s.mark.y}%` }} aria-hidden>
                 <span className="absolute -left-4 -top-4 h-8 w-8 animate-ping rounded-full bg-white/50" />
-                <span className="absolute -left-2 -top-2 h-4 w-4 rounded-full border-2 border-white bg-blue shadow" />
+                <span className="absolute -left-2 -top-2 h-4 w-4 rounded-full border-2 border-white bg-fresh shadow" />
               </span>
               <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/55 to-transparent p-5 pt-14 text-white">
                 <p className="text-[17px] font-semibold tracking-[-0.03em]">{s.room}</p>

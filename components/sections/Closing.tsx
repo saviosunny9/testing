@@ -8,7 +8,7 @@ export function ClosingCTA() {
   return (
     <section className="bg-white pb-24 md:pb-32">
       <div className="container-x">
-        <div className="relative overflow-hidden rounded-[32px] bg-[linear-gradient(160deg,var(--sky)_0%,var(--lilac)_60%,var(--peach)_100%)] px-6 pt-20 text-center md:pt-24">
+        <div className="relative overflow-hidden rounded-[32px] bg-paper px-6 pt-20 text-center md:pt-24">
           <h2 data-reveal className="display h-section mx-auto max-w-[16ch] text-ink">
             Ready to bring {BRAND_NAME} into your space?
           </h2>
@@ -50,7 +50,7 @@ export function ClosingCTA() {
 export function Footer() {
   const [done, setDone] = useState(false);
   return (
-    <footer data-header-theme="dark" className="bg-night py-16 text-white">
+    <footer data-header-theme="dark" className="on-dark bg-black py-16 text-white">
       <div className="container-x">
         <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
           <div>
@@ -60,7 +60,7 @@ export function Footer() {
           <nav aria-label="Footer" className="flex flex-wrap gap-x-7 gap-y-3 text-[14px] text-white/75">
             {[
               ['Moments', '#moments'],
-              ['How it works', '#how'],
+              ['Design', '#design'],
               [`Ask ${BRAND_NAME}`, '#ask'],
               ['Colours', '#colours'],
               ['Support', '#faq'],

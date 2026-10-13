@@ -40,13 +40,32 @@ function lathe(pts: THREE.Vector2[], segs = 128) {
   return g;
 }
 
+/** Fine speckle used as roughness and bump on the shell: reads as soft-touch matte plastic. */
+function grainTexture() {
+  const size = 256;
+  const cv = document.createElement('canvas');
+  cv.width = cv.height = size;
+  const ctx = cv.getContext('2d')!;
+  const img = ctx.createImageData(size, size);
+  for (let i = 0; i < size * size; i++) {
+    const v = 150 + Math.round((Math.random() - 0.5) * 46);
+    img.data[i * 4] = img.data[i * 4 + 1] = img.data[i * 4 + 2] = v;
+    img.data[i * 4 + 3] = 255;
+  }
+  ctx.putImageData(img, 0, 0);
+  const tex = new THREE.CanvasTexture(cv);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  tex.repeat.set(10, 5);
+  return tex;
+}
+
 function logoTexture(color: string) {
   const cv = document.createElement('canvas');
   cv.width = 1024;
   cv.height = 256;
   const ctx = cv.getContext('2d')!;
   ctx.fillStyle = color;
-  ctx.font = '700 76px Geist, "Helvetica Neue", Arial, sans-serif';
+  ctx.font = '700 76px Switzer, "Helvetica Neue", Arial, sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText('alaro.', 512, 128);
@@ -62,24 +81,27 @@ export type AlaroCamera = {
   pan: THREE.Group;
   /** Tilts the head up (positive, radians). */
   tilt: THREE.Group;
-  /** Emissive ring around the lens, for "night vision". */
-  irRing: THREE.Mesh;
   setColor: (c: CameraColor) => void;
   dispose: () => void;
 };
 
 export function createAlaroCamera(color: CameraColor = 'graphite', { segments = 128 } = {}): AlaroCamera {
   const conf = BODY_COLORS[color];
+  const grain = grainTexture();
   const body = new THREE.MeshPhysicalMaterial({
     color: conf.body,
-    roughness: conf.rough,
+    roughness: conf.rough + 0.08,
+    roughnessMap: grain,
+    bumpMap: grain,
+    bumpScale: 0.0025,
     metalness: 0,
-    clearcoat: 0.15,
-    clearcoatRoughness: 0.5,
-    sheen: 0.2,
-    sheenRoughness: 0.8,
+    clearcoat: 0.08,
+    clearcoatRoughness: 0.6,
+    sheen: 0.25,
+    sheenRoughness: 0.9,
+    sheenColor: new THREE.Color(0xffffff),
   });
-  const glass = new THREE.MeshPhysicalMaterial({ color: 0x020203, roughness: 0.03, clearcoat: 1, clearcoatRoughness: 0.02, ior: 1.5 });
+  const glass = new THREE.MeshPhysicalMaterial({ color: 0x020203, roughness: 0.035, clearcoat: 1, clearcoatRoughness: 0.03, ior: 1.52, envMapIntensity: 1.25 });
   const glassInner = new THREE.MeshPhysicalMaterial({ color: 0x141418, roughness: 0.18, metalness: 0.1, clearcoat: 1, clearcoatRoughness: 0.05 });
   const rimMat = new THREE.MeshPhysicalMaterial({ color: 0x0e0e10, roughness: 0.25, metalness: 0.6 });
   const lensRing = new THREE.MeshPhysicalMaterial({ color: 0x1a1b1e, roughness: 0.28, metalness: 0.85 });
@@ -96,7 +118,6 @@ export function createAlaroCamera(color: CameraColor = 'graphite', { segments = 
   const holeMat = new THREE.MeshStandardMaterial({ color: 0x060606, roughness: 0.9 });
   const portMat = new THREE.MeshStandardMaterial({ color: 0x111112, roughness: 0.5, metalness: 0.4 });
   const logoMat = new THREE.MeshPhysicalMaterial({ map: logoTexture(conf.logo), transparent: true, roughness: 0.4, depthWrite: false });
-  const irMat = new THREE.MeshBasicMaterial({ color: 0xff2a1a, transparent: true, opacity: 0 });
 
   const mesh = (g: THREE.BufferGeometry, m: THREE.Material, cast = true) => {
     const o = new THREE.Mesh(g, m);
@@ -197,11 +218,17 @@ export function createAlaroCamera(color: CameraColor = 'graphite', { segments = 
   const pupil = mesh(new THREE.CircleGeometry(0.3, 32), new THREE.MeshPhysicalMaterial({ color: 0x1b2a3a, roughness: 0.1, metalness: 0.5, clearcoat: 1 }), false);
   pupil.position.set(0, 0.12, APEX + 0.235);
   tilt.add(pupil);
-
-  // night-vision ring: a faint red glow around the inner window
-  const irRing = new THREE.Mesh(new THREE.RingGeometry(HEAD_R * 0.54, HEAD_R * 0.575, 96), irMat);
-  irRing.position.set(0, 0, domeZ(HEAD_R * 0.56) + 0.03);
-  tilt.add(irRing);
+  // inner lens elements: a dark aperture ring and a thin coated rim that catches light
+  const aperture = mesh(new THREE.RingGeometry(0.3, 0.52, 48), new THREE.MeshStandardMaterial({ color: 0x050608, roughness: 0.35, metalness: 0.6 }), false);
+  aperture.position.set(0, 0.12, APEX + 0.232);
+  tilt.add(aperture);
+  const coat = mesh(
+    new THREE.TorusGeometry(0.54, 0.018, 8, 64),
+    new THREE.MeshPhysicalMaterial({ color: 0x2a3550, roughness: 0.15, metalness: 0.9, iridescence: 1, iridescenceIOR: 1.8 }),
+    false,
+  );
+  coat.position.set(0, 0.12, APEX + 0.236);
+  tilt.add(coat);
 
   for (const [y, r] of [
     [HEAD_R * 0.78, 0.07],
@@ -243,9 +270,10 @@ export function createAlaroCamera(color: CameraColor = 'graphite', { segments = 
         });
       }
     });
+    grain.dispose();
   };
 
-  return { group, pan, tilt, irRing, setColor, dispose };
+  return { group, pan, tilt, setColor, dispose };
 }
 
 /** Studio environment with feathered softboxes, so the black glass picks up real reflections. */

@@ -2,43 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Bright, friendly product system (Calendly-like): white ground, navy ink, one confident blue,
-   and soft tints for tiles. Product colours (graphite, chalk, nuuk red) get their own blended tints. */
+/* Restrained editorial system: warm off-white, white, charcoal and black surfaces; forest and fresh
+   green only as small non-text accents. Text is always black, white or grey. Colour comes from the
+   photography, the film and the product itself. */
 :root {
   --bg: #ffffff;
-  --surface: #f4f7fb; /* cool light tile */
-  --surface-2: #e6edf6;
-  --ink: #0b3558; /* navy */
-  --ink-2: #1d4a72;
-  --muted: #476788;
-  --line: #d4e0ed;
-  --black: #071f36;
-  --night: #0b3558; /* dark sections */
-  --night-2: #134470; /* cards on dark */
-
-  --blue: #006bff;
-  --blue-hover: #0057d1;
-  --sky: #e8f2ff;
-  --lilac: #f0eaff;
-  --violet: #8247f5;
-  --mint: #e2f8ef;
-  --green: #11a37f;
-  --peach: #ffece4;
-  --coral: #ff6b4a;
-  --sun: #fff5d6;
-  --gold: #f5b400;
-
-  /* product-blended tints */
-  --tint-graphite: #e3e7ec;
-  --tint-white: #eaf2ff;
-  --tint-red: #ffe3e1;
-
-  --red: #b8232b; /* "Nuuk Red" from the product */
-  --live: #30d158;
+  --paper: #f5f5f2; /* warm off-white */
+  --paper-2: #ebebe6;
+  --ink: #161715; /* near-black text */
+  --ink-2: #3a3b38;
+  --muted: #6b6d68; /* grey text */
+  --muted-2: #9a9c96; /* lighter grey, second-line emphasis */
+  --line: #deded8;
+  --charcoal: #222321;
+  --black: #0d0e0d;
+  --forest: #172d25; /* brand dark */
+  --forest-2: #213c31;
+  --fresh: #54c878; /* brand accent, non-text only */
   --rec: #ff3b30;
-  --amber: #ffd60a;
 
-  --shadow-soft: 0 30px 60px -30px rgba(0, 0, 0, 0.25), 0 12px 24px -16px rgba(0, 0, 0, 0.15);
+  /* neutral grounds for the three product finishes */
+  --tint-graphite: #ebecea;
+  --tint-white: #f5f5f2;
+  --tint-red: #f1edea;
+
+  --shadow-soft: 0 30px 60px -32px rgba(13, 14, 13, 0.28), 0 12px 24px -16px rgba(13, 14, 13, 0.14);
 
   /* Size of a 16:9 box that covers the viewport (manual object-fit: cover). */
   --cover-w: max(100vw, 177.7778svh);
@@ -55,10 +43,11 @@ html {
 body {
   background: var(--bg);
   color: var(--ink);
-  font-family: var(--font-geist), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-family: var(--font-switzer), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   font-size: 17px;
-  line-height: 1.42;
-  letter-spacing: -0.018em;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
 }
 
 /* Lenis */
@@ -77,88 +66,102 @@ html.lenis body {
 }
 
 @layer components {
-  /* Display: Geist, tight tracking and leading */
+  /* ---- Type scale (Switzer). Every section uses these; no one-off sizes. ---- */
   .display {
-    font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
     font-weight: 600;
-    letter-spacing: -0.05em;
-    line-height: 0.98;
+    letter-spacing: -0.04em;
+    line-height: 0.96;
     text-wrap: balance;
   }
   .h-hero {
-    font-size: clamp(2.75rem, 6vw, 6.25rem);
-    letter-spacing: -0.058em;
-    line-height: 0.94;
+    font-size: clamp(3rem, 7.2vw, 7.75rem);
+    letter-spacing: -0.05em;
+    line-height: 0.9;
   }
   .h-section {
-    font-size: clamp(2.2rem, 4.2vw, 4rem);
+    font-size: clamp(2.4rem, 5vw, 4.75rem);
   }
   .h-card {
-    font-size: clamp(1.4rem, 2vw, 1.75rem);
-    line-height: 1.05;
-    letter-spacing: -0.04em;
+    font-size: clamp(1.45rem, 2.1vw, 1.9rem);
+    line-height: 1.04;
+    letter-spacing: -0.032em;
   }
+  .h-small {
+    font-size: 1.1875rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+  /* emphasis through contrast, never colour */
   .hl {
-    color: var(--blue);
+    color: var(--muted-2);
+  }
+  .on-dark .hl {
+    color: rgba(255, 255, 255, 0.5);
   }
   .eyebrow {
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    color: var(--blue);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .on-dark .eyebrow {
+    color: rgba(255, 255, 255, 0.6);
   }
   .lede {
-    font-size: clamp(1.0625rem, 1.35vw, 1.25rem);
-    line-height: 1.4;
+    font-size: clamp(1.0625rem, 1.3vw, 1.3125rem);
+    line-height: 1.45;
+    letter-spacing: -0.015em;
     color: var(--muted);
-    letter-spacing: -0.022em;
   }
-  .mono {
-    font-family: var(--font-geist-mono), ui-monospace, monospace;
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0.02em;
+  .on-dark .lede {
+    color: rgba(255, 255, 255, 0.7);
   }
+  .mono,
   .tnum {
     font-variant-numeric: tabular-nums;
   }
 
+  /* ---- Buttons ---- */
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.45rem;
-    height: 2.75rem;
-    padding: 0 1.35rem;
+    height: 2.875rem;
+    padding: 0 1.4rem;
     border-radius: 9999px;
     font-size: 0.9375rem;
-    font-weight: 600;
-    letter-spacing: -0.015em;
+    font-weight: 500;
+    letter-spacing: -0.01em;
     white-space: nowrap;
     transition:
       background-color 0.25s ease,
       color 0.25s ease,
       border-color 0.25s ease,
-      transform 0.25s ease;
+      transform 0.25s ease,
+      opacity 0.25s ease;
   }
   .btn:active {
     transform: scale(0.98);
   }
+  .btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
   .btn-sm {
-    height: 2.25rem;
-    padding: 0 1rem;
+    height: 2.375rem;
+    padding: 0 1.05rem;
     font-size: 0.875rem;
   }
-  .btn-dark {
-    background: var(--blue);
-    color: #fff;
-  }
-  .btn-dark:hover {
-    background: var(--blue-hover);
-  }
+  /* primary: charcoal on light */
+  .btn-dark,
   .btn-navy {
-    background: var(--ink);
+    background: var(--charcoal);
     color: #fff;
   }
+  .btn-dark:hover,
   .btn-navy:hover {
     background: var(--black);
   }
@@ -167,14 +170,14 @@ html.lenis body {
     color: var(--ink);
   }
   .btn-light:hover {
-    background: #f0f0f2;
+    background: var(--paper);
   }
   .btn-outline {
-    border: 1.5px solid var(--blue);
-    color: var(--blue);
+    border: 1px solid var(--ink);
+    color: var(--ink);
   }
   .btn-outline:hover {
-    background: var(--blue);
+    background: var(--ink);
     color: #fff;
   }
   .btn-glass {
@@ -188,22 +191,25 @@ html.lenis body {
     background: rgba(255, 255, 255, 0.22);
   }
   .link {
-    color: var(--blue);
+    color: var(--ink);
     text-decoration: underline;
     text-underline-offset: 3px;
     text-decoration-thickness: 1px;
   }
+  .on-dark .link {
+    color: #fff;
+  }
 
   .focus-ring:focus-visible,
   .btn:focus-visible {
-    outline: 2px solid var(--blue);
+    outline: 2px solid var(--fresh);
     outline-offset: 3px;
   }
 
   .container-x {
     margin-inline: auto;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1240px;
     padding-inline: 1.25rem;
   }
   @media (min-width: 768px) {
@@ -215,10 +221,19 @@ html.lenis body {
   .tile {
     border-radius: 28px;
     overflow: hidden;
-    background: var(--surface);
+    background: var(--paper);
   }
   .section {
-    padding-block: clamp(5rem, 11vw, 9.5rem);
+    padding-block: clamp(5.5rem, 11vw, 10rem);
+  }
+
+  /* small green dot used for "selected" and "live" states (non-text accent) */
+  .accent-dot {
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: var(--fresh);
   }
 }
 
@@ -248,7 +263,7 @@ html.lenis body {
     color 0.3s ease;
 }
 .site-header[data-theme='light'] .header-buy {
-  background: var(--blue);
+  background: var(--charcoal);
   color: #fff;
 }
 .site-header .header-bar {
@@ -259,14 +274,14 @@ html.lenis body {
   border-bottom: 1px solid transparent;
 }
 .site-header[data-solid='true']:not([data-menu='open']) .header-bar {
-  background: rgba(255, 255, 255, 0.78);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  backdrop-filter: blur(20px) saturate(180%);
-  border-bottom-color: rgba(0, 0, 0, 0.06);
+  background: rgba(255, 255, 255, 0.8);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(20px) saturate(160%);
+  border-bottom-color: rgba(13, 14, 13, 0.06);
   padding-block: 12px;
 }
 .site-header[data-solid='true'][data-theme='dark']:not([data-menu='open']) .header-bar {
-  background: rgba(11, 53, 88, 0.82);
+  background: rgba(23, 45, 37, 0.84);
   border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 .site-header[data-menu='open'] {
@@ -282,15 +297,15 @@ html.lenis body {
 }
 
 /* ----------------------------------------------------------------------------
-   Hero stage
+   Hero stage: full-bleed film that shrinks into a phone, with moments around it
 ---------------------------------------------------------------------------- */
 .hero-track {
   position: relative;
-  height: 340vh;
+  height: 360vh;
 }
 @media (max-width: 767px) {
   .hero-track {
-    height: 290vh;
+    height: 300vh;
   }
 }
 
@@ -299,7 +314,7 @@ html.lenis body {
   top: 0;
   height: 100svh;
   overflow: hidden;
-  background: var(--bg);
+  background: var(--paper);
 }
 
 .cam-frame {
@@ -319,7 +334,6 @@ html.lenis body {
 .cam-media.poster-hidden {
   background-image: none !important;
 }
-
 .cam-video {
   position: absolute;
   left: 50%;
@@ -332,7 +346,6 @@ html.lenis body {
   object-fit: cover;
   transform-origin: 50% 50%;
 }
-
 .hero-gradient {
   position: absolute;
   inset: auto 0 0 0;
@@ -347,22 +360,56 @@ html.lenis body {
   }
 }
 
-/* The phone's screen in the final state: a 19.5:9 landscape iPhone display.
-   JS reads this rect; the HUD and phone body share it. */
+/* Film grain for the black-and-white opening; fades out as colour comes in. */
+.film-grain {
+  position: absolute;
+  inset: -60%;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 -0.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+  opacity: 0.55;
+  animation: grain 0.6s steps(6) infinite;
+}
+@keyframes grain {
+  0% {
+    transform: translate(0, 0);
+  }
+  17% {
+    transform: translate(-6%, 4%);
+  }
+  33% {
+    transform: translate(5%, -7%);
+  }
+  50% {
+    transform: translate(-3%, 8%);
+  }
+  67% {
+    transform: translate(8%, 2%);
+  }
+  83% {
+    transform: translate(-7%, -4%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* The phone's screen in the final state: a portrait 9:19.5 iPhone display.
+   JS reads this rect; the phone body, HUD and caption share it. */
 .frame-rect {
+  --ph: min(62svh, 640px);
   position: absolute;
   left: 50%;
-  top: calc(50% - 6svh);
-  width: min(64vw, 1060px, calc((100svh - 330px) * 2.1667));
-  aspect-ratio: 2.1667;
+  top: 44%;
+  height: var(--ph);
+  width: calc(var(--ph) * 9 / 19.5);
   transform: translate(-50%, -50%);
-  border-radius: clamp(18px, 3.4vw, 50px);
+  border-radius: calc(var(--ph) * 0.068);
 }
 @media (max-width: 767px) {
   .frame-rect {
-    top: 40%;
-    width: calc(100vw - 56px);
-    border-radius: 22px;
+    --ph: min(54svh, 520px);
+    top: 44%;
   }
 }
 .frame-target {
@@ -370,55 +417,40 @@ html.lenis body {
   pointer-events: none;
 }
 
-/* iPhone body drawn around the screen rect */
+/* iPhone body around the screen rect: titanium edge, black bezel, side buttons */
 .phone-body {
   pointer-events: none;
 }
 .phone-body .frame {
   position: absolute;
-  inset: calc(clamp(7px, 1vw, 13px) * -1);
-  border-radius: calc(clamp(18px, 3.4vw, 50px) + clamp(7px, 1vw, 13px));
+  inset: calc(var(--ph) * -0.019);
+  border-radius: calc(var(--ph) * 0.087);
   background: #0b0b0c;
   box-shadow:
-    0 0 0 2.5px #c9c9cc,
-    0 0 0 3.5px #9a9a9f,
-    0 60px 90px -40px rgba(0, 0, 0, 0.42),
-    0 28px 40px -24px rgba(0, 0, 0, 0.25);
+    0 0 0 calc(var(--ph) * 0.004) #cfcfcc,
+    0 0 0 calc(var(--ph) * 0.0065) #8f908c,
+    0 70px 90px -50px rgba(13, 14, 13, 0.55),
+    0 30px 40px -28px rgba(13, 14, 13, 0.3);
 }
 .phone-body .btn-nub {
   position: absolute;
-  height: 4px;
+  width: calc(var(--ph) * 0.007);
   border-radius: 3px;
-  background: linear-gradient(#d4d4d7, #a3a3a8);
-}
-@media (max-width: 767px) {
-  .phone-body .frame {
-    border-radius: 30px;
-  }
-  .phone-body .btn-nub {
-    height: 3px;
-  }
+  background: linear-gradient(90deg, #a3a3a0, #d6d6d3);
 }
 
-/* Clean live-view overlay (Fitness-style panel) */
+/* Minimal live-view overlay on the phone */
 .hud {
   container-type: size;
   color: #fff;
 }
-.hud-panel {
-  border-radius: 7cqh;
-  background: rgba(28, 28, 30, 0.32);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  -webkit-backdrop-filter: blur(24px) saturate(160%);
-  backdrop-filter: blur(24px) saturate(160%);
-}
 .hud-island {
   position: absolute;
-  left: 1.7cqw;
-  top: 50%;
-  width: 5.4cqh;
-  height: 26cqh;
-  transform: translateY(-50%);
+  left: 50%;
+  top: 1.7cqh;
+  width: 31cqw;
+  height: 4.2cqh;
+  transform: translateX(-50%);
   border-radius: 9999px;
   background: #000;
 }
@@ -438,6 +470,147 @@ html.lenis body {
   }
 }
 
+/* Moments that gather around the phone. Positions come from CSS custom properties so desktop and
+   mobile layouts can differ without extra markup. */
+.moment-tile {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--w);
+  aspect-ratio: var(--ar);
+  border-radius: clamp(14px, 1.4vw, 22px);
+  overflow: hidden;
+  background: var(--paper-2);
+  box-shadow: 0 30px 50px -34px rgba(13, 14, 13, 0.45);
+}
+@media (max-width: 767px) {
+  .moment-tile {
+    left: var(--mx, var(--x));
+    top: var(--my, var(--y));
+    width: var(--mw, var(--w));
+  }
+  .moment-tile[data-mobile='hide'] {
+    display: none;
+  }
+}
+.moment-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ----------------------------------------------------------------------------
+   Product journey: one sticky WebGL canvas behind three sections
+---------------------------------------------------------------------------- */
+.journey-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+.journey-sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+}
+.journey-section {
+  padding-block: 6rem;
+}
+@media (min-width: 768px) {
+  /* 200svh per section with the copy held in place for the first half */
+  .journey-section {
+    min-height: 200svh;
+    padding-block: 0;
+  }
+  .journey-copy {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    align-items: center;
+  }
+  .journey[data-fallback='true'] .journey-section {
+    min-height: 100svh;
+  }
+  .journey[data-fallback='true'] .journey-copy {
+    position: relative;
+  }
+}
+.journey[data-fallback='true'] .journey-stage {
+  display: none;
+}
+.journey[data-fallback='true'] .journey-still {
+  display: block;
+}
+
+/* ----------------------------------------------------------------------------
+   Realistic phone (app showcase)
+---------------------------------------------------------------------------- */
+.device-scene {
+  perspective: 1800px;
+}
+.device {
+  --dw: min(320px, 70vw);
+  position: relative;
+  width: var(--dw);
+  aspect-ratio: 9 / 19.5;
+  transform: rotateY(-16deg) rotateX(7deg) rotateZ(3deg);
+  transform-style: preserve-3d;
+  transition: transform 1.2s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.device-scene:hover .device {
+  transform: rotateY(-9deg) rotateX(4deg) rotateZ(2deg);
+}
+.device .shell {
+  position: absolute;
+  inset: calc(var(--dw) * -0.045);
+  border-radius: calc(var(--dw) * 0.2);
+  background: linear-gradient(115deg, #e4e4e1 0%, #9d9e9a 18%, #f3f3f1 32%, #8b8c88 56%, #d9d9d6 78%, #a5a6a2 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.6),
+    inset 0 0 calc(var(--dw) * 0.012) rgba(0, 0, 0, 0.35);
+}
+.device .bezel {
+  position: absolute;
+  inset: calc(var(--dw) * -0.03);
+  border-radius: calc(var(--dw) * 0.185);
+  background: #070707;
+}
+.device .screen {
+  position: absolute;
+  inset: 0;
+  border-radius: calc(var(--dw) * 0.155);
+  overflow: hidden;
+  background: #000;
+}
+.device .glare {
+  position: absolute;
+  inset: 0;
+  border-radius: calc(var(--dw) * 0.155);
+  background: linear-gradient(118deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.06) 26%, rgba(255, 255, 255, 0) 40%);
+  pointer-events: none;
+}
+.device .island {
+  position: absolute;
+  left: 50%;
+  top: 2.2%;
+  width: 31%;
+  height: 4.1%;
+  transform: translateX(-50%);
+  border-radius: 9999px;
+  background: #000;
+}
+.device-shadow {
+  position: absolute;
+  left: 8%;
+  right: -4%;
+  bottom: -9%;
+  height: 16%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(13, 14, 13, 0.38), transparent);
+  filter: blur(14px);
+  transform: rotateZ(3deg);
+}
+
 /* ----------------------------------------------------------------------------
    Misc
 ---------------------------------------------------------------------------- */
@@ -449,8 +622,12 @@ html.intro-pending .intro-hide {
     opacity: 1;
   }
   .rec-dot,
-  .marquee-track {
+  .marquee-track,
+  .film-grain {
     animation: none !important;
+  }
+  .device {
+    transition: none;
   }
 }
 
@@ -478,7 +655,6 @@ html.intro-pending .intro-hide {
   display: none;
 }
 
-
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -488,84 +664,4 @@ html.intro-pending .intro-hide {
     opacity: 1;
     transform: none;
   }
-}
-
-/* Film grain for the black-and-white opening; fades out as colour comes in. */
-.film-grain {
-  position: absolute;
-  inset: -60%;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 -0.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  mix-blend-mode: overlay;
-  opacity: 0.55;
-  animation: grain 0.6s steps(6) infinite;
-}
-@keyframes grain {
-  0% { transform: translate(0, 0); }
-  17% { transform: translate(-6%, 4%); }
-  33% { transform: translate(5%, -7%); }
-  50% { transform: translate(-3%, 8%); }
-  67% { transform: translate(8%, 2%); }
-  83% { transform: translate(-7%, -4%); }
-  100% { transform: translate(0, 0); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .film-grain { animation: none; }
-}
-
-/* How it works: chapter copy and UI swap with the active chapter */
-.how-ch,
-.how-ui {
-  opacity: 0;
-  transform: translateY(14px);
-  transition:
-    opacity 0.5s ease,
-    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-.how-ui {
-  transform: translateY(10px) scale(0.96);
-}
-.how[data-active='0'] .how-ch-0,
-.how[data-active='0'] .how-ui-0,
-.how[data-active='1'] .how-ch-1,
-.how[data-active='1'] .how-ui-1,
-.how[data-active='2'] .how-ch-2,
-.how[data-active='2'] .how-ui-2,
-.how[data-active='3'] .how-ch-3,
-.how[data-active='3'] .how-ui-3,
-.how[data-active='4'] .how-ch-4,
-.how[data-active='4'] .how-ui-4 {
-  opacity: 1;
-  transform: none;
-}
-.how-title {
-  color: var(--ink);
-  transition: color 0.5s ease;
-}
-.how-body {
-  color: var(--muted);
-  transition: color 0.5s ease;
-}
-.how[data-active='3'] .how-title {
-  color: #fff;
-}
-.how[data-active='3'] .how-body {
-  color: rgba(255, 255, 255, 0.75);
-}
-.how[data-active='3'] .how-eyebrow {
-  color: #8cbcff;
-}
-.how-dot {
-  background: rgba(11, 53, 88, 0.22);
-  transition:
-    height 0.4s ease,
-    background-color 0.4s ease;
-}
-.how[data-active='0'] .how-dot-0,
-.how[data-active='1'] .how-dot-1,
-.how[data-active='2'] .how-dot-2,
-.how[data-active='3'] .how-dot-3,
-.how[data-active='4'] .how-dot-4 {
-  height: 1.4rem;
-  background: var(--blue);
 }

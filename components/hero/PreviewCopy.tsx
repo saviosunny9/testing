@@ -5,10 +5,10 @@ export default function PreviewCopy({ className = '', as: Tag = 'h2' }: { classN
   const { eyebrow, headline, sub } = COPY.preview;
   return (
     <div className={`frame-rect pointer-events-none ${className}`}>
-      <div className="absolute inset-x-[-10%] top-[calc(100%+44px)] flex flex-col items-center gap-3 text-center md:top-[calc(100%+56px)]">
+      <div className="absolute left-1/2 top-[calc(100%+3.4svh)] flex w-[min(92vw,620px)] -translate-x-1/2 flex-col items-center gap-2.5 text-center">
         <p className="preview-item eyebrow">{eyebrow}</p>
-        <Tag className="preview-item display text-[clamp(1.75rem,3.2vw,3rem)] text-ink">{headline}</Tag>
-        <p className="preview-item lede max-w-[560px] max-md:text-[15px]">{sub}</p>
+        <Tag className="preview-item display text-[clamp(1.6rem,2.6vw,2.6rem)] text-ink">{headline}</Tag>
+        <p className="preview-item lede max-w-[480px] max-md:hidden">{sub}</p>
       </div>
     </div>
   );

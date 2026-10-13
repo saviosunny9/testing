@@ -117,7 +117,7 @@ export default function Header() {
           >
             <ShoppingBag size={17} strokeWidth={1.6} />
             <span className="hidden lg:inline">Cart ({cart})</span>
-            {cart > 0 && <span className="grid h-4 min-w-4 place-items-center rounded-full bg-brand px-1 text-[10px] font-semibold text-white lg:hidden">{cart}</span>}
+            {cart > 0 && <span className="grid h-4 min-w-4 place-items-center rounded-full bg-fresh px-1 text-[10px] font-semibold text-ink lg:hidden">{cart}</span>}
           </a>
           <button
             ref={toggleRef}

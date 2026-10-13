@@ -49,7 +49,7 @@ function FamilyGrid() {
       </Photo>
       <div
         data-reveal
-        className="flex flex-col items-center justify-center gap-6 rounded-[24px] bg-sky p-8 text-center"
+        className="flex flex-col items-center justify-center gap-6 rounded-[24px] bg-paper p-8 text-center"
       >
         <p className="max-w-[26ch] text-[1.125rem] font-medium leading-snug text-ink">
           The moments you’d never want to miss, captured, remembered and shared just for you.
@@ -73,7 +73,7 @@ function BusinessGrid() {
           <p className="display mt-2 max-w-[13ch] text-[1.75rem] text-ink">Keep an eye on the shop floor.</p>
         </figcaption>
       </Photo>
-      <div data-reveal className="rounded-[24px] bg-night p-6 text-white">
+      <div data-reveal className="rounded-[24px] bg-forest p-6 text-white">
         <p className="text-[13px] text-white/60">Today at the shop</p>
         <ul className="mt-4 space-y-3 text-[15px]">
           {[
@@ -92,14 +92,14 @@ function BusinessGrid() {
           ))}
         </ul>
       </div>
-      <div data-reveal className="flex flex-col rounded-[24px] bg-sun p-6">
+      <div data-reveal className="flex flex-col rounded-[24px] bg-paper p-6">
         <p className="text-[13px] text-muted">Footfall today</p>
         <p className="display mt-1 text-[2.25rem] text-ink">
           142 <span className="text-[1rem] font-medium text-muted">visitors</span>
         </p>
         <div className="mt-auto flex h-24 items-end gap-1.5" aria-label="Hourly footfall, busiest at 6 to 7 PM">
           {BARS.map((h, i) => (
-            <span key={i} className={`flex-1 rounded-[3px] ${i === 9 ? 'bg-coral' : 'bg-[#f3d98a]'}`} style={{ height: `${h}%` }} />
+            <span key={i} className={`flex-1 rounded-[3px] ${i === 9 ? 'bg-forest' : 'bg-[#d9dad4]'}`} style={{ height: `${h}%` }} />
           ))}
         </div>
       </div>
@@ -110,7 +110,7 @@ function BusinessGrid() {
       </Photo>
       <div
         data-reveal
-        className="flex flex-col items-center justify-center gap-6 rounded-[24px] bg-sky p-8 text-center"
+        className="flex flex-col items-center justify-center gap-6 rounded-[24px] bg-paper p-8 text-center"
       >
         <p className="max-w-[24ch] text-[1.125rem] font-medium leading-snug text-ink">
           Openings, deliveries and quiet hours, summed up before you ask.
@@ -135,7 +135,7 @@ export default function Moments() {
           <h2 data-reveal className="display h-section mt-4 text-ink">
             You can’t be everywhere. <span className="hl">But you can still be part of it.</span>
           </h2>
-          <div data-reveal role="tablist" aria-label="Show moments for" className="mt-9 inline-flex rounded-full bg-sky p-1">
+          <div data-reveal role="tablist" aria-label="Show moments for" className="mt-9 inline-flex rounded-full bg-paper p-1">
             {(['family', 'business'] as const).map((m) => (
               <button
                 key={m}
@@ -145,7 +145,7 @@ export default function Moments() {
                 aria-controls={`moments-${m}`}
                 onClick={() => setMode(m)}
                 className={`focus-ring rounded-full px-5 py-2 text-[14px] font-medium transition-all duration-300 ${
-                  mode === m ? 'bg-blue text-white shadow-[0_6px_16px_-6px_rgba(0,107,255,.6)]' : 'text-muted hover:text-ink'
+                  mode === m ? 'bg-charcoal text-white' : 'text-muted hover:text-ink'
                 }`}
               >
                 {m === 'family' ? 'For Family' : 'For Business'}

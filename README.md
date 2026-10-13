@@ -1,8 +1,7 @@
 # Alaro: smart camera site
 
-Product site for **Alaro** (working brand name, set in `lib/brand.ts`), laid out from the Alaro wireframe with an
-Apple-style white system. The hero is a black-and-white film that turns to colour as you scroll and shrinks into a
-landscape iPhone showing a clean live view of the Alaro app. The original hero brief is
+Product site for **Alaro** (working brand name, set in `lib/brand.ts`). The hero is a grainy black-and-white film
+that turns to colour as you scroll and shrinks into a portrait iPhone, with captured moments gathering around it. The original hero brief is
 [`docs/HERO_CONTEXT.md`](docs/HERO_CONTEXT.md).
 
 ```bash
@@ -12,22 +11,13 @@ npm run build      # production build (also runs lint + typecheck)
 ```
 
 Stack: Next.js 15 (App Router) · TypeScript · Tailwind CSS 3 · GSAP 3 (ScrollTrigger, SplitText) · Lenis · lucide-react.
-Type: Geist · Geist Mono. 3D: three.js, loaded on demand.
+Type: Switzer (self-hosted, ITF Free Font License). 3D: three.js, loaded on demand.
 
 ## Page
 
-1. **Hero**: grainy black-and-white film that clears and turns to colour as it shrinks into an iPhone with a minimal live view
-2. **Captured on Alaro**: moments bento, with a Family / Business toggle (business uses 3D shop scenes)
-3. **Colours**: Graphite, Chalk White and Nuuk Red tiles on backgrounds tinted to match each product
-4. **How it works**: pinned, scroll-driven 3D story on an oak shelf: meet, pan, recognise, night vision, privacy
-5. **At home**: the camera composited into real rooms from the film, with markers
-6. **Understands**: navy cards: visual intelligence, day digest, "little things" marquee
-7. **Ask Alaro**: working chat demo
-8. **Your space. Your control.**: feature carousel
-9. **Buy**: drag-to-rotate 3D camera with colour picker, feature list, add to bag
-10. **Built for the way you use it**, **FAQ**, **closing CTA**, **footer**
-
-Palette: white, navy ink `#0B3558`, blue `#006BFF`, soft sky / lilac / mint / peach / sun tints. Type: Geist with tight tracking.
+The full, current description of every section, the design system (Switzer, neutral palette with forest/fresh
+green accents), assets and placeholders is in [`docs/SITE_CONTEXT.md`](docs/SITE_CONTEXT.md). The latest change
+brief is [`docs/ALARO_FIRST_DRAFT_CONTEXT.md`](docs/ALARO_FIRST_DRAFT_CONTEXT.md).
 
 ## Where things live
 
