@@ -120,7 +120,7 @@ def music():
                 if j == 7 and b == 3:
                     vel *= 0.7
                 place(buf, felt_piano(hz(note), vel), when, pan=rng.uniform(-0.35, 0.35))
-    buf = reverb(buf)
+    buf = reverb(buf, seconds=2.2, decay=0.85, wet=0.22)  # a short, warm tail: it must not blur the voice
     seg = buf[:, int(LOOP * SR): int(2 * LOOP * SR)]
     seg /= np.abs(seg).max()
     rms = np.sqrt((seg ** 2).mean())
@@ -156,7 +156,7 @@ def voice(model):
     for start, text in VO:
         with tempfile.NamedTemporaryFile(suffix='.wav') as tmp:
             with wave.open(tmp.name, 'wb') as w:
-                v.synthesize_wav(text, w, syn_config=SynthesisConfig(length_scale=1.12, noise_scale=0.6, noise_w_scale=0.7))
+                v.synthesize_wav(text, w, syn_config=SynthesisConfig(length_scale=1.0, noise_scale=0.667, noise_w_scale=0.8))
             with wave.open(tmp.name) as w:
                 sr = w.getframerate()
                 x = np.frombuffer(w.readframes(w.getnframes()), np.int16).astype(float) / 32768
@@ -166,13 +166,19 @@ def voice(model):
         x = np.interp(np.arange(0, len(x), sr / SR), np.arange(len(x)), x)
         i = int(start * SR)
         track[i:i + len(x)] += x[: len(track) - i]
-    # gentle room and level: about -17 dBFS RMS while speaking
-    st = np.stack([track, track])
-    st = reverb(st, seconds=1.2, decay=0.35, wet=0.12)
-    speech = st[:, np.abs(st[0]) > 0.02]
-    st *= 10 ** (-17 / 20) / np.sqrt((speech ** 2).mean())
-    st *= min(1, 0.89 / np.abs(st).max())
-    return st[0]
+    # Dry on purpose: a close, natural voice for a family audience, with no room or reverb on it.
+    # Cut the low rumble (one-pole high-pass at ~90 Hz) and level it to about -17 dBFS RMS while speaking.
+    a = np.exp(-2 * np.pi * 90 / SR)
+    hp = np.zeros_like(track)
+    prev_x = prev_y = 0.0
+    for i in range(len(track)):
+        y = a * (prev_y + track[i] - prev_x)
+        hp[i] = y
+        prev_x, prev_y = track[i], y
+    speech = hp[np.abs(hp) > 0.02]
+    hp *= 10 ** (-17 / 20) / np.sqrt((speech ** 2).mean())
+    hp *= min(1, 0.89 / np.abs(hp).max())
+    return hp
 
 
 def write_mp3(x, path, bitrate):

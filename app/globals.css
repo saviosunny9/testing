@@ -446,7 +446,6 @@ html.lenis body {
   inset: 0;
   background-size: cover;
   background-position: center;
-  filter: grayscale(1) contrast(1.12) brightness(0.9);
 }
 .cam-media.poster-hidden {
   background-image: none !important;
@@ -475,40 +474,6 @@ html.lenis body {
   .hero-gradient {
     height: 70vh;
     background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.7) 55%, #000);
-  }
-}
-
-/* Film grain for the black-and-white opening; fades out as colour comes in. */
-.film-grain {
-  position: absolute;
-  inset: -60%;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 -0.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  mix-blend-mode: overlay;
-  opacity: 0.55;
-  animation: grain 0.6s steps(6) infinite;
-}
-@keyframes grain {
-  0% {
-    transform: translate(0, 0);
-  }
-  17% {
-    transform: translate(-6%, 4%);
-  }
-  33% {
-    transform: translate(5%, -7%);
-  }
-  50% {
-    transform: translate(-3%, 8%);
-  }
-  67% {
-    transform: translate(8%, 2%);
-  }
-  83% {
-    transform: translate(-7%, -4%);
-  }
-  100% {
-    transform: translate(0, 0);
   }
 }
 
@@ -729,8 +694,7 @@ html.intro-pending .intro-hide {
   html.intro-pending .intro-hide {
     opacity: 1;
   }
-  .marquee-track,
-  .film-grain {
+  .marquee-track {
     animation: none !important;
   }
   .device {

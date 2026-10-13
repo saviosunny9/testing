@@ -3,13 +3,13 @@ import { BRAND_NAME } from '@/lib/brand';
 const SHOTS = [
   {
     src: '/media/life/table.jpg',
-    w: 1024,
-    h: 1024,
+    w: 1600,
+    h: 900,
     n: '01',
     title: 'On a table',
     note: 'Stands steady on its own base. Turn it to face the room.',
     alt: `A white ${BRAND_NAME} camera on a sunlit wooden table, a living room softly out of focus behind it`,
-    pos: '50% 55%',
+    pos: '56% 50%',
     span: 'md:col-span-7',
   },
   {

@@ -18,10 +18,13 @@ export default function ChooseWay() {
           <a data-reveal href="#moments" className="group focus-ring relative block aspect-[4/3] overflow-hidden rounded-[3px] bg-surface">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/media/stills/kitchen.jpg"
-              alt="A mum lifting her toddler in a sunny kitchen"
+              src="/media/life/family-home.jpg"
+              alt={`A little boy runs to his parents in a sunlit living room, an ${BRAND_NAME} camera watching from the wall`}
+              width={1600}
+              height={900}
               loading="lazy"
               className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(.2,.7,.2,1)] group-hover:scale-[1.03]"
+              style={{ objectPosition: '45% 50%' }}
             />
             <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 bg-gradient-to-t from-black/55 to-transparent p-7 pt-24 text-white">
               <div>

@@ -14,9 +14,10 @@ where the code and assets live, and which parts are still placeholders.
 
 - **Hero:** the film plays in an 8px white frame. On scroll it closes like an aperture into the glass face of a rendered Alaro camera at the centre, which keeps the moment clips around it. Caption: "Every moment, kept." Reduced motion shows the same composition still.
 - **Camera journey (`#design`):** one pinned section. The copy on the left changes (Design → Pan and tilt → Privacy) while the same rendered camera stays on the right, turning and tipping its head by scroll position. Forest green on the privacy panel.
-- **Placement:** "Stand it up. Or mount it." two lifestyle photos with Alaro in them.
+- **Placement:** "Stand it up. Or mount it." two photos: Alaro on a sunlit table (the client's own Alaro render, `life/table.jpg`) and Alaro on its wall mount (composited, `life/wall.jpg`).
+- **Client Alaro photos:** `life/table.jpg` is on the Placement table slot; `life/family-home.jpg` (boy running to his parents, camera on the wall) is the For Family card in Choose your way.
 - **Lifestyle photos:** the client's reference photographs with other brands' products removed and Alaro composited in (built by `tools/camera-render/lifestyle.py`). Usage rights need checking before launch.
-- **Sound:** a music icon in the header turns the hero's ambient music and a short voiceover on and off (off by default). The voice is a placeholder synthetic voice.
+- **Sound:** a music icon in the header turns the hero's ambient music and a short voiceover on and off (off by default). The voice is a placeholder synthetic voice, kept dry (no reverb) and at a natural conversational pace for a family audience; the music's reverb tail is short and warm so it never blurs the voice.
 - **Known gaps:** the moment clips and the camera journey were checked in headless Chromium, not on real phones; the 8px hero frame was not checked on a phone.
 
 
@@ -161,14 +162,13 @@ Nav: Products (`#buy`), For Home (`#moments`), For Business (`#choose`), Design 
 
 ### Hero (`components/hero/`)
 
-**Opening:** a film in an 8px white frame (`.cam-frame`, inset by `--hero-gap`; the white `.hero-canvas` behind it fades out as the film closes into the camera), grainy and black and white, with the bottom-row copy (eyebrow, H1 "The intelligence / behind your space." with the second line at 55% white, Watch the film / Buy Alaro, description) and an intro character reveal.
+**Opening:** a film in an 8px white frame (`.cam-frame`, inset by `--hero-gap`; the white `.hero-canvas` behind it fades out as the film closes into the camera), in normal colour (the earlier black-and-white and grain opening was removed), with the bottom-row copy (eyebrow, H1 "The intelligence / behind your space." with the second line at 55% white, Watch the film / Buy Alaro, description) and an intro character reveal.
 
 **Scroll timeline** (`useHeroTimeline.ts`): one ScrollTrigger over a 360vh track (300vh on mobile).
 
 | Progress | What happens |
 |---|---|
 | 0–0.18 | Copy and gradient fade out |
-| 0.03–0.23 | Grain fades; the film turns to colour |
 | 0.06–0.52 | **Aperture:** one value drives an `ellipse()` clip on `.cam-frame`, from covering the stage down to the camera's glass face (`.cam-target`), and the film's own cover-fit to the visible part of that ellipse, so it never letterboxes. Meanwhile the camera render (`HeroCamera.tsx`, `media/hero/alaro-camera*.webp`) settles from 1.25× to 1× around its face. |
 | 0.16–0.6 | Six moment tiles (`MomentTiles.tsx`), each a short looping clip from the film (`media/moments/*.webm|mp4`, poster `.jpg`), settle from a pull toward the centre at 1.18×. They sit in two zones either side of the camera + caption column (`--cw`), so they can never touch it or the caption. Clips load on first play and run only while progress > 0.12 and the hero is on screen. On phones and portrait tablets four tiles tuck behind the camera's edges within its height. Reduced motion shows the posters. |
 | 0.4–0.62 | The film plays inside the glass under a highlight and rim shade (`.cam-glass`) |
@@ -255,7 +255,7 @@ Nav: Products (`#buy`), For Home (`#moments`), For Business (`#choose`), Design 
 ```
 app/layout.tsx            Switzer (next/font/local), metadata, intro-hide script, Header, Lenis
 app/page.tsx              section order
-app/globals.css           tokens, type scale, buttons, hero camera/grain, moment tiles, device
+app/globals.css           tokens, type scale, buttons, hero camera, moment tiles, device
 app/fonts/switzer/        font files + LICENSE.md
 components/hero/          Hero, HeroCopy, HeroCamera (+ CameraGlass), MomentTiles, PreviewCopy, FilmPlayer,
                           useHeroTimeline.ts

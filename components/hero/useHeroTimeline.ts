@@ -107,8 +107,6 @@ export function useHeroTimeline({ track, stage, frameTarget, camFrame, camVideo 
       // Explicit start states: invalidateOnRefresh re-records staggered fromTo children,
       // so they must already be at their "from" values before the timeline exists.
       aperture();
-      gsap.set(media, { filter: 'grayscale(1) contrast(1.12) brightness(0.9)' });
-      gsap.set(q('.film-grain'), { opacity: 0.55 });
       gsap.set(q('.hero-word'), { opacity: 0, yPercent: 12 });
       gsap.set(q('.hero-cam-img'), { scale: 1.25 });
       gsap.set(q('.cam-glass'), { opacity: 0 });
@@ -157,14 +155,6 @@ export function useHeroTimeline({ track, stage, frameTarget, camFrame, camVideo 
         0,
       )
         .to(q('.hero-gradient'), { opacity: 0, duration: 0.18 }, 0)
-        // Grainy black-and-white film clears up and takes on colour early in the scroll.
-        .fromTo(
-          media,
-          { filter: 'grayscale(1) contrast(1.12) brightness(0.9)' },
-          { filter: 'grayscale(0) contrast(1) brightness(1)', duration: 0.2, ease: 'power2.out' },
-          0.03,
-        )
-        .fromTo(q('.film-grain'), { opacity: 0.55 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 0.03)
         // The film closes like an aperture into the camera's glass face, while the camera settles back...
         .fromTo(ap, { k: 0 }, { k: 1, duration: 0.46, ease: 'power3.inOut', onUpdate: aperture }, 0.06)
         .fromTo(q('.hero-cam-img'), { scale: 1.25 }, { scale: 1, duration: 0.46, ease: 'power3.inOut' }, 0.06)
