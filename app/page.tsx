@@ -2,6 +2,7 @@ import Hero from '@/components/hero/Hero';
 import AppShowcase from '@/components/sections/AppShowcase';
 import AskAlaro from '@/components/sections/AskAlaro';
 import AtHome from '@/components/sections/AtHome';
+import Evening from '@/components/sections/Evening';
 import ChooseWay from '@/components/sections/ChooseWay';
 import { ClosingCTA, Footer } from '@/components/sections/Closing';
 import Control from '@/components/sections/Control';
@@ -25,6 +26,7 @@ export default function Page() {
         <AppShowcase />
         <ProductTiles />
         <AtHome />
+        <Evening />
         <Understands />
         <AskAlaro />
         <Control />

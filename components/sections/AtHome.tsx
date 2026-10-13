@@ -1,8 +1,9 @@
 const SCENES = [
-  { src: '/media/life/bedroom.jpg', room: 'Bedroom', where: 'On the ottoman, watching story time', mark: { x: 25, y: 44 }, span: 'md:col-span-2 md:row-span-2' },
-  { src: '/media/life/living.jpg', room: 'Living room', where: 'At floor level, Milo’s view of the world', mark: { x: 91.8, y: 63 }, span: '' },
-  { src: '/media/life/kitchen.jpg', room: 'Kitchen', where: 'On the counter, out of reach', mark: { x: 91.8, y: 57 }, span: '' },
-  { src: '/media/life/dining.jpg', room: 'Dining room', where: 'Beside the candles, catching the cake', mark: { x: 91.5, y: 23.5 }, span: 'md:col-span-2' },
+  { src: '/media/life/lounge.jpg', w: 1070, h: 844, room: 'Living room', where: 'On the side table, facing the sofa', mark: { x: 83, y: 49 }, span: 'md:col-span-2 md:row-span-2' },
+  { src: '/media/life/evening.jpg', w: 736, h: 1103, room: 'Reading corner', where: 'Beside the chair, quiet as a lamp', mark: { x: 51, y: 39 }, span: 'md:row-span-2' },
+  { src: '/media/life/playroom.jpg', w: 1080, h: 1350, room: 'Playroom', where: 'On the bench, with the whole floor in view', mark: { x: 88.7, y: 15.4 }, span: 'md:row-span-2' },
+  { src: '/media/life/kitchen-family.jpg', w: 1024, h: 762, room: 'Kitchen', where: 'On the island, out of little hands’ reach', mark: { x: 84.6, y: 70 }, span: 'md:col-span-2' },
+  { src: '/media/life/bedroom.jpg', w: 1600, h: 900, room: 'Bedroom', where: 'On the ottoman, watching story time', mark: { x: 25, y: 44 }, span: 'md:col-span-2' },
 ];
 
 /** The camera in real rooms, with a marker showing where it sits. */
@@ -30,6 +31,8 @@ export default function AtHome() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={s.src}
+                width={s.w}
+                height={s.h}
                 alt={`${s.room} with an Alaro camera ${s.where.toLowerCase()}`}
                 loading="lazy"
                 className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1.4s] ease-[cubic-bezier(.2,.7,.2,1)] group-hover:scale-[1.04]"

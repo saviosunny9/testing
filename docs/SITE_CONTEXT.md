@@ -133,7 +133,8 @@ npm run export       # static site in out/ with relative URLs (see section 9)
 | 5 | Captured on Alaro: moments bento, For family / For business word-tabs | `sections/Moments.tsx` | `#moments` | white |
 | 6 | App showcase: realistic tilted phone | `sections/AppShowcase.tsx` | `#app` | white |
 | 7 | Colour tiles | `sections/ProductTiles.tsx` | `#colours` | white with neutral tiles |
-| 8 | At home: camera composited into real rooms | `sections/AtHome.tsx` | `#at-home` | white |
+| 8 | At home: the camera in five real rooms (living room, reading corner, playroom, kitchen, bedroom) | `sections/AtHome.tsx` | `#at-home` | white |
+| 8b | Evening band: wide lamp-lit living-room photo, mono label, the camera tagged `[ ALARO ]` | `sections/Evening.tsx` | | white |
 | 9 | Understands | `sections/Understands.tsx` | | forest |
 | 10 | Ask Alaro | `sections/AskAlaro.tsx` | `#ask` | paper card |
 | 11 | Your space. Your control. | `sections/Control.tsx` | `#control` | white, paper cards |
@@ -159,7 +160,7 @@ Nav: Products (`#buy`), For Home (`#moments`), For Business (`#choose`), Design 
 | 0–0.18 | Copy and gradient fade out |
 | 0.03–0.23 | Grain fades; the film turns to colour |
 | 0.06–0.52 | `.cam-frame` clip-path shrinks to `.frame-rect`, a **portrait 9:19.5 phone screen** at the centre; the video scales to cover it |
-| 0.16–0.6 | Six moment tiles (`MomentTiles.tsx`), hidden under the film, settle from a pull toward the centre at 1.18× into a balanced collage; on mobile four tiles sit at the edges |
+| 0.16–0.6 | Six moment tiles (`MomentTiles.tsx`), each a short looping clip from the film (`media/moments/*.webm|mp4`, poster `.jpg`), settle from a pull toward the centre at 1.18×. They sit in two zones either side of the phone + caption column (`--cw`), so they can never touch the caption; clips load on first play and run only while progress > 0.12 and the hero is on screen. On phones and portrait tablets four tiles tuck behind the phone's edges within its height. Reduced motion shows the posters. |
 | 0.44 | The iPhone body (`PhoneBody.tsx`) fades in |
 | 0.5 | Minimal HUD (`CameraHUD.tsx`): Dynamic Island, "● LIVE · {room}" pill, clock, and the app's three controls (talk, snapshot, record) |
 | 0.56 | Caption: "The Alaro app / Every moment, right in your pocket." |
@@ -227,9 +228,10 @@ Nav: Products (`#buy`), For Home (`#moments`), For Business (`#choose`), Design 
 | Path | What |
 |---|---|
 | `hero-1080.mp4`, `hero-720.mp4`, `hero-poster.jpg` | the client film, re-encoded (letterbox cropped) |
-| `stills/*.jpg` | warm-graded frames from the film (also used as hero moment tiles) |
+| `stills/*.jpg` | warm-graded frames from the film |
+| `moments/*` | 2–3 s loops cut from the film for the hero tiles (webm VP9 + mp4 H.264 + poster), ~1.3 MB total |
 | `product/front-*.webp`, `three4-white`, `pan-left-white`, `pan-right-white`, `rear-red` | transparent renders of the model |
-| `life/*.jpg` | the camera composited into rooms from the film; 3D shop scenes |
+| `life/*.jpg` | lifestyle photos with the camera composited in. `lounge`, `evening`, `playroom`, `kitchen-family` and `companion` come from the client's reference photography via `tools/camera-render/lifestyle.py`, which also removes other brands' products (a robot vacuum and dock, a speaker, a sunscreen stick, a spray bottle's label, a pet-food bag and frame). `bedroom` is a film composite; `shop-*` are 3D scenes. **Check usage rights for the client photos before launch.** |
 | `app/fonts/switzer/*` | Switzer web fonts + licence note |
 
 **Why the model is our own (first-draft brief, §4):**

@@ -25,3 +25,8 @@ The site uses trimmed WebP versions of these renders in `public/media/product/`.
   then `PAGE=shop.html node shoot.js out.png "scene=grocery"` (or `scene=cafe`).
 - `composite.py` places a transparent render into a film still (anchor point, height, blur, warmth, exposure).
   The `view=custom&cam=x,y,z&target=x,y,z&keyx=..&keyy=..` parameters of `render.html` match each photo's angle and light.
+- `lifestyle.py` builds the client-photo scenes in `public/media/life/` (`lounge`, `evening`, `playroom`,
+  `kitchen-family`, `companion`): it inpaints or crops out other brands' products, repaints a printed label as plain
+  bottle, and composites a render per scene (`r10.png` … `r14.png`, shot with `view=custom` to match each photo's
+  angle and light). Needs `opencv-python-headless`.
+  `python3 lifestyle.py <photo dir> <render dir> <out dir> [scene ...]`
