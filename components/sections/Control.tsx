@@ -91,13 +91,13 @@ const CARDS = [
     title: 'Look around, remotely',
     body: 'Pan and tilt from the app to see more of what matters, without getting up.',
     media: <PanDemo />,
-    bg: 'bg-gradient-to-b from-[#f5f5f7] to-[#e8e8ed]',
+    bg: 'bg-sky',
   },
   {
     title: 'Control the camera from the app',
     body: 'Check in, watch live and manage every camera without being tied to the room.',
     media: <AppDemo />,
-    bg: 'bg-gradient-to-b from-[#f5f5f7] to-[#e8e8ed]',
+    bg: 'bg-lilac',
   },
   {
     title: 'Talk, from anywhere',
@@ -115,7 +115,7 @@ const CARDS = [
         </span>
       </PhotoDemo>
     ),
-    bg: 'bg-surface',
+    bg: 'bg-peach',
   },
   {
     title: 'Clear, even at night',
@@ -127,7 +127,7 @@ const CARDS = [
         </span>
       </PhotoDemo>
     ),
-    bg: 'bg-surface',
+    bg: 'bg-night',
   },
   {
     title: 'Private by design',
@@ -138,7 +138,7 @@ const CARDS = [
         <img src="/media/product/rear-red.webp" alt={`${BRAND_NAME} camera from behind, in Nuuk Red`} loading="lazy" className="absolute inset-0 m-auto h-[82%] w-auto object-contain" />
       </div>
     ),
-    bg: 'bg-gradient-to-b from-[#f5f5f7] to-[#e8e8ed]',
+    bg: 'bg-mint',
   },
 ];
 

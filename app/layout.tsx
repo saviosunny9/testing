@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Archivo, Geist, Geist_Mono } from 'next/font/google';
+import { Geist, Geist_Mono } from 'next/font/google';
 import Header from '@/components/Header';
 import SmoothScroll from '@/components/SmoothScroll';
 import { BRAND_NAME, COPY } from '@/lib/brand';
@@ -7,7 +7,6 @@ import './globals.css';
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-geist', display: 'swap', preload: false });
 const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono', display: 'swap', preload: false });
-const archivo = Archivo({ subsets: ['latin'], axes: ['wdth'], variable: '--font-archivo', display: 'swap', preload: false });
 
 export const metadata: Metadata = {
   title: `${BRAND_NAME} · The intelligence behind your space`,
@@ -23,7 +22,7 @@ const introScript = `(function(){try{if(matchMedia('(prefers-reduced-motion: red
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${geist.variable} ${geistMono.variable} ${archivo.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${geist.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <head>
         <link rel="preload" as="image" href="/media/hero-poster.jpg" fetchPriority="high" />
         <script dangerouslySetInnerHTML={{ __html: introScript }} />

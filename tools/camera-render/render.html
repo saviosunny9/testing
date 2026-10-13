@@ -236,7 +236,7 @@ scene.add(ground);
 }
 
 const key = new THREE.DirectionalLight(0xffffff, DARK ? 2.2 : 2.4);
-key.position.set(-14, 22, 12); key.castShadow = true;
+key.position.set(+(P.get('keyx') || -14), +(P.get('keyy') || 22), 12); key.castShadow = true;
 key.shadow.mapSize.set(512, 512); key.shadow.radius = 10; key.shadow.blurSamples = 32; key.shadow.bias = -0.0004;
 Object.assign(key.shadow.camera, { left: -24, right: 24, top: 24, bottom: -24, near: 5, far: 80 });
 // a finite ground so nothing beyond the shadow camera catches stray VSM bleed
@@ -255,7 +255,11 @@ const VIEWS = {
   macro:  { pos: [-3, 10.6, 11], target: [0.4, 9.9, 0], fov: 34 },
   top:    { pos: [12, 30, 34], target: [0, 6.2, 0], fov: 22 },
 };
-const v = VIEWS[VIEW];
+// view=custom: cam=x,y,z & target=x,y,z & fov=n
+const num = (k, d) => (P.get(k) ? P.get(k).split(',').map(Number) : d);
+const v = VIEW === 'custom'
+  ? { pos: num('cam', [0, 8, 40]), target: num('target', [0, 6.6, 0]), fov: +(P.get('fov') || 24) }
+  : VIEWS[VIEW];
 const cam = new THREE.PerspectiveCamera(v.fov, W / H, 0.1, 200);
 cam.position.set(...v.pos); cam.lookAt(...v.target);
 

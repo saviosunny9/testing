@@ -16,3 +16,12 @@ Query parameters: `color` (graphite | white | red), `view` (front | three4 | rea
 browser isn't installed, set `executablePath` in `shoot.js` to a local Chromium.
 
 The site uses trimmed WebP versions of these renders in `public/media/product/`.
+
+## Scenes and lifestyle composites
+
+- `shop.html` renders the grocery and café scenes used for business. It imports the site's model from
+  `lib/three/alaroCamera.ts`, compiled first:
+  `npx tsc ../../lib/three/alaroCamera.ts --ignoreConfig --outDir build --module esnext --target es2020 --moduleResolution bundler --skipLibCheck --lib es2020,dom`
+  then `PAGE=shop.html node shoot.js out.png "scene=grocery"` (or `scene=cafe`).
+- `composite.py` places a transparent render into a film still (anchor point, height, blur, warmth, exposure).
+  The `view=custom&cam=x,y,z&target=x,y,z&keyx=..&keyy=..` parameters of `render.html` match each photo's angle and light.

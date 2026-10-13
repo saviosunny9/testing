@@ -1,9 +1,10 @@
 'use client';
 
 import { Check, ChevronDown, ShoppingBag } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BRAND_NAME, PRICE } from '@/lib/brand';
 import { addToCart } from '@/lib/cart';
+import ProductViewer from './ProductViewer';
 
 const COLORS = [
   { id: 'graphite', name: 'Graphite', swatch: '#3a3b3e' },
@@ -22,7 +23,7 @@ const FEATURES = [
 
 function PhoneOverlay() {
   return (
-    <div className="absolute bottom-[-6%] right-[4%] w-[38%] min-w-[150px] max-w-[230px] rounded-[30px] bg-[#0b0b0c] p-[6px] shadow-[0_40px_60px_-30px_rgba(0,0,0,.5),0_0_0_2px_#c9c9cc] md:right-[-6%]">
+    <div className="pointer-events-none absolute bottom-[-8%] right-[4%] w-[30%] min-w-[130px] max-w-[190px] rounded-[30px] bg-[#0b0b0c] p-[6px] shadow-[0_40px_60px_-30px_rgba(0,0,0,.5),0_0_0_2px_#c9c9cc] md:right-[-6%]">
       <div className="overflow-hidden rounded-[25px] bg-white">
         <div className="flex items-center justify-between px-3 pt-2.5 text-[9px] font-semibold text-ink">
           <span>{BRAND_NAME.toUpperCase()}.</span>
@@ -56,23 +57,31 @@ export default function Experience() {
   const [added, setAdded] = useState(false);
   const current = COLORS.find((c) => c.id === color)!;
 
+  // "Buy" links elsewhere on the page carry data-color to preselect a colour here.
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      const a = (e.target as HTMLElement).closest<HTMLElement>('[data-color]');
+      const c = a?.dataset.color as ColorId | undefined;
+      if (c && COLORS.some((x) => x.id === c)) setColor(c);
+    };
+    document.addEventListener('click', onClick);
+    return () => document.removeEventListener('click', onClick);
+  }, []);
+
   return (
     <section id="buy" className="section bg-white">
+      <span id="plans" />
       <div className="container-x grid gap-16 md:grid-cols-12 md:gap-10">
         <div className="md:col-span-6">
           <div className="relative md:sticky md:top-24">
-            <div className="relative aspect-[4/5] rounded-[32px] bg-gradient-to-b from-[#f5f5f7] to-[#e8e8ed]">
-              {COLORS.map((c) => (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  key={c.id}
-                  src={`/media/product/front-${c.id}.webp`}
-                  alt={c.id === color ? `${BRAND_NAME} camera in ${c.name}` : ''}
-                  loading="lazy"
-                  className="absolute inset-x-0 top-[12%] mx-auto w-[74%] object-contain transition-opacity duration-500"
-                  style={{ opacity: c.id === color ? 1 : 0 }}
-                />
-              ))}
+            <div
+              className="relative aspect-[4/5] overflow-hidden rounded-[32px] transition-colors duration-700"
+              style={{ background: `var(--tint-${color})` }}
+            >
+              <ProductViewer color={color} className="absolute inset-0 h-full w-full cursor-grab active:cursor-grabbing" />
+              <span className="pointer-events-none absolute left-1/2 top-5 -translate-x-1/2 rounded-full bg-white/70 px-3 py-1.5 text-[12px] font-medium text-ink backdrop-blur-md">
+                Drag to look around · {current.name}
+              </span>
               <PhoneOverlay />
             </div>
           </div>
@@ -83,7 +92,7 @@ export default function Experience() {
             The {BRAND_NAME} experience
           </p>
           <h2 data-reveal className="display h-section mt-4 text-ink">
-            Everything you need, <span className="text-[#86868b]">right from your phone.</span>
+            Everything you need, <span className="hl">right from your phone.</span>
           </h2>
           <p data-reveal className="lede mt-6 max-w-[38ch]">
             One beautiful, connected experience for everything that matters, right in your hand.
@@ -137,7 +146,7 @@ export default function Experience() {
                       className="peer sr-only"
                     />
                     <span
-                      className="block h-8 w-8 rounded-full ring-1 ring-black/10 ring-offset-[3px] ring-offset-surface transition-shadow peer-checked:ring-2 peer-checked:ring-[#0071e3] peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-[#0071e3]"
+                      className="block h-8 w-8 rounded-full ring-1 ring-black/10 ring-offset-[3px] ring-offset-surface transition-shadow peer-checked:ring-2 peer-checked:ring-blue peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-blue"
                       style={{ background: c.swatch }}
                     />
                     <span className="sr-only">{c.name}</span>

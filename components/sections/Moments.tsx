@@ -49,7 +49,7 @@ function FamilyGrid() {
       </Photo>
       <div
         data-reveal
-        className="flex flex-col items-center justify-center gap-6 rounded-[24px] bg-gradient-to-b from-[#f5f5f7] to-[#e3e3e8] p-8 text-center"
+        className="flex flex-col items-center justify-center gap-6 rounded-[24px] bg-sky p-8 text-center"
       >
         <p className="max-w-[26ch] text-[1.125rem] font-medium leading-snug text-ink">
           The moments you’d never want to miss, captured, remembered and shared just for you.
@@ -67,13 +67,13 @@ const BARS = [12, 18, 26, 34, 30, 44, 38, 52, 66, 88, 72, 40];
 function BusinessGrid() {
   return (
     <div className="grid gap-3 md:grid-cols-3 md:grid-rows-[300px_300px] lg:grid-rows-[340px_340px]">
-      <div data-reveal className="relative flex flex-col overflow-hidden rounded-[24px] bg-surface p-7 md:row-span-2">
-        <p className="eyebrow">For Business</p>
-        <p className="display mt-3 max-w-[14ch] text-[1.75rem] text-ink">Keep an eye on the shop floor.</p>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/media/product/front-red.webp" alt={`${BRAND_NAME} camera in Nuuk Red`} width={1355} height={1258} loading="lazy" className="mx-auto mt-auto h-auto w-[78%] max-w-[360px] object-contain" />
-      </div>
-      <div data-reveal className="rounded-[24px] bg-[#1d1d1f] p-6 text-white">
+      <Photo src="/media/life/shop-grocery.jpg" alt={`An ${BRAND_NAME} camera on a grocery store counter`} className="aspect-[3/4] md:row-span-2 md:aspect-auto">
+        <figcaption className="absolute inset-x-0 top-0 p-6">
+          <p className="eyebrow">For Business</p>
+          <p className="display mt-2 max-w-[13ch] text-[1.75rem] text-ink">Keep an eye on the shop floor.</p>
+        </figcaption>
+      </Photo>
+      <div data-reveal className="rounded-[24px] bg-night p-6 text-white">
         <p className="text-[13px] text-white/60">Today at the shop</p>
         <ul className="mt-4 space-y-3 text-[15px]">
           {[
@@ -92,25 +92,25 @@ function BusinessGrid() {
           ))}
         </ul>
       </div>
-      <div data-reveal className="flex flex-col rounded-[24px] bg-surface p-6">
+      <div data-reveal className="flex flex-col rounded-[24px] bg-sun p-6">
         <p className="text-[13px] text-muted">Footfall today</p>
         <p className="display mt-1 text-[2.25rem] text-ink">
           142 <span className="text-[1rem] font-medium text-muted">visitors</span>
         </p>
         <div className="mt-auto flex h-24 items-end gap-1.5" aria-label="Hourly footfall, busiest at 6 to 7 PM">
           {BARS.map((h, i) => (
-            <span key={i} className={`flex-1 rounded-[3px] ${i === 9 ? 'bg-ink' : 'bg-[#c7c7cc]'}`} style={{ height: `${h}%` }} />
+            <span key={i} className={`flex-1 rounded-[3px] ${i === 9 ? 'bg-coral' : 'bg-[#f3d98a]'}`} style={{ height: `${h}%` }} />
           ))}
         </div>
       </div>
-      <Photo src="/media/stills/kitchen.jpg" alt="A mum lifting her toddler in a bright kitchen" className="aspect-[4/3] md:aspect-auto">
-        <span className="absolute left-4 top-4 rounded-full bg-black/35 px-3 py-1.5 text-[12px] font-medium text-white backdrop-blur-md">
-          And home, after closing
+      <Photo src="/media/life/shop-cafe.jpg" alt={`An ${BRAND_NAME} camera in Nuuk Red on a café counter`} className="aspect-[4/3] md:aspect-auto">
+        <span className="absolute left-4 top-4 rounded-full bg-white/85 px-3 py-1.5 text-[12px] font-medium text-ink backdrop-blur-md">
+          Café counter · Nuuk Red
         </span>
       </Photo>
       <div
         data-reveal
-        className="flex flex-col items-center justify-center gap-6 rounded-[24px] bg-gradient-to-b from-[#f5f5f7] to-[#e3e3e8] p-8 text-center"
+        className="flex flex-col items-center justify-center gap-6 rounded-[24px] bg-sky p-8 text-center"
       >
         <p className="max-w-[24ch] text-[1.125rem] font-medium leading-snug text-ink">
           Openings, deliveries and quiet hours, summed up before you ask.
@@ -130,12 +130,12 @@ export default function Moments() {
       <div className="container-x">
         <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
           <p data-reveal className="eyebrow">
-            A day, beautifully understood
+            Captured on Alaro
           </p>
           <h2 data-reveal className="display h-section mt-4 text-ink">
-            You can’t be everywhere. <span className="text-[#86868b]">But you can still be part of it.</span>
+            You can’t be everywhere. <span className="hl">But you can still be part of it.</span>
           </h2>
-          <div data-reveal role="tablist" aria-label="Show moments for" className="mt-9 inline-flex rounded-full bg-surface p-1">
+          <div data-reveal role="tablist" aria-label="Show moments for" className="mt-9 inline-flex rounded-full bg-sky p-1">
             {(['family', 'business'] as const).map((m) => (
               <button
                 key={m}
@@ -145,7 +145,7 @@ export default function Moments() {
                 aria-controls={`moments-${m}`}
                 onClick={() => setMode(m)}
                 className={`focus-ring rounded-full px-5 py-2 text-[14px] font-medium transition-all duration-300 ${
-                  mode === m ? 'bg-white text-ink shadow-[0_1px_4px_rgba(0,0,0,.12)]' : 'text-muted hover:text-ink'
+                  mode === m ? 'bg-blue text-white shadow-[0_6px_16px_-6px_rgba(0,107,255,.6)]' : 'text-muted hover:text-ink'
                 }`}
               >
                 {m === 'family' ? 'For Family' : 'For Business'}

@@ -107,6 +107,7 @@ function AnimatedHero({ onWatchFilm }: { onWatchFilm: () => void }) {
               <source src={SRC_1080} type="video/mp4" />
             </video>
           </div>
+          <div className="film-grain" aria-hidden />
           <div className="hero-gradient" />
         </div>
 

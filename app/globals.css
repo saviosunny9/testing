@@ -2,19 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Clean product-page system: white ground, near-black ink, one quiet grey surface. */
+/* Bright, friendly product system (Calendly-like): white ground, navy ink, one confident blue,
+   and soft tints for tiles. Product colours (graphite, chalk, nuuk red) get their own blended tints. */
 :root {
   --bg: #ffffff;
-  --surface: #f5f5f7; /* tiles, bands */
-  --surface-2: #e8e8ed;
-  --ink: #1d1d1f;
-  --ink-2: #424245;
-  --muted: #6e6e73;
-  --line: #d2d2d7;
-  --black: #000000;
-  --night: #161617; /* dark cards on black */
+  --surface: #f4f7fb; /* cool light tile */
+  --surface-2: #e6edf6;
+  --ink: #0b3558; /* navy */
+  --ink-2: #1d4a72;
+  --muted: #476788;
+  --line: #d4e0ed;
+  --black: #071f36;
+  --night: #0b3558; /* dark sections */
+  --night-2: #134470; /* cards on dark */
 
-  --red: #b8232b; /* "Nuuk Red" from the product; used sparingly */
+  --blue: #006bff;
+  --blue-hover: #0057d1;
+  --sky: #e8f2ff;
+  --lilac: #f0eaff;
+  --violet: #8247f5;
+  --mint: #e2f8ef;
+  --green: #11a37f;
+  --peach: #ffece4;
+  --coral: #ff6b4a;
+  --sun: #fff5d6;
+  --gold: #f5b400;
+
+  /* product-blended tints */
+  --tint-graphite: #e3e7ec;
+  --tint-white: #eaf2ff;
+  --tint-red: #ffe3e1;
+
+  --red: #b8232b; /* "Nuuk Red" from the product */
   --live: #30d158;
   --rec: #ff3b30;
   --amber: #ffd60a;
@@ -35,10 +54,11 @@ html {
 
 body {
   background: var(--bg);
+  color: var(--ink);
   font-family: var(--font-geist), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   font-size: 17px;
-  line-height: 1.47;
-  letter-spacing: -0.012em;
+  line-height: 1.42;
+  letter-spacing: -0.018em;
 }
 
 /* Lenis */
@@ -57,37 +77,41 @@ html.lenis body {
 }
 
 @layer components {
-  /* Display: Archivo, slightly expanded, as in the wireframe */
+  /* Display: Geist, tight tracking and leading */
   .display {
-    font-family: var(--font-archivo), var(--font-geist), ui-sans-serif, system-ui, sans-serif;
-    font-stretch: 112%;
+    font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
     font-weight: 600;
-    letter-spacing: -0.035em;
-    line-height: 1.02;
+    letter-spacing: -0.05em;
+    line-height: 0.98;
     text-wrap: balance;
   }
   .h-hero {
-    font-size: clamp(2.6rem, 5.4vw, 5.75rem);
+    font-size: clamp(2.75rem, 6vw, 6.25rem);
+    letter-spacing: -0.058em;
+    line-height: 0.94;
   }
   .h-section {
-    font-size: clamp(2rem, 3.7vw, 3.5rem);
+    font-size: clamp(2.2rem, 4.2vw, 4rem);
   }
   .h-card {
     font-size: clamp(1.4rem, 2vw, 1.75rem);
-    line-height: 1.12;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+  }
+  .hl {
+    color: var(--blue);
   }
   .eyebrow {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--muted);
+    letter-spacing: -0.01em;
+    color: var(--blue);
   }
   .lede {
-    font-size: clamp(1.0625rem, 1.4vw, 1.3125rem);
-    line-height: 1.45;
+    font-size: clamp(1.0625rem, 1.35vw, 1.25rem);
+    line-height: 1.4;
     color: var(--muted);
-    letter-spacing: -0.016em;
+    letter-spacing: -0.022em;
   }
   .mono {
     font-family: var(--font-geist-mono), ui-monospace, monospace;
@@ -107,7 +131,8 @@ html.lenis body {
     padding: 0 1.35rem;
     border-radius: 9999px;
     font-size: 0.9375rem;
-    font-weight: 500;
+    font-weight: 600;
+    letter-spacing: -0.015em;
     white-space: nowrap;
     transition:
       background-color 0.25s ease,
@@ -124,11 +149,18 @@ html.lenis body {
     font-size: 0.875rem;
   }
   .btn-dark {
-    background: var(--ink);
+    background: var(--blue);
     color: #fff;
   }
   .btn-dark:hover {
-    background: #000;
+    background: var(--blue-hover);
+  }
+  .btn-navy {
+    background: var(--ink);
+    color: #fff;
+  }
+  .btn-navy:hover {
+    background: var(--black);
   }
   .btn-light {
     background: #fff;
@@ -138,11 +170,11 @@ html.lenis body {
     background: #f0f0f2;
   }
   .btn-outline {
-    border: 1px solid var(--ink);
-    color: var(--ink);
+    border: 1.5px solid var(--blue);
+    color: var(--blue);
   }
   .btn-outline:hover {
-    background: var(--ink);
+    background: var(--blue);
     color: #fff;
   }
   .btn-glass {
@@ -156,7 +188,7 @@ html.lenis body {
     background: rgba(255, 255, 255, 0.22);
   }
   .link {
-    color: var(--ink);
+    color: var(--blue);
     text-decoration: underline;
     text-underline-offset: 3px;
     text-decoration-thickness: 1px;
@@ -164,7 +196,7 @@ html.lenis body {
 
   .focus-ring:focus-visible,
   .btn:focus-visible {
-    outline: 2px solid #0071e3;
+    outline: 2px solid var(--blue);
     outline-offset: 3px;
   }
 
@@ -216,7 +248,7 @@ html.lenis body {
     color 0.3s ease;
 }
 .site-header[data-theme='light'] .header-buy {
-  background: var(--ink);
+  background: var(--blue);
   color: #fff;
 }
 .site-header .header-bar {
@@ -234,7 +266,7 @@ html.lenis body {
   padding-block: 12px;
 }
 .site-header[data-solid='true'][data-theme='dark']:not([data-menu='open']) .header-bar {
-  background: rgba(22, 22, 23, 0.78);
+  background: rgba(11, 53, 88, 0.82);
   border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 .site-header[data-menu='open'] {
@@ -282,7 +314,7 @@ html.lenis body {
   inset: 0;
   background-size: cover;
   background-position: center;
-  filter: grayscale(1);
+  filter: grayscale(1) contrast(1.12) brightness(0.9);
 }
 .cam-media.poster-hidden {
   background-image: none !important;
@@ -446,16 +478,6 @@ html.intro-pending .intro-hide {
   display: none;
 }
 
-/* Small phone screens: keep the panel to LIVE + room */
-@container (max-height: 230px) {
-  .hud-extra {
-    display: none !important;
-  }
-  .hud-panel {
-    width: auto !important;
-    min-width: 30cqw;
-  }
-}
 
 @keyframes fadeUp {
   from {
@@ -466,4 +488,84 @@ html.intro-pending .intro-hide {
     opacity: 1;
     transform: none;
   }
+}
+
+/* Film grain for the black-and-white opening; fades out as colour comes in. */
+.film-grain {
+  position: absolute;
+  inset: -60%;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 -0.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+  opacity: 0.55;
+  animation: grain 0.6s steps(6) infinite;
+}
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  17% { transform: translate(-6%, 4%); }
+  33% { transform: translate(5%, -7%); }
+  50% { transform: translate(-3%, 8%); }
+  67% { transform: translate(8%, 2%); }
+  83% { transform: translate(-7%, -4%); }
+  100% { transform: translate(0, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .film-grain { animation: none; }
+}
+
+/* How it works: chapter copy and UI swap with the active chapter */
+.how-ch,
+.how-ui {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.5s ease,
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.how-ui {
+  transform: translateY(10px) scale(0.96);
+}
+.how[data-active='0'] .how-ch-0,
+.how[data-active='0'] .how-ui-0,
+.how[data-active='1'] .how-ch-1,
+.how[data-active='1'] .how-ui-1,
+.how[data-active='2'] .how-ch-2,
+.how[data-active='2'] .how-ui-2,
+.how[data-active='3'] .how-ch-3,
+.how[data-active='3'] .how-ui-3,
+.how[data-active='4'] .how-ch-4,
+.how[data-active='4'] .how-ui-4 {
+  opacity: 1;
+  transform: none;
+}
+.how-title {
+  color: var(--ink);
+  transition: color 0.5s ease;
+}
+.how-body {
+  color: var(--muted);
+  transition: color 0.5s ease;
+}
+.how[data-active='3'] .how-title {
+  color: #fff;
+}
+.how[data-active='3'] .how-body {
+  color: rgba(255, 255, 255, 0.75);
+}
+.how[data-active='3'] .how-eyebrow {
+  color: #8cbcff;
+}
+.how-dot {
+  background: rgba(11, 53, 88, 0.22);
+  transition:
+    height 0.4s ease,
+    background-color 0.4s ease;
+}
+.how[data-active='0'] .how-dot-0,
+.how[data-active='1'] .how-dot-1,
+.how[data-active='2'] .how-dot-2,
+.how[data-active='3'] .how-dot-3,
+.how[data-active='4'] .how-dot-4 {
+  height: 1.4rem;
+  background: var(--blue);
 }

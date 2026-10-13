@@ -58,7 +58,8 @@ export function useHeroTimeline({ track, stage, frameTarget, camFrame, camVideo 
       // Explicit start states: invalidateOnRefresh re-records staggered fromTo children,
       // so they must already be at their "from" values before the timeline exists.
       gsap.set(videoEl, { scale: 1.08, x: 0, y: 0 });
-      gsap.set(media, { filter: 'grayscale(1)' });
+      gsap.set(media, { filter: 'grayscale(1) contrast(1.12) brightness(0.9)' });
+      gsap.set(q('.film-grain'), { opacity: 0.55 });
       gsap.set(q('.phone-body'), { opacity: 0 });
       gsap.set(q('.detection'), { opacity: 0 });
       gsap.set(q('.hud-item'), { opacity: 0, y: 8 });
@@ -97,8 +98,14 @@ export function useHeroTimeline({ track, stage, frameTarget, camFrame, camVideo 
         0,
       )
         .to(q('.hero-gradient'), { opacity: 0, duration: 0.2 }, 0)
-        // Black and white film slowly takes on colour as it becomes the live feed.
-        .fromTo(media, { filter: 'grayscale(1)' }, { filter: 'grayscale(0)', duration: 0.44, ease: 'power1.inOut' }, 0.08)
+        // Grainy black-and-white film clears up and takes on colour early in the scroll.
+        .fromTo(
+          media,
+          { filter: 'grayscale(1) contrast(1.12) brightness(0.9)' },
+          { filter: 'grayscale(0) contrast(1) brightness(1)', duration: 0.2, ease: 'power2.out' },
+          0.03,
+        )
+        .fromTo(q('.film-grain'), { opacity: 0.55 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 0.03)
         .to(frameEl, { clipPath: clipTarget, duration: 0.46, ease: 'power2.inOut' }, 0.08)
         .fromTo(
           videoEl,
