@@ -1,0 +1,453 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --cream: #f6f1ea;
+  --sand: #ede4d8;
+  --linen: #fbf8f3;
+  --ink: #17130f;
+  --ink-muted: #5e564c;
+  --line: #e3d9cc;
+
+  --forest: #0f3b28;
+  --leaf: #4cc764;
+  --leaf-soft: #ddf3e1;
+
+  --ember: #f07a2e;
+  --apricot: #f8b26a;
+  --peach: #f6a88e;
+
+  --rec: #ff4a3d;
+  --hud-glass: rgba(23, 19, 15, 0.38);
+  --warm-shade: rgba(28, 18, 10, 0.78);
+
+  /* Size of a 16:9 box that covers the viewport (manual object-fit: cover). */
+  --cover-w: max(100vw, 177.7778svh);
+}
+
+html {
+  background: var(--cream);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+@media (min-width: 1024px) {
+  body {
+    font-size: 18px;
+  }
+}
+
+/* Lenis recommended styles */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+@layer components {
+  .display {
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+  .h1-hero {
+    font-size: clamp(3rem, 5vw, 6.5rem);
+  }
+  .h2-section {
+    font-size: clamp(2.25rem, 3.6vw, 4.25rem);
+  }
+  .accent-serif {
+    font-family: var(--font-instrument), ui-serif, Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+  .mono {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* Sequel's glass recipe */
+  .glass {
+    background: rgba(200, 200, 200, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    backdrop-filter: blur(20px) saturate(140%);
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition:
+      transform 0.25s ease,
+      background-color 0.25s ease,
+      color 0.25s ease;
+  }
+  .pill:hover {
+    transform: translateY(-1px);
+  }
+  .pill:focus-visible,
+  .focus-ring:focus-visible {
+    outline: 2px solid var(--leaf);
+    outline-offset: 3px;
+  }
+  .pill-sm {
+    height: 2.5rem;
+    padding: 0 1.1rem;
+    font-size: 0.875rem;
+  }
+  .pill-md {
+    height: 2.875rem;
+    padding: 0 1.4rem;
+    font-size: 0.9375rem;
+  }
+
+  .container-x {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 1280px;
+    padding-inline: 1.5rem;
+  }
+  @media (min-width: 768px) {
+    .container-x {
+      padding-inline: 2.5rem;
+    }
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   Header
+---------------------------------------------------------------------------- */
+.site-header {
+  --header-fg: #fff;
+  color: var(--header-fg);
+  transition: color 0.3s ease;
+}
+.site-header[data-theme='light'] {
+  --header-fg: var(--ink);
+}
+.site-header .header-shade {
+  transition: opacity 0.3s ease;
+}
+.site-header[data-theme='light'] .header-shade {
+  opacity: 0;
+}
+.site-header .header-cta {
+  background: #fff;
+  color: var(--ink);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    transform 0.25s ease;
+}
+.site-header[data-theme='light'] .header-cta {
+  background: var(--forest);
+  color: #fff;
+}
+.site-header[data-menu='open'] {
+  --header-fg: #fff;
+}
+
+.menu-overlay {
+  clip-path: circle(0% at 50% 50%);
+  transition: clip-path 0.7s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.menu-overlay[data-open='true'] {
+  clip-path: circle(150% at 50% 50%);
+}
+
+/* ----------------------------------------------------------------------------
+   Hero stage
+---------------------------------------------------------------------------- */
+.hero-track {
+  position: relative;
+  height: 350vh;
+}
+@media (max-width: 767px) {
+  .hero-track {
+    height: 300vh;
+  }
+}
+
+.hero-stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--cream);
+}
+
+.cam-frame {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  overflow: hidden;
+  background-color: #000;
+  background-size: cover;
+  background-position: center;
+}
+.cam-frame.poster-hidden {
+  background-image: none !important;
+}
+
+.cam-video {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--cover-w);
+  height: calc(var(--cover-w) * 9 / 16);
+  max-width: none;
+  margin-left: calc(var(--cover-w) / -2);
+  margin-top: calc(var(--cover-w) * -9 / 32);
+  object-fit: cover;
+  transform-origin: 50% 50%;
+}
+
+.hero-gradient {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 50vh;
+  background: linear-gradient(to bottom, transparent, var(--warm-shade));
+  pointer-events: none;
+}
+@media (max-width: 767px) {
+  .hero-gradient {
+    height: 70vh;
+    background: linear-gradient(to bottom, transparent, var(--warm-shade) 55%, rgb(28, 18, 10));
+  }
+}
+
+/* The final 16:9 camera-frame rectangle. JS reads this; HUD/rings/toasts share it. */
+.frame-rect {
+  position: absolute;
+  left: 50%;
+  top: calc(50% - 4svh);
+  width: min(68vw, 1120px, calc((100svh - 330px) * 16 / 9));
+  aspect-ratio: 16 / 9;
+  transform: translate(-50%, -50%);
+  border-radius: 28px;
+}
+@media (max-width: 767px) {
+  .frame-rect {
+    top: 42%;
+    width: calc(100vw - 32px);
+    transform: translate(-50%, -60%);
+    border-radius: 20px;
+  }
+}
+.frame-target {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Reduced motion: the preview frame is a real element instead of a clip-path. */
+.frame-rect.static-frame {
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 40px 80px -20px rgba(80, 40, 10, 0.35);
+}
+
+/* ----------------------------------------------------------------------------
+   Camera HUD
+---------------------------------------------------------------------------- */
+@layer components {
+  .hud-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    height: 2rem;
+    padding: 0 0.85rem;
+    border-radius: 9999px;
+    background: var(--hud-glass);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    backdrop-filter: blur(20px) saturate(140%);
+    font-size: 11px;
+  }
+  .hud-btn {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 9999px;
+    color: #fff;
+    background: rgba(200, 200, 200, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    backdrop-filter: blur(20px) saturate(140%);
+    transition: transform 0.25s ease;
+  }
+  .hud-btn:hover {
+    transform: scale(1.06);
+  }
+  .hud-btn:focus-visible {
+    outline: 2px solid var(--leaf);
+    outline-offset: 2px;
+  }
+  @media (min-width: 768px) {
+    .hud-btn {
+      width: 40px;
+      height: 40px;
+    }
+  }
+}
+
+.hud {
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+.hud-corner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-color: rgba(255, 255, 255, 0.85);
+  border-style: solid;
+  border-width: 0;
+}
+.hud-corner.tl {
+  top: 0;
+  left: 0;
+  border-top-width: 2px;
+  border-left-width: 2px;
+  border-top-left-radius: 4px;
+  transform-origin: 0 0;
+}
+.hud-corner.tr {
+  top: 0;
+  right: 0;
+  border-top-width: 2px;
+  border-right-width: 2px;
+  border-top-right-radius: 4px;
+  transform-origin: 100% 0;
+}
+.hud-corner.bl {
+  bottom: 0;
+  left: 0;
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+  border-bottom-left-radius: 4px;
+  transform-origin: 0 100%;
+}
+.hud-corner.br {
+  bottom: 0;
+  right: 0;
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+  border-bottom-right-radius: 4px;
+  transform-origin: 100% 100%;
+}
+
+.rec-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--rec);
+  box-shadow: 0 0 8px rgba(255, 74, 61, 0.7);
+  animation: rec-pulse 1.2s ease-in-out infinite;
+}
+@keyframes rec-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.frame-grain {
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+.frame-vignette {
+  box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.25);
+}
+
+/* ----------------------------------------------------------------------------
+   Sonar rings
+---------------------------------------------------------------------------- */
+.sonar-glow {
+  position: absolute;
+  inset: -55% -40%;
+  background: radial-gradient(
+    60% 60% at 50% 50%,
+    rgba(248, 178, 106, 0.45),
+    rgba(240, 122, 46, 0.12) 45%,
+    transparent 70%
+  );
+}
+.sonar-ring {
+  position: absolute;
+  border: 1.5px solid rgba(240, 122, 46, 0.35);
+}
+@media (max-width: 767px) {
+  .sonar-glow {
+    inset: -30% -12%;
+  }
+  .sonar-ring.desktop-only {
+    display: none;
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   Intro (before JS runs the intro, keep the animated pieces hidden)
+---------------------------------------------------------------------------- */
+html.intro-pending .intro-hide {
+  opacity: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  html.intro-pending .intro-hide {
+    opacity: 1;
+  }
+  .rec-dot {
+    animation: none;
+  }
+}
+
+.split-char {
+  will-change: opacity, filter;
+}
+
+/* Until the scroll timeline has set its start states, keep end-state pieces hidden. */
+.hero-stage:not(.is-armed) .arm-hidden {
+  opacity: 0;
+}
+
+.site-header .header-bar {
+  transition:
+    background-color 0.4s ease,
+    padding 0.4s ease;
+}
+.site-header[data-solid='true']:not([data-menu='open']) .header-bar {
+  background: rgba(246, 241, 234, 0.82);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+  padding-block: 14px;
+}
+.site-header[data-solid='true'][data-theme='dark']:not([data-menu='open']) .header-bar {
+  background: rgba(15, 59, 40, 0.82);
+}
