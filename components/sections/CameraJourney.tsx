@@ -126,7 +126,7 @@ const PANELS = [DesignCopy, SeeCopy, PrivacyCopy];
 /* ----------------------------------------------------------------- the scene */
 
 /**
- * A sunlit living room (the client's photo, with its own wall camera painted out) fills the section, and the
+ * A sunlit living room (the client's photo of a family playing with their dog) fills the section, and the
  * rendered camera stands on the coffee table in it. The scene is sized like `object-fit: cover` for a 16:9 photo, and
  * the camera is positioned in percentages of the photo, so it stays on the table at any screen size.
  */

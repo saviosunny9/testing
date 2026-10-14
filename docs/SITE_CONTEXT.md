@@ -13,7 +13,7 @@ where the code and assets live, and which parts are still placeholders.
 ## 0. Current state (read this first)
 
 - **Hero:** the film plays in an 8px white frame. On scroll it closes like an aperture into the glass face of a rendered Alaro camera at the centre, which keeps the moment clips around it. Caption: "Every moment, kept." Reduced motion shows the same composition still.
-- **Camera journey (`#design`):** one pinned section in a sunlit living room (the client's family photo). The copy on the left changes (Design → Pan and tilt → Privacy) while the same rendered camera stays on the coffee table, turning and tipping its head by scroll position.
+- **Camera journey (`#design`):** one pinned section in a sunlit living room (the client's photo of the family playing with their dog). The copy on the left changes (Design → Pan and tilt → Privacy) while the same rendered camera stays on the coffee table, turning and tipping its head by scroll position.
 - **Placement:** "Stand it up. Or mount it." two photos: Alaro on a sunlit table (the client's own Alaro render, `life/table.jpg`) and Alaro on its wall mount (composited, `life/wall.jpg`).
 - **Client Alaro photos:** `life/table.jpg` is on the Placement table slot; `life/family-home.jpg` (boy running to his parents, camera on the wall) is the For Family card in Choose your way.
 - **Lifestyle photos:** the client's reference photographs with other brands' products removed and Alaro composited in (built by `tools/camera-render/lifestyle.py`). Usage rights need checking before launch.
@@ -181,9 +181,9 @@ Nav: Products (`#buy`), For Home (`#moments`), For Business (`#choose`), Design 
 
 ### Camera journey (`CameraJourney.tsx`, `public/media/camera/f00–f32.webp`, `public/media/life/family-scene.jpg`)
 
-**How it works:** one pinned section (`#design`, 300svh). A sunlit living room (the client's family photo) fills the section, and the rendered Alaro camera stands on the coffee table in it. The copy sits on the left over a dark gradient and changes as you scroll; the scene and camera stay put.
+**How it works:** one pinned section (`#design`, 300svh). A sunlit living room (the client's photo of a family playing with their golden retriever on the rug) fills the section, and the rendered Alaro camera stands on the coffee table in it. The copy sits on the left over a dark gradient and changes as you scroll; the scene and camera stay put.
 
-- **Scene:** `family-scene.jpg` is the client's photo with its own small wall camera painted out (so only one camera shows). `.cj-scene` is sized like `object-fit: cover` for a 16:9 photo (`--cover-w`), and the camera (`.cj-cam`) is positioned in percentages of the photo (left 62%, top 57.8%, width 11.6%), so it stays on the table at any screen size. A light sepia/warm filter takes the studio edge off the render.
+- **Scene:** `family-scene.jpg` is the client's photo of the family playing with their dog (no camera in the original). `.cj-scene` is sized like `object-fit: cover` for a 16:9 photo (`--cover-w`), and the camera (`.cj-cam`) is positioned in percentages of the photo (left 66.5%, top 59.5%, width 9.6%), so it stays on the table at any screen size. A light sepia/warm filter takes the studio edge off the render.
 - **Frames:** 33 renders from `tools/camera-render/sequence.js`, cropped to one shared box (1119 × 1300). f00–f22 pan the head from −61° to +49° in 5° steps; f09 is the hero's own view (−16°); f23–f32 tip the head from 7.5° to 75°.
 - **Scroll mapping** (`frameAt`):
   - 0–⅓ Design: pan turns right (f09 → f22)
