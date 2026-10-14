@@ -394,7 +394,7 @@ html.lenis body {
 ---------------------------------------------------------------------------- */
 .hero-track {
   position: relative;
-  height: 360vh;
+  height: 340vh;
 }
 @media (max-width: 767px) {
   .hero-track {
@@ -515,16 +515,12 @@ html.lenis body {
 .hero-cam-dot.is-on {
   opacity: 1;
 }
-.cam-glass {
+.hero-cam-move {
   position: absolute;
-  border-radius: 50%;
-  background:
-    radial-gradient(60% 46% at 30% 22%, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0) 70%),
-    radial-gradient(closest-side, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.55) 100%);
-  box-shadow:
-    inset 0 0 0 calc(var(--ch) * 0.006) rgba(0, 0, 0, 0.85),
-    inset 0 calc(var(--ch) * -0.02) calc(var(--ch) * 0.05) rgba(0, 0, 0, 0.35);
-  opacity: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  visibility: hidden;
 }
 .hero-caption {
   position: absolute;

@@ -3,6 +3,7 @@
 import { type RefObject, useEffect } from 'react';
 import { gsap, ScrollTrigger, SplitText } from '@/lib/gsap';
 import { setHeroProgress } from '@/lib/headerTheme';
+import { HEAD_DOTS, headFrame } from './HeroCamera';
 
 export type HeroRefs = {
   track: RefObject<HTMLElement | null>;
@@ -109,7 +110,6 @@ export function useHeroTimeline({ track, stage, frameTarget, camFrame, camVideo 
       aperture();
       gsap.set(q('.hero-word'), { opacity: 0, yPercent: 12 });
       gsap.set(q('.hero-cam-img'), { scale: 1.25 });
-      gsap.set(q('.cam-glass'), { opacity: 0 });
       gsap.set(q('.hero-cam-dot'), { opacity: 0 });
       // the film dissolves into the glass from the face's centre
       const setOrigin = () => {
@@ -119,6 +119,34 @@ export function useHeroTimeline({ track, stage, frameTarget, camFrame, camVideo 
       setOrigin();
       gsap.set(tiles, { opacity: 0, scale: 1.18, x: pull('x'), y: pull('y') });
       gsap.set(q('.preview-item'), { opacity: 0, y: 20 });
+
+      /**
+       * Once the camera is revealed, scrolling on turns its head a little: right, back past centre to the left, and
+       * home again, using the journey's rendered frames (same crop as the hero render; frame 9 is the hero's own view).
+       * The status light follows the head.
+       */
+      const move = stageEl.querySelector<HTMLImageElement>('.hero-cam-move')!;
+      const dot = stageEl.querySelector<HTMLElement>('.hero-cam-dot')!;
+      const head = { t: 0 };
+      let shownFrame = 9;
+      const turnHead = () => {
+        const f = Math.round(9 + 2 * Math.sin(head.t * Math.PI * 2));
+        if (f === shownFrame) return;
+        shownFrame = f;
+        if (f === 9) {
+          move.style.visibility = 'hidden';
+        } else {
+          move.src = headFrame(f);
+          move.style.visibility = 'visible';
+        }
+        const [x, y] = HEAD_DOTS[f];
+        dot.style.left = `${x * 100}%`;
+        dot.style.top = `${y * 100}%`;
+      };
+      [7, 8, 10, 11].forEach((f) => {
+        const pre = new Image();
+        pre.src = headFrame(f);
+      });
 
       const tl = gsap.timeline({
         defaults: { ease: 'none' },
@@ -166,16 +194,16 @@ export function useHeroTimeline({ track, stage, frameTarget, camFrame, camVideo 
           0.16,
         )
         .fromTo(q('.hero-word'), { opacity: 0, yPercent: 12 }, { opacity: 1, yPercent: 0, duration: 0.36, ease: 'power3.out' }, 0.2)
-        // Behind the glass for a beat, then the film goes in and the glass is just glass.
-        .fromTo(q('.cam-glass'), { opacity: 0 }, { opacity: 1, duration: 0.1, ease: 'power1.out' }, 0.4)
-        .fromTo(media, { scale: 1 }, { scale: 0.86, duration: 0.12, ease: 'power2.in' }, 0.62)
-        .fromTo(frameEl, { opacity: 1 }, { opacity: 0, duration: 0.12, ease: 'power2.in' }, 0.62)
+        // As the film lands in the glass face it fades away, leaving the lens.
+        .fromTo(media, { scale: 1 }, { scale: 0.92, duration: 0.08, ease: 'power1.in' }, 0.48)
+        .fromTo(frameEl, { opacity: 1 }, { opacity: 0, duration: 0.08, ease: 'power1.in' }, 0.48)
         // the white margin gives way to the stage's ground once the film has closed
-        .fromTo(q('.hero-canvas'), { opacity: 1 }, { opacity: 0, duration: 0.12, ease: 'power1.inOut' }, 0.52)
-        .to(q('.cam-glass'), { opacity: 0, duration: 0.1, ease: 'power1.in' }, 0.66)
-        .fromTo(q('.hero-cam-dot'), { opacity: 0 }, { opacity: 1, duration: 0.05, ease: 'power1.out' }, 0.72)
-        .fromTo(q('.preview-item'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: 0.03, duration: 0.14, ease: 'power2.out' }, 0.66)
-        .to({}, { duration: 0.16 });
+        .fromTo(q('.hero-canvas'), { opacity: 1 }, { opacity: 0, duration: 0.1, ease: 'power1.inOut' }, 0.46)
+        .fromTo(q('.hero-cam-dot'), { opacity: 0 }, { opacity: 1, duration: 0.04, ease: 'power1.out' }, 0.56)
+        .fromTo(q('.preview-item'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: 0.03, duration: 0.14, ease: 'power2.out' }, 0.52)
+        // scrolling on: a small look around before the next section
+        .fromTo(head, { t: 0 }, { t: 1, duration: 0.34, ease: 'sine.inOut', onUpdate: turnHead }, 0.62)
+        .to({}, { duration: 0.04 });
 
       stageEl.classList.add('is-armed');
       setHeroProgress(tl.scrollTrigger?.progress ?? 0);

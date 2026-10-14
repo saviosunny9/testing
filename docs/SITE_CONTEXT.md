@@ -164,16 +164,16 @@ Nav: Products (`#buy`), For Home (`#moments`), For Business (`#choose`), Design 
 
 **Opening:** a film in an 8px white frame (`.cam-frame`, inset by `--hero-gap`; the white `.hero-canvas` behind it fades out as the film closes into the camera), in normal colour (the earlier black-and-white and grain opening was removed), with the bottom-row copy (eyebrow, H1 "The intelligence / behind your space." with the second line at 55% white, Watch the film / Buy Alaro, description) and an intro character reveal.
 
-**Scroll timeline** (`useHeroTimeline.ts`): one ScrollTrigger over a 360vh track (300vh on mobile).
+**Scroll timeline** (`useHeroTimeline.ts`): one ScrollTrigger over a 340vh track (300vh on mobile).
 
 | Progress | What happens |
 |---|---|
 | 0–0.18 | Copy and gradient fade out |
 | 0.06–0.52 | **Aperture:** one value drives an `ellipse()` clip on `.cam-frame`, from covering the stage down to the camera's glass face (`.cam-target`), and the film's own cover-fit to the visible part of that ellipse, so it never letterboxes. Meanwhile the camera render (`HeroCamera.tsx`, `media/hero/alaro-camera*.webp`) settles from 1.25× to 1× around its face. |
 | 0.16–0.6 | Six moment tiles (`MomentTiles.tsx`), each a short looping clip from the film (`media/moments/*.webm|mp4`, poster `.jpg`), settle from a pull toward the centre at 1.18×. They sit in two zones either side of the camera + caption column (`--cw`), so they can never touch it or the caption. Clips load on first play and run only while progress > 0.12 and the hero is on screen. On phones and portrait tablets four tiles tuck behind the camera's edges within its height. Reduced motion shows the posters. |
-| 0.4–0.62 | The film plays inside the glass under a highlight and rim shade (`.cam-glass`) |
-| 0.62–0.74 | The film shrinks into the glass and fades; the render's real glass and lens remain. Then the status light comes on (`.hero-cam-dot`, green). |
-| 0.66 | Caption under the camera: "Alaro smart camera / Every moment, kept." |
+| 0.48–0.56 | As the film lands in the glass face it fades away (no hold inside the lens); the render's real glass and lens remain, the white frame fades to the stage's ground, and the status light comes on (`.hero-cam-dot`, green) |
+| 0.62–0.96 | Scrolling on, the head looks around a little: ±10° pan (right, left, home) by swapping the journey's rendered frames 7–11 into `.hero-cam-move`; the status light follows (`HEAD_DOTS`) |
+| 0.52 | Caption under the camera: "Alaro smart camera / Every moment, kept." |
 
 - **Camera geometry:** `CAMERA` in `HeroCamera.tsx` holds the render's face ellipse, status dot and body box as fractions of the image. CSS (`.hero-cam`, `--ch` image height, `--ph`/`--pw` body size) centres the body at 44% of the stage. Re-render with `tools/camera-render` (`shoot.js` writes the matching `.json`) and update both if the model changes.
 - **Reduced motion:** a static poster hero, then the camera and collage composition as a normal section.

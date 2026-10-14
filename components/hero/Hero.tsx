@@ -7,7 +7,7 @@ import { useReducedMotion } from '@/lib/useReducedMotion';
 import FilmPlayer from './FilmPlayer';
 import HeroCopy from './HeroCopy';
 import MomentTiles from './MomentTiles';
-import HeroCamera, { CameraGlass } from './HeroCamera';
+import HeroCamera from './HeroCamera';
 import PreviewCopy from './PreviewCopy';
 import { useHeroIntro, useHeroTimeline } from './useHeroTimeline';
 
@@ -113,7 +113,6 @@ function AnimatedHero({ onWatchFilm }: { onWatchFilm: () => void }) {
           <div className="hero-gradient" />
         </div>
 
-        <CameraGlass className="z-[7]" />
         <HeroCopy onWatchFilm={onWatchFilm} className="absolute inset-0 z-30" />
         <PreviewCopy className="arm-hidden z-30" />
       </div>
